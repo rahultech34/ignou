@@ -1,9 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  devIndicators: false,
+  serverExternalPackages: [
+    "firebase-admin",
+    "@google-cloud/firestore",
+  ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "edukyu.com",
+      },
+    ],
+  },
   turbopack: {
     rules: {
       "*.css": {
