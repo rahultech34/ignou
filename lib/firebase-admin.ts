@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { initializeApp, cert, getApps, App } from "firebase-admin/app";
-import { getFirestore, Firestore } from "firebase-admin/firestore";
+import type { Firestore } from "firebase-admin/firestore";
 
 let dbInstance: Firestore | null = null;
 let initialized = false;
@@ -46,6 +46,9 @@ export function getDb(): Firestore | null {
     const app = initFirebaseAdmin();
     if (app) {
       try {
+        // Lazily load firestore so missing optional modules don't crash Next.js build
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const { getFirestore } = require("firebase-admin/firestore");
         // Target 'default' database provisioned in ignou-fe1a9
         dbInstance = getFirestore(app, "default");
         try {
@@ -55,7 +58,8 @@ export function getDb(): Firestore | null {
         }
         console.log("[firebase-admin] Connected to Cloud Firestore ('default' on ignou-fe1a9)");
       } catch (e) {
-        console.error("[firebase-admin] Failed to initialize Firestore instance:", e);
+        console.warn("[firebase-admin] Failed to initialize Firestore instance:", e);
+        dbInstance = null;
       }
     }
     initialized = true;

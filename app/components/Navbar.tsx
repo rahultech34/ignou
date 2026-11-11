@@ -561,12 +561,12 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
 
             {/* RIGHT ACTION BUTTON (COMPARE UNIVERSITIES & MOBILE TRIGGER - ONE LINE) */}
             <div className="flex items-center gap-3 shrink-0 whitespace-nowrap">
-              {/* "Compare Universities" Primary Button */}
+              {/* "Compare Universities" Primary Button - Hidden on mobile to prevent overlapping hamburger */}
               <a
                 href="https://edukyu.com/compare-colleges"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold text-white bg-[#009FE3] hover:bg-[#008ec9] rounded-lg shadow-xs hover:shadow transition-all whitespace-nowrap shrink-0 active:scale-[0.98] cursor-pointer"
+                className="hidden md:inline-flex items-center justify-center px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold text-white bg-[#009FE3] hover:bg-[#008ec9] rounded-lg shadow-xs hover:shadow transition-all whitespace-nowrap shrink-0 active:scale-[0.98] cursor-pointer"
               >
                 Compare Universities
               </a>
