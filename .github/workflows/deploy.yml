@@ -1,0 +1,40 @@
+name: Auto Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy IGNOU Portal to VPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          passphrase: ${{ secrets.VPS_PASSPHRASE }}
+          port: 22
+          script_stop: true
+          script: |
+            echo "🚀 Starting automated deployment on VPS..."
+            cd /var/www/ignou
+
+            echo "📥 Pulling latest changes from GitHub..."
+            git pull origin main
+
+            echo "📦 Installing npm dependencies..."
+            npm install
+
+            echo "🔨 Building Next.js production bundle..."
+            npm run build
+
+            echo "🔄 Restarting application with PM2..."
+            pm2 restart ignou-portal || pm2 start ecosystem.config.js
+            pm2 save
+
+            echo "✅ Deployment completed successfully!"
