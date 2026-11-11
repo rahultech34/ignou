@@ -4,6 +4,7 @@ import { getDb, isFirestoreAvailable, getFirebaseProjectId } from "./firebase-ad
 import {
   Program,
   Blog,
+  MbaSpecialization,
   StudentResource,
   HomePageData,
   SiteSettings,
@@ -19,6 +20,7 @@ const DATA_FILE = path.join(DATA_DIR, "admin-store.json");
 interface DataStore {
   programs: Program[];
   blogs: Blog[];
+  mbaSpecializations?: MbaSpecialization[];
   studentResources: StudentResource[];
   homePage: HomePageData;
   settings: SiteSettings;
@@ -588,6 +590,18 @@ async function ensureFirestoreSeeded(): Promise<void> {
       await uBatch.commit();
       console.log("[admin-data:firestore] Seeding completed!");
     }
+
+    const mbaSnap = await db.collection("mba_specializations").limit(1).get();
+    if (mbaSnap.empty) {
+      const store = getStore();
+      if (store.mbaSpecializations && store.mbaSpecializations.length > 0) {
+        const mBatch = db.batch();
+        store.mbaSpecializations.forEach((m) => {
+          mBatch.set(db.collection("mba_specializations").doc(m.id), m);
+        });
+        await mBatch.commit();
+      }
+    }
     isSeededChecked = true;
   } catch (err) {
     console.error("[admin-data:firestore] ensureFirestoreSeeded error:", err);
@@ -607,7 +621,12 @@ export async function getPrograms(type?: "ug" | "pg" | "mba"): Promise<Program[]
       const snap = await query.get();
       if (!snap.empty) {
         const list = snap.docs.map((d) => d.data() as Program);
-        list.sort((a, b) => new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime());
+        list.sort((a, b) => {
+          if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
+            return a.displayOrder - b.displayOrder;
+          }
+          return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
+        });
         return list;
       }
     } catch (err) {
@@ -733,7 +752,12 @@ export async function getBlogs(): Promise<Blog[]> {
       const snap = await db.collection("blogs").get();
       if (!snap.empty) {
         const list = snap.docs.map((d) => d.data() as Blog);
-        list.sort((a, b) => new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime());
+        list.sort((a, b) => {
+          if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
+            return a.displayOrder - b.displayOrder;
+          }
+          return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
+        });
         return list;
       }
     } catch (err) {
@@ -844,6 +868,52 @@ export async function deleteBlog(id: string): Promise<boolean> {
   return deleted;
 }
 
+// MBA SPECIALIZATIONS CRUD
+export async function getMbaSpecializations(): Promise<MbaSpecialization[]> {
+  await ensureFirestoreSeeded();
+  const db = getDb();
+  if (db) {
+    try {
+      const snap = await db.collection("mba_specializations").get();
+      if (!snap.empty) {
+        const list = snap.docs.map((d) => d.data() as MbaSpecialization);
+        list.sort((a, b) => {
+          if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
+            return a.displayOrder - b.displayOrder;
+          }
+          return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
+        });
+        return list;
+      }
+    } catch (err) {
+      console.error("[admin-data:firestore] getMbaSpecializations error:", err);
+    }
+  }
+
+  const store = getStore();
+  const localList = [...(store.mbaSpecializations || [])];
+  localList.sort((a, b) => {
+    if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
+      return a.displayOrder - b.displayOrder;
+    }
+    return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
+  });
+  return localList;
+}
+
+export async function getMbaSpecializationBySlug(slug: string): Promise<MbaSpecialization | null> {
+  const all = await getMbaSpecializations();
+  const cleanSlug = slug.toLowerCase().trim();
+  return (
+    all.find(
+      (item) =>
+        item.slug.toLowerCase() === cleanSlug ||
+        item.id.toLowerCase() === cleanSlug ||
+        item.slug.toLowerCase().replace("ignou-", "") === cleanSlug.replace("ignou-", "")
+    ) || null
+  );
+}
+
 // STUDENT RESOURCE CRUD
 export async function getStudentResources(category?: string): Promise<StudentResource[]> {
   await ensureFirestoreSeeded();
@@ -857,7 +927,12 @@ export async function getStudentResources(category?: string): Promise<StudentRes
       const snap = await query.get();
       if (!snap.empty) {
         const list = snap.docs.map((d) => d.data() as StudentResource);
-        list.sort((a, b) => new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime());
+        list.sort((a, b) => {
+          if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
+            return a.displayOrder - b.displayOrder;
+          }
+          return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
+        });
         return list;
       }
     } catch (err) {

@@ -56,14 +56,23 @@ export default async function PublicBlogsPage() {
                 <BookOpen className="w-12 h-12 text-[#009FE3] mx-auto mb-3" />
                 <h3 className="text-lg font-bold text-slate-900">Articles Coming Soon</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Our academic counselor team is currently preparing new admissions guides for the 2026-27 session.
+                  New student blogs and admission guides will be published soon.
                 </p>
-                <Link
-                  href="/"
-                  className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#009FE3] text-white text-xs font-bold shadow-md hover:bg-sky-600 transition-colors"
-                >
-                  Return to Home
-                </Link>
+                <div className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+                  <Link
+                    href="/mba-specializations"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#009FE3] text-white text-xs font-bold shadow-md hover:bg-sky-600 transition-colors"
+                  >
+                    <span>MBA Specializations</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                  <Link
+                    href="/"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200 transition-colors"
+                  >
+                    Return to Home
+                  </Link>
+                </div>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">

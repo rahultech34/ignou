@@ -189,47 +189,19 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
               {/* Vertical Divider */}
               <div className="h-7 sm:h-8 w-[1.5px] bg-slate-200 mx-0.5 sm:mx-1.5 shrink-0" />
 
-              {/* Custom SVG IGNOU Emblem & University Name */}
-              <div className="flex items-center gap-2 shrink-0">
-                <div className="relative w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center rounded-xl bg-gradient-to-tr from-sky-50 to-white border border-sky-100 shadow-2xs group-hover:shadow-xs group-hover:border-sky-300 transition-all">
-                  <svg
-                    viewBox="0 0 100 100"
-                    className="w-6 h-6 sm:w-7 sm:h-7 text-[#009FE3] transition-transform duration-300 group-hover:scale-105"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle cx="50" cy="50" r="45" stroke="#009FE3" strokeWidth="6" strokeDasharray="6 3" opacity="0.4" />
-                    <circle cx="50" cy="50" r="34" stroke="#009FE3" strokeWidth="7" />
-                    <path
-                      d="M50 16 C31 16 16 31 16 50 C16 68 31 84 50 84 C62 84 72 78 78 68"
-                      stroke="#009FE3"
-                      strokeWidth="7"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M50 30 C39 30 30 39 30 50 C30 61 39 70 50 70 C58 70 65 65 68 58"
-                      stroke="#0080B8"
-                      strokeWidth="6"
-                      strokeLinecap="round"
-                    />
-                    <circle cx="50" cy="50" r="7" fill="#009FE3" />
-                  </svg>
-                </div>
-
-                {/* IGNOU Official Title */}
-                <div className="flex flex-col shrink-0">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-lg sm:text-xl font-black tracking-tight text-[#009FE3] leading-none font-sans">
-                      ignou
-                    </span>
-                  </div>
-                  <span className="text-[8.5px] sm:text-[9px] font-bold uppercase tracking-wider text-slate-700 leading-tight">
-                    The People&apos;s
-                  </span>
-                  <span className="text-[8px] sm:text-[8.5px] font-extrabold uppercase tracking-widest text-[#0b2545] leading-none">
-                    University
+              {/* IGNOU Official Title */}
+              <div className="flex flex-col shrink-0">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg sm:text-xl font-black tracking-tight text-[#009FE3] leading-none font-sans">
+                    ignou
                   </span>
                 </div>
+                <span className="text-[8.5px] sm:text-[9px] font-bold uppercase tracking-wider text-slate-700 leading-tight">
+                  The People&apos;s
+                </span>
+                <span className="text-[8px] sm:text-[8.5px] font-extrabold uppercase tracking-widest text-[#0b2545] leading-none">
+                  University
+                </span>
               </div>
             </Link>
 
@@ -455,7 +427,7 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                 )}
               </div>
 
-              {/* 3. MBA */}
+              {/* 3. MBA Specializations */}
               <div
                 className="relative shrink-0"
                 onMouseEnter={() => handleMouseEnter("mba")}
@@ -470,7 +442,7 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                       : "text-slate-800 hover:text-[#009FE3] hover:bg-slate-50"
                   }`}
                 >
-                  <span>MBA</span>
+                  <span>MBA Specializations</span>
                   <ChevronDown
                     className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 ${
                       activeDropdown === "mba" ? "rotate-180 text-[#009FE3]" : ""
@@ -478,145 +450,99 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                   />
                 </button>
 
-                {/* Dropdown Menu - MBA */}
+                {/* Dropdown Menu - MBA Specializations */}
                 {activeDropdown === "mba" && (
                   <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                    <div className="w-[520px] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-5 animate-in fade-in slide-in-from-top-2 duration-150">
-                      <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                          AICTE & UGC-DEB Approved MBA
+                    <div className="w-[580px] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-5 animate-in fade-in slide-in-from-top-2 duration-150">
+                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-100">
+                        <span className="flex items-center gap-1.5 text-xs font-bold text-sky-700 uppercase tracking-wider">
+                          <Briefcase className="w-4 h-4 text-sky-600" />
+                          SOMS • 2-Year Master of Business Administration
                         </span>
-                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-100">
-                          2 Years
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          AICTE Approved
                         </span>
                       </div>
 
-                      <div className="space-y-2">
-                        <Link
-                          href="/programs/master-of-business-administration-mba"
-                          onClick={() => setActiveDropdown(null)}
-                          className="p-3 rounded-xl border border-slate-100 hover:border-sky-300 hover:bg-sky-50/60 transition-all block group"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-sm text-slate-900 group-hover:text-sky-700 transition-colors">
-                              IGNOU Distance MBA (General Management)
-                            </span>
-                            <span className="font-extrabold text-xs text-sky-700">₹62,000 Total</span>
-                          </div>
-                          <p className="text-xs text-slate-500 mt-1">
-                            2 Years | 4 Semesters | Dual Specializations in Finance, Marketing, HR &amp; Operations.
-                          </p>
-                        </Link>
-
-                        <Link
-                          href="/programs/master-of-business-administration-mba"
-                          onClick={() => setActiveDropdown(null)}
-                          className="p-3 rounded-xl border border-slate-100 hover:border-sky-300 hover:bg-sky-50/60 transition-all block group"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-sm text-slate-900 group-hover:text-sky-700 transition-colors">
-                              MBA in Banking &amp; Finance (MPB)
-                            </span>
-                            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
-                              IIBF Collab
-                            </span>
-                          </div>
-                          <p className="text-xs text-slate-500 mt-1">
-                            Specialized for banking professionals and CA/CS graduates seeking leadership roles.
-                          </p>
-                        </Link>
-
-                        <Link
-                          href="/programs/master-of-business-administration-mba"
-                          onClick={() => setActiveDropdown(null)}
-                          className="p-3 rounded-xl border border-slate-100 hover:border-sky-300 hover:bg-sky-50/60 transition-all block group"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-sm text-slate-900 group-hover:text-sky-700 transition-colors">
-                              100% Online MBA Program
-                            </span>
-                            <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
-                              Fully Digital
-                            </span>
-                          </div>
-                          <p className="text-xs text-slate-500 mt-1">
-                            Study anywhere without visiting study centers. Interactive LMS with digital exams.
-                          </p>
-                        </Link>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          {
+                            title: "IGNOU MBA in Finance Management",
+                            short: "Finance & Accounting",
+                            badge: "Finance",
+                            href: "/mba-specializations/ignou-mba-in-finance-management",
+                          },
+                          {
+                            title: "IGNOU MBA in HR Management",
+                            short: "Human Resources & Talent",
+                            badge: "HR",
+                            href: "/mba-specializations/ignou-mba-in-hr-management",
+                          },
+                          {
+                            title: "IGNOU MBA in Operations Management",
+                            short: "Operations & Supply Chain",
+                            badge: "Operations",
+                            href: "/mba-specializations/ignou-mba-in-operations-management",
+                          },
+                          {
+                            title: "IGNOU MBA in IT",
+                            short: "Information Technology",
+                            badge: "IT",
+                            href: "/mba-specializations/ignou-mba-in-it",
+                          },
+                          {
+                            title: "IGNOU MBA in Business Analytics",
+                            short: "Data Analytics & Insights",
+                            badge: "Analytics",
+                            href: "/mba-specializations/ignou-mba-in-business-analytics",
+                          },
+                          {
+                            title: "IGNOU MBA in Business Management",
+                            short: "General Management",
+                            badge: "Management",
+                            href: "/mba-specializations/ignou-mba-in-business-management",
+                          },
+                          {
+                            title: "IGNOU MBA in Marketing Management",
+                            short: "Marketing & Strategy",
+                            badge: "Marketing",
+                            href: "/mba-specializations/ignou-mba-in-marketing-management",
+                            colSpan: "col-span-2",
+                          },
+                        ].map((item) => (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setActiveDropdown(null)}
+                            className={`group p-2.5 rounded-xl border border-slate-100 hover:border-sky-300 hover:bg-sky-50/60 transition-all flex flex-col ${
+                              item.colSpan || ""
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-xs text-slate-900 group-hover:text-[#009FE3] transition-colors truncate">
+                                {item.title}
+                              </span>
+                              <span className="text-[9.5px] font-extrabold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 shrink-0 ml-1">
+                                {item.badge}
+                              </span>
+                            </div>
+                            <span className="text-[11px] text-slate-500 mt-0.5 truncate">{item.short}</span>
+                          </Link>
+                        ))}
                       </div>
 
-                      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-3">
-                          <Link
-                            href="/blogs/distance-mba-from-ignou"
-                            onClick={() => setActiveDropdown(null)}
-                            className="font-bold text-[#009FE3] hover:underline"
-                          >
-                            Distance MBA &rarr;
-                          </Link>
-                          <Link
-                            href="/blogs/online-mba-from-ignou"
-                            onClick={() => setActiveDropdown(null)}
-                            className="font-bold text-indigo-700 hover:underline"
-                          >
-                            Online MBA &rarr;
-                          </Link>
-                          <Link
-                            href="/blogs/ignou-mba-in-finance-management"
-                            onClick={() => setActiveDropdown(null)}
-                            className="font-bold text-emerald-700 hover:underline"
-                          >
-                            MBA Finance &rarr;
-                          </Link>
-                          <Link
-                            href="/blogs/ignou-mba-in-hr-management"
-                            onClick={() => setActiveDropdown(null)}
-                            className="font-bold text-sky-700 hover:underline"
-                          >
-                            MBA HR &rarr;
-                          </Link>
-                          <Link
-                            href="/blogs/ignou-mba-in-operations-management"
-                            onClick={() => setActiveDropdown(null)}
-                            className="font-bold text-amber-700 hover:underline"
-                          >
-                            MBA Operations &rarr;
-                          </Link>
-                          <Link
-                            href="/blogs/ignou-mba-in-it"
-                            onClick={() => setActiveDropdown(null)}
-                            className="font-bold text-purple-700 hover:underline"
-                          >
-                            MBA IT &rarr;
-                          </Link>
-                          <Link
-                            href="/blogs/ignou-mba-in-business-analytics"
-                            onClick={() => setActiveDropdown(null)}
-                            className="font-bold text-teal-700 hover:underline"
-                          >
-                            MBA Analytics &rarr;
-                          </Link>
-                          <Link
-                            href="/blogs/ignou-mba-in-business-management"
-                            onClick={() => setActiveDropdown(null)}
-                            className="font-bold text-blue-700 hover:underline"
-                          >
-                            Business Management &rarr;
-                          </Link>
-                          <Link
-                            href="/blogs/ignou-mba-in-marketing-management"
-                            onClick={() => setActiveDropdown(null)}
-                            className="font-bold text-rose-700 hover:underline"
-                          >
-                            MBA Marketing &rarr;
-                          </Link>
-                        </div>
+                      {/* Dropdown Footer */}
+                      <div className="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600 bg-sky-50/50 -mx-5 -mb-5 px-5 py-3 rounded-b-2xl">
+                        <span className="flex items-center gap-1.5 font-medium text-slate-700">
+                          <Award className="w-4 h-4 text-sky-600" /> ₹66,000 Total Fee • Direct Admission
+                        </span>
                         <Link
-                          href="/programs/master-of-business-administration-mba"
+                          href="/mba-specializations"
                           onClick={() => setActiveDropdown(null)}
-                          className="font-bold text-slate-700 hover:underline"
+                          className="font-bold text-[#009FE3] hover:underline inline-flex items-center gap-1"
                         >
-                          View Syllabus &rarr;
+                          <span>Explore All Specializations</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
                     </div>
@@ -624,67 +550,7 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                 )}
               </div>
 
-              {/* 4. Student Zone (Right Aligned to Prevent Screen Overflow) */}
-              <div
-                className="relative shrink-0"
-                onMouseEnter={() => handleMouseEnter("student")}
-                onMouseLeave={handleMouseLeave}
-              >
-                <button
-                  type="button"
-                  onClick={() => setActiveDropdown(activeDropdown === "student" ? null : "student")}
-                  className={`flex items-center gap-1.5 px-3 py-2 text-[14px] font-semibold rounded-lg transition-colors whitespace-nowrap ${
-                    activeDropdown === "student"
-                      ? "text-[#009FE3] bg-sky-50 shadow-2xs"
-                      : "text-slate-800 hover:text-[#009FE3] hover:bg-slate-50"
-                  }`}
-                >
-                  <span>Student Zone</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 ${
-                      activeDropdown === "student" ? "rotate-180 text-[#009FE3]" : ""
-                    }`}
-                  />
-                </button>
-
-                {/* Dropdown Menu - Student Zone */}
-                {activeDropdown === "student" && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                    <div className="w-[520px] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-5 grid grid-cols-2 gap-3 animate-in fade-in slide-in-from-top-2 duration-150">
-                      {[
-                        { title: "Hall Ticket / Admit Card", desc: "Download TEE Exam Hall Ticket", icon: FileText, color: "bg-sky-100 text-sky-700", href: "#hall-ticket" },
-                        { title: "Assignment Status", desc: "Check 30% assignment marks", icon: CheckCircle2, color: "bg-emerald-100 text-emerald-700", href: "#assignment-status" },
-                        { title: "Grade Card & Results", desc: "Check semester & term marks", icon: Award, color: "bg-amber-100 text-amber-700", href: "#grade-card" },
-                        { title: "Re-Registration", desc: "Register for next semester", icon: Calendar, color: "bg-sky-100 text-sky-800", href: "#re-registration" },
-                        { title: "eGyanKosh Study Books", desc: "Free PDF course books download", icon: BookOpen, color: "bg-blue-100 text-blue-700", href: "#egyankosh" },
-                        { title: "Exam Date Sheet", desc: "June & Dec TEE Timetables", icon: Clock, color: "bg-rose-100 text-rose-700", href: "#datesheet" },
-                      ].map((service) => {
-                        const Icon = service.icon;
-                        return (
-                          <a
-                            key={service.title}
-                            href={service.href}
-                            onClick={() => setActiveDropdown(null)}
-                            className="p-3 rounded-xl border border-slate-100 hover:border-sky-300 hover:bg-sky-50/60 transition-all flex items-start gap-3 group"
-                          >
-                            <div className={`p-2 rounded-lg ${service.color} shrink-0`}>
-                              <Icon className="w-4 h-4" />
-                            </div>
-                            <div className="min-w-0">
-                              <div className="font-bold text-sm text-slate-900 group-hover:text-[#009FE3] transition-colors truncate">
-                                {service.title}
-                              </div>
-                              <p className="text-xs text-slate-500 mt-0.5 truncate">{service.desc}</p>
-                            </div>
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* 5. Blogs */}
+              {/* 4. Blogs */}
               <Link
                 href="/blogs"
                 className="px-3 py-2 text-[14px] font-semibold text-slate-800 hover:text-[#009FE3] hover:bg-slate-50 rounded-lg transition-colors whitespace-nowrap shrink-0"
@@ -784,92 +650,53 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                       <Link href="/programs/bachelor-of-arts-bag" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online BA (Arts &amp; Humanities)
                       </Link>
-                      <Link href="/blogs/online-ba-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online BA Guide 2026 (Process &amp; Scope)
-                      </Link>
                       <Link href="/programs/bachelor-of-business-administration-bba" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online BBA (Digital Business Admin)
-                      </Link>
-                      <Link href="/blogs/online-bba-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online BBA Guide 2026 (Process &amp; Careers)
                       </Link>
                       <Link href="/programs/bachelor-of-computer-applications-bca" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online BCA (Digital E-Learning)
                       </Link>
-                      <Link href="/blogs/online-bca-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online BCA Guide 2026 (Fees &amp; Admission)
-                      </Link>
                       <Link href="/programs/master-of-computer-applications-mca" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online MCA (Software &amp; Cloud)
-                      </Link>
-                      <Link href="/blogs/online-mca-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online MCA Guide 2026 (Fees &amp; Admission)
                       </Link>
                       <Link href="/programs/master-of-business-administration-mba" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online MBA (General Management)
                       </Link>
-                      <Link href="/blogs/online-mba-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online MBA Guide 2026 (Fees &amp; Admission)
-                      </Link>
                       <Link href="/programs/bachelor-of-commerce-bcom" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online B.Com (E-Tutorials)
-                      </Link>
-                      <Link href="/blogs/online-bcom-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online BCom Guide 2026 (Process &amp; Scope)
                       </Link>
                       <Link href="/programs/bachelor-of-science-bscg" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online B.Sc (Science &amp; Labs)
                       </Link>
-                      <Link href="/blogs/online-bsc-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online BSc Guide 2026 (Process &amp; Careers)
-                      </Link>
                       <Link href="/programs/bachelor-of-library-and-information-science-blis" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online BLIS (Library &amp; Information Science)
-                      </Link>
-                      <Link href="/blogs/online-blis-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online BLIS Guide 2026 (Fees &amp; Admission)
                       </Link>
                       <Link href="/programs/master-of-arts-ma" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online MA (Arts &amp; Humanities)
                       </Link>
-                      <Link href="/blogs/online-ma-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online MA Guide 2026 (Fees &amp; Admission)
-                      </Link>
                       <Link href="/programs/master-of-commerce-mcom" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online M.Com (Commerce &amp; Finance)
-                      </Link>
-                      <Link href="/blogs/online-mcom-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online MCom Guide 2026 (Process &amp; Scope)
                       </Link>
                       <Link href="/programs/master-of-arts-journalism-and-mass-communication-majmc" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online MJMC (Journalism &amp; Mass Comm)
                       </Link>
-                      <Link href="/blogs/online-mjmc-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online MJMC Guide 2026 (Process &amp; Scope)
-                      </Link>
                       <Link href="/programs/master-of-science-msc" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online M.Sc (Science &amp; Research)
                       </Link>
-                      <Link href="/blogs/online-msc-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online MSc Guide 2026 (Process &amp; Scope)
-                      </Link>
                       <Link href="/programs/master-of-library-and-information-science-mlis" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
                         • Online MLIS (Library &amp; Information Science)
-                      </Link>
-                      <Link href="/blogs/online-mlis-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online MLIS Guide 2026 (Process &amp; Scope)
                       </Link>
                     </div>
                   )}
                 </div>
 
-                {/* Accordion 3: MBA */}
+                {/* Accordion 3: MBA Specializations */}
                 <div className="pt-2">
                   <button
                     onClick={() => toggleMobileAccordion("mba")}
                     className="w-full flex items-center justify-between py-2 text-left font-bold text-slate-900 text-base"
                   >
-                    <span>MBA Programs</span>
+                    <span>MBA Specializations</span>
                     <ChevronDown
                       className={`w-4 h-4 text-slate-500 transition-transform ${
                         mobileAccordion === "mba" ? "rotate-180 text-sky-600" : ""
@@ -878,79 +705,30 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                   </button>
                   {mobileAccordion === "mba" && (
                     <div className="pl-3 pr-2 py-2 space-y-1.5 text-xs text-slate-600">
-                      <Link href="/programs/master-of-business-administration-mba" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
-                        • IGNOU Distance MBA (General) - ₹62,000 Total
+                      <Link href="/mba-specializations/ignou-mba-in-finance-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
+                        • IGNOU MBA in Finance Management
                       </Link>
-                      <Link href="/blogs/distance-mba-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Distance MBA Guide 2026 (Eligibility &amp; Careers)
+                      <Link href="/mba-specializations/ignou-mba-in-hr-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
+                        • IGNOU MBA in HR Management
                       </Link>
-                      <Link href="/programs/mba-banking-and-finance-mpb" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
-                        • MBA in Banking &amp; Finance (MPB)
+                      <Link href="/mba-specializations/ignou-mba-in-operations-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
+                        • IGNOU MBA in Operations Management
                       </Link>
-                      <Link href="/blogs/ignou-mba-in-finance-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • MBA in Finance Guide 2027 (Admission &amp; Fees)
+                      <Link href="/mba-specializations/ignou-mba-in-it" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
+                        • IGNOU MBA in IT
                       </Link>
-                      <Link href="/programs/master-of-business-administration-mba" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
-                        • 100% Online MBA (AICTE Approved)
+                      <Link href="/mba-specializations/ignou-mba-in-business-analytics" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
+                        • IGNOU MBA in Business Analytics
                       </Link>
-                      <Link href="/blogs/online-mba-from-ignou" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • Online MBA Guide 2026 (Fees &amp; Process)
+                      <Link href="/mba-specializations/ignou-mba-in-business-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
+                        • IGNOU MBA in Business Management
                       </Link>
-                      <Link href="/blogs/ignou-mba-in-hr-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • MBA in HR Guide (Eligibility &amp; Admission)
+                      <Link href="/mba-specializations/ignou-mba-in-marketing-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
+                        • IGNOU MBA in Marketing Management
                       </Link>
-                      <Link href="/blogs/ignou-mba-in-operations-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • MBA in Operations Guide 2027 (Admission &amp; Fees)
+                      <Link href="/mba-specializations" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-bold text-[#009FE3]">
+                        • View All MBA Specializations →
                       </Link>
-                      <Link href="/blogs/ignou-mba-in-it" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • MBA in IT Guide 2027 (Admission &amp; Fees)
-                      </Link>
-                      <Link href="/blogs/ignou-mba-in-business-analytics" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • MBA in Business Analytics Guide (Fees &amp; Admission)
-                      </Link>
-                      <Link href="/blogs/ignou-mba-in-business-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • MBA in Business Management Guide (Fees &amp; Admission)
-                      </Link>
-                      <Link href="/blogs/ignou-mba-in-marketing-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium text-[#009FE3]">
-                        • MBA in Marketing Guide (Fees &amp; Admission)
-                      </Link>
-                    </div>
-                  )}
-                </div>
-
-                {/* Accordion 4: Student Zone */}
-                <div className="pt-2">
-                  <button
-                    onClick={() => toggleMobileAccordion("student")}
-                    className="w-full flex items-center justify-between py-2 text-left font-bold text-slate-900 text-base"
-                  >
-                    <span>Student Zone</span>
-                    <ChevronDown
-                      className={`w-4 h-4 text-slate-500 transition-transform ${
-                        mobileAccordion === "student" ? "rotate-180 text-sky-600" : ""
-                      }`}
-                    />
-                  </button>
-                  {mobileAccordion === "student" && (
-                    <div className="pl-3 pr-2 py-2 grid grid-cols-2 gap-2 text-xs text-slate-700">
-                      <a href="#hall-ticket" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded bg-slate-50 font-medium">
-                        🎟️ Hall Ticket (TEE)
-                      </a>
-                      <a href="#assignment-status" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded bg-slate-50 font-medium">
-                        📝 Assignment Status
-                      </a>
-                      <a href="#grade-card" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded bg-slate-50 font-medium">
-                        📊 Grade Card Result
-                      </a>
-                      <a href="#re-registration" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded bg-slate-50 font-medium">
-                        🔄 Re-Registration
-                      </a>
-                      <a href="#egyankosh" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded bg-slate-50 font-medium">
-                        📚 eGyanKosh Books
-                      </a>
-                      <a href="#datesheet" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded bg-slate-50 font-medium">
-                        ⏰ Exam Datesheet
-                      </a>
                     </div>
                   )}
                 </div>

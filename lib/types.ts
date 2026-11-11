@@ -18,6 +18,7 @@ export interface Program {
   metaTitle?: string;
   metaDescription?: string;
   status: "published" | "draft";
+  displayOrder?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -36,6 +37,26 @@ export interface Blog {
   metaTitle?: string;
   metaDescription?: string;
   status: "published" | "draft";
+  displayOrder?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MbaSpecialization {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  author: string;
+  readTime: string;
+  coverImage?: string;
+  tags?: string[];
+  metaTitle?: string;
+  metaDescription?: string;
+  status: "published" | "draft";
+  displayOrder?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -52,6 +73,7 @@ export interface StudentResource {
   instructions?: string[];
   iconName?: string;
   status: "published" | "draft";
+  displayOrder?: number;
   createdAt: string;
   updatedAt: string;
 }

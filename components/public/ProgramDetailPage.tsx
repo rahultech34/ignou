@@ -495,7 +495,7 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
             {/* Right Column Sticky Form (4 cols) — Fixed after touching the header */}
             <aside
               id="admission-form"
-              className="lg:col-span-4 lg:sticky lg:top-[128px] self-start space-y-4"
+              className="lg:col-span-4 lg:sticky lg:top-[128px] self-start space-y-4 w-full max-w-[370px] mx-auto lg:ml-auto"
             >
               {/* 1. Dedicated Admission & Counseling Form */}
               <AdmissionForm

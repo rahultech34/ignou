@@ -1,10 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { connection } from "next/server";
-import { getBlogBySlug, getBlogs, getSiteSettings } from "@/lib/admin-data";
+import { getBlogBySlug, getBlogs, getSiteSettings, getMbaSpecializationBySlug } from "@/lib/admin-data";
 import {
   Calendar,
   Clock,
@@ -33,6 +33,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const blog = await getBlogBySlug(slug);
 
   if (!blog) {
+    const mba = await getMbaSpecializationBySlug(slug);
+    if (mba) {
+      return {
+        title: mba.metaTitle || `${mba.title} | IGNOU Admission & Exam Guides 2026`,
+        description: mba.metaDescription || mba.excerpt,
+      };
+    }
     return {
       title: "Article Not Found | IGNOU Portal",
     };
@@ -86,6 +93,10 @@ export default async function BlogPostPage({ params }: Props) {
   ]);
 
   if (!blog) {
+    const mba = await getMbaSpecializationBySlug(slug);
+    if (mba) {
+      redirect(`/mba-specializations/${mba.slug}`);
+    }
     notFound();
   }
 
@@ -268,7 +279,7 @@ export default async function BlogPostPage({ params }: Props) {
               {/* RIGHT COLUMN: Sticky Sidebar with Form */}
               <aside
                 id="counseling-form"
-                className="lg:col-span-4 lg:sticky lg:top-[76px] self-start z-20"
+                className="lg:col-span-4 lg:sticky lg:top-[76px] self-start z-20 w-full max-w-[370px] mx-auto lg:ml-auto"
               >
                 {/* Quick Admission Counseling Form (Sticks below navbar) */}
                 <AdmissionForm

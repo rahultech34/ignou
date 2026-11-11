@@ -210,8 +210,8 @@ export default function Footer({ settings }: FooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/programs/master-of-business-administration-mba" className="hover:text-white transition-colors block truncate">
-                  MBA in Finance &amp; Specializations
+                <Link href="/mba-specializations" className="hover:text-white transition-colors block truncate">
+                  MBA Specializations (Finance, HR, IT, etc.)
                 </Link>
               </li>
             </ul>

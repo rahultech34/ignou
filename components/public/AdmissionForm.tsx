@@ -164,9 +164,9 @@ export function AdmissionForm({
   }
 
   return (
-    <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-xl ring-1 ring-slate-900/10 border border-slate-200/80">
+    <div className="w-full max-w-[370px] mx-auto bg-white rounded-2xl p-4 sm:p-5 shadow-lg ring-1 ring-slate-900/5 border border-slate-200/80">
       {/* Header Badge & Title */}
-      <div className="mb-4 text-center">
+      <div className="mb-3 text-center">
         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 text-[#009FE3] text-[10px] font-bold tracking-wide uppercase mb-1 border border-sky-100">
           <span className="w-1.5 h-1.5 rounded-full bg-[#009FE3] animate-pulse" />
           Admissions 2026-27 Open
@@ -178,12 +178,12 @@ export function AdmissionForm({
       </div>
 
       {error && (
-        <div className="mb-3 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-1.5 animate-in fade-in">
+        <div className="mb-3 p-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-1.5 animate-in fade-in">
           <span>⚠️ {error}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-2.5">
         {/* Row 1: Full Name */}
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
