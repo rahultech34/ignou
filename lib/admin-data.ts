@@ -614,14 +614,14 @@ export async function getPrograms(type?: "ug" | "pg" | "mba"): Promise<Program[]
   const db = getDb();
   if (db) {
     try {
-      let query: FirebaseFirestore.Query = db.collection("programs");
+      let query: any = db.collection("programs");
       if (type) {
         query = query.where("type", "==", type);
       }
       const snap = await query.get();
       if (!snap.empty) {
-        const list = snap.docs.map((d) => d.data() as Program);
-        list.sort((a, b) => {
+        const list = snap.docs.map((d: any) => d.data() as Program);
+        list.sort((a: any, b: any) => {
           if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
             return a.displayOrder - b.displayOrder;
           }
@@ -751,8 +751,8 @@ export async function getBlogs(): Promise<Blog[]> {
     try {
       const snap = await db.collection("blogs").get();
       if (!snap.empty) {
-        const list = snap.docs.map((d) => d.data() as Blog);
-        list.sort((a, b) => {
+        const list = snap.docs.map((d: any) => d.data() as Blog);
+        list.sort((a: any, b: any) => {
           if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
             return a.displayOrder - b.displayOrder;
           }
@@ -876,8 +876,8 @@ export async function getMbaSpecializations(): Promise<MbaSpecialization[]> {
     try {
       const snap = await db.collection("mba_specializations").get();
       if (!snap.empty) {
-        const list = snap.docs.map((d) => d.data() as MbaSpecialization);
-        list.sort((a, b) => {
+        const list = snap.docs.map((d: any) => d.data() as MbaSpecialization);
+        list.sort((a: any, b: any) => {
           if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
             return a.displayOrder - b.displayOrder;
           }
@@ -920,14 +920,14 @@ export async function getStudentResources(category?: string): Promise<StudentRes
   const db = getDb();
   if (db) {
     try {
-      let query: FirebaseFirestore.Query = db.collection("studentResources");
+      let query: any = db.collection("studentResources");
       if (category) {
         query = query.where("category", "==", category);
       }
       const snap = await query.get();
       if (!snap.empty) {
-        const list = snap.docs.map((d) => d.data() as StudentResource);
-        list.sort((a, b) => {
+        const list = snap.docs.map((d: any) => d.data() as StudentResource);
+        list.sort((a: any, b: any) => {
           if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
             return a.displayOrder - b.displayOrder;
           }
@@ -1193,8 +1193,8 @@ export async function getMediaList(): Promise<MediaItem[]> {
     try {
       const snap = await db.collection("media").get();
       if (!snap.empty) {
-        const list = snap.docs.map((d) => d.data() as MediaItem);
-        list.sort((a, b) => new Date(b.uploadedAt || 0).getTime() - new Date(a.uploadedAt || 0).getTime());
+        const list = snap.docs.map((d: any) => d.data() as MediaItem);
+        list.sort((a: any, b: any) => new Date(b.uploadedAt || 0).getTime() - new Date(a.uploadedAt || 0).getTime());
         return list;
       }
     } catch (err) {
@@ -1253,7 +1253,7 @@ export async function getAdminUsers(): Promise<StoredAdminUser[]> {
     try {
       const snap = await db.collection("adminUsers").get();
       if (!snap.empty) {
-        return snap.docs.map((d) => d.data() as StoredAdminUser);
+        return snap.docs.map((d: any) => d.data() as StoredAdminUser);
       }
     } catch (err) {
       console.error("[admin-data:firestore] getAdminUsers error:", err);
@@ -1360,7 +1360,7 @@ export async function insertLead(leadData: Partial<Lead>): Promise<{ id: string 
   let createdId = leadId;
   if (db) {
     try {
-      const docRef = await withTimeout(db.collection("crm_leads").add(payload), 2000);
+      const docRef: any = await withTimeout(db.collection("crm_leads").add(payload), 2000);
       createdId = docRef.id;
       payload.id = createdId;
     } catch (err) {
@@ -1395,7 +1395,7 @@ export async function getLeads(options?: {
   const db = getDb();
   if (db) {
     try {
-      const snap = await withTimeout(
+      const snap: any = await withTimeout(
         db
           .collection("crm_leads")
           .orderBy("created_at_iso", "desc")
