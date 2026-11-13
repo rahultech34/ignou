@@ -165,7 +165,7 @@ export interface AdminUser {
   id: string;
   name: string;
   email: string;
-  role: "admin" | "superadmin";
+  role: "admin" | "superadmin" | "counselor" | "editor";
 }
 
 export interface StoredAdminUser {
@@ -173,8 +173,9 @@ export interface StoredAdminUser {
   email: string;
   password: string;
   name: string;
-  role: "admin" | "superadmin";
+  role: "admin" | "superadmin" | "counselor" | "editor";
   updatedAt?: string;
+  createdAt?: string;
 }
 
 export interface DashboardStats {
@@ -184,6 +185,11 @@ export interface DashboardStats {
   totalBlogs: number;
   totalStudentResources: number;
   totalMedia: number;
+  totalLeads?: number;
+  todayLeads?: number;
+  contactedLeads?: number;
+  convertedLeads?: number;
+  recentLeads?: Lead[];
   recentActivity: {
     id: string;
     type: "ug" | "pg" | "mba" | "blog" | "student";
@@ -224,7 +230,8 @@ export interface Lead {
   crm_status?: "synced" | "pending" | "failed";
   crm_lead_id?: string;
   crm_response?: string;
-  status?: "new" | "contacted" | "enrolled" | "closed";
+  status?: "new" | "contacted" | "in-progress" | "enrolled" | "closed";
+  notes?: string;
   created_at?: any;
   created_at_iso?: string;
 }

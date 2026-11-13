@@ -8,9 +8,7 @@ import {
   LayoutDashboard,
   FileText,
   PlusCircle,
-  FolderTree,
   GraduationCap,
-  BookOpen,
   Image as ImageIcon,
   Settings,
   User,
@@ -22,8 +20,10 @@ import {
   Award,
   LifeBuoy,
   Globe,
-  Sparkles,
   Layers,
+  Users,
+  BarChart3,
+  TrendingUp,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -66,7 +66,7 @@ export function AdminSidebar({
   };
 
   const navLinkClass = (active: boolean) =>
-    `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+    `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
       active
         ? "bg-[#009FE3] text-white shadow-md shadow-[#009FE3]/20"
         : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
@@ -118,273 +118,358 @@ export function AdminSidebar({
       </div>
 
       {/* Navigation List */}
-      <div className="flex-1 overflow-y-auto px-3.5 py-4 space-y-1.5">
-        {/* Dashboard */}
-        <Link
-          href="/admin/dashboard"
-          onClick={() => setMobileOpen(false)}
-          className={navLinkClass(isActive("/admin/dashboard"))}
-        >
-          <LayoutDashboard className="w-4 h-4 shrink-0" />
-          <span>Dashboard</span>
-        </Link>
-
-        {/* Home Page Content Manager */}
-        <Link
-          href="/admin/home-page"
-          onClick={() => setMobileOpen(false)}
-          className={navLinkClass(isActive("/admin/home-page"))}
-        >
-          <Globe className="w-4 h-4 shrink-0 text-sky-600" />
-          <span>Home Page Editor</span>
-        </Link>
-
-        {/* UG Programs Dropdown */}
+      <div className="flex-1 overflow-y-auto px-3.5 py-4 space-y-4">
+        {/* SECTION: Overview & CRM */}
         <div className="space-y-1">
-          <button
-            type="button"
-            onClick={() => setUgExpanded(!ugExpanded)}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-              isActive("/admin/ug-programs", false)
-                ? "text-[#009FE3] bg-[#009FE3]/5"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-            }`}
+          <div className="px-3.5 pb-1 text-[10px] font-black uppercase tracking-wider text-slate-400">
+            Overview & CRM
+          </div>
+
+          {/* Dashboard */}
+          <Link
+            href="/admin/dashboard"
+            onClick={() => setMobileOpen(false)}
+            className={navLinkClass(isActive("/admin/dashboard"))}
           >
             <div className="flex items-center gap-3">
-              <GraduationCap className="w-4 h-4 shrink-0 text-sky-600" />
-              <span>UG Programs</span>
+              <LayoutDashboard className="w-4 h-4 shrink-0" />
+              <span>Dashboard</span>
             </div>
-            <ChevronDown
-              className={`w-4 h-4 transition-transform duration-200 ${
-                ugExpanded ? "rotate-180 text-[#009FE3]" : ""
-              }`}
-            />
-          </button>
+          </Link>
 
-          {ugExpanded && (
-            <div className="pl-6 space-y-1 pt-0.5">
-              <Link
-                href="/admin/ug-programs"
-                onClick={() => setMobileOpen(false)}
-                className={subNavLinkClass(pathname === "/admin/ug-programs")}
-              >
-                <span>All UG Programs</span>
-              </Link>
-              <Link
-                href="/admin/ug-programs/new"
-                onClick={() => setMobileOpen(false)}
-                className={subNavLinkClass(pathname === "/admin/ug-programs/new")}
-              >
-                <PlusCircle className="w-3.5 h-3.5" />
-                <span>Add New UG</span>
-              </Link>
-            </div>
-          )}
-        </div>
-
-        {/* PG Programs Dropdown */}
-        <div className="space-y-1">
-          <button
-            type="button"
-            onClick={() => setPgExpanded(!pgExpanded)}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-              isActive("/admin/pg-programs", false)
-                ? "text-[#009FE3] bg-[#009FE3]/5"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-            }`}
+          {/* Leads CRM */}
+          <Link
+            href="/admin/leads"
+            onClick={() => setMobileOpen(false)}
+            className={navLinkClass(isActive("/admin/leads"))}
           >
             <div className="flex items-center gap-3">
-              <Award className="w-4 h-4 shrink-0 text-indigo-600" />
-              <span>PG Programs</span>
+              <Users className="w-4 h-4 shrink-0 text-sky-600" />
+              <span>Admission Leads</span>
             </div>
-            <ChevronDown
-              className={`w-4 h-4 transition-transform duration-200 ${
-                pgExpanded ? "rotate-180 text-[#009FE3]" : ""
-              }`}
-            />
-          </button>
+            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+              isActive("/admin/leads") ? "bg-white/20 text-white" : "bg-sky-50 text-[#009FE3]"
+            }`}>
+              CRM
+            </span>
+          </Link>
 
-          {pgExpanded && (
-            <div className="pl-6 space-y-1 pt-0.5">
-              <Link
-                href="/admin/pg-programs"
-                onClick={() => setMobileOpen(false)}
-                className={subNavLinkClass(pathname === "/admin/pg-programs")}
-              >
-                <span>All PG Programs</span>
-              </Link>
-              <Link
-                href="/admin/pg-programs/new"
-                onClick={() => setMobileOpen(false)}
-                className={subNavLinkClass(pathname === "/admin/pg-programs/new")}
-              >
-                <PlusCircle className="w-3.5 h-3.5" />
-                <span>Add New PG</span>
-              </Link>
-            </div>
-          )}
-        </div>
-
-        {/* MBA Specializations Dropdown */}
-        <div className="space-y-1">
-          <button
-            type="button"
-            onClick={() => setMbaExpanded(!mbaExpanded)}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-              isActive("/admin/mba-specializations", false)
-                ? "text-[#009FE3] bg-[#009FE3]/5"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-            }`}
+          {/* Analytics */}
+          <Link
+            href="/admin/analytics"
+            onClick={() => setMobileOpen(false)}
+            className={navLinkClass(isActive("/admin/analytics"))}
           >
             <div className="flex items-center gap-3">
-              <Layers className="w-4 h-4 shrink-0 text-amber-600" />
-              <span>MBA Specializations</span>
+              <BarChart3 className="w-4 h-4 shrink-0 text-indigo-600" />
+              <span>Analytics</span>
             </div>
-            <ChevronDown
-              className={`w-4 h-4 transition-transform duration-200 ${
-                mbaExpanded ? "rotate-180 text-[#009FE3]" : ""
-              }`}
-            />
-          </button>
-
-          {mbaExpanded && (
-            <div className="pl-6 space-y-1 pt-0.5">
-              <Link
-                href="/admin/mba-specializations"
-                onClick={() => setMobileOpen(false)}
-                className={subNavLinkClass(pathname === "/admin/mba-specializations")}
-              >
-                <span>All Specializations</span>
-              </Link>
-              <Link
-                href="/admin/mba-specializations/new"
-                onClick={() => setMobileOpen(false)}
-                className={subNavLinkClass(pathname === "/admin/mba-specializations/new")}
-              >
-                <PlusCircle className="w-3.5 h-3.5" />
-                <span>Add Specialization</span>
-              </Link>
-            </div>
-          )}
+            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+              isActive("/admin/analytics") ? "bg-white/20 text-white" : "bg-emerald-50 text-emerald-700"
+            }`}>
+              Live
+            </span>
+          </Link>
         </div>
 
-        {/* Student Zone Dropdown */}
+        {/* SECTION: Academic Programs */}
         <div className="space-y-1">
-          <button
-            type="button"
-            onClick={() => setStudentZoneExpanded(!studentZoneExpanded)}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-              isActive("/admin/student-zone", false)
-                ? "text-[#009FE3] bg-[#009FE3]/5"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-            }`}
+          <div className="px-3.5 pb-1 text-[10px] font-black uppercase tracking-wider text-slate-400">
+            Academic Programs
+          </div>
+
+          {/* UG Programs Dropdown */}
+          <div className="space-y-1">
+            <button
+              type="button"
+              onClick={() => setUgExpanded(!ugExpanded)}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+                isActive("/admin/ug-programs", false)
+                  ? "text-[#009FE3] bg-[#009FE3]/5"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <GraduationCap className="w-4 h-4 shrink-0 text-sky-600" />
+                <span>UG Programs</span>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  ugExpanded ? "rotate-180 text-[#009FE3]" : ""
+                }`}
+              />
+            </button>
+
+            {ugExpanded && (
+              <div className="pl-6 space-y-1 pt-0.5">
+                <Link
+                  href="/admin/ug-programs"
+                  onClick={() => setMobileOpen(false)}
+                  className={subNavLinkClass(pathname === "/admin/ug-programs")}
+                >
+                  <span>All UG Programs</span>
+                </Link>
+                <Link
+                  href="/admin/ug-programs/new"
+                  onClick={() => setMobileOpen(false)}
+                  className={subNavLinkClass(pathname === "/admin/ug-programs/new")}
+                >
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  <span>Add New UG</span>
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* PG Programs Dropdown */}
+          <div className="space-y-1">
+            <button
+              type="button"
+              onClick={() => setPgExpanded(!pgExpanded)}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+                isActive("/admin/pg-programs", false)
+                  ? "text-[#009FE3] bg-[#009FE3]/5"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Award className="w-4 h-4 shrink-0 text-indigo-600" />
+                <span>PG Programs</span>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  pgExpanded ? "rotate-180 text-[#009FE3]" : ""
+                }`}
+              />
+            </button>
+
+            {pgExpanded && (
+              <div className="pl-6 space-y-1 pt-0.5">
+                <Link
+                  href="/admin/pg-programs"
+                  onClick={() => setMobileOpen(false)}
+                  className={subNavLinkClass(pathname === "/admin/pg-programs")}
+                >
+                  <span>All PG Programs</span>
+                </Link>
+                <Link
+                  href="/admin/pg-programs/new"
+                  onClick={() => setMobileOpen(false)}
+                  className={subNavLinkClass(pathname === "/admin/pg-programs/new")}
+                >
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  <span>Add New PG</span>
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* MBA Specializations Dropdown */}
+          <div className="space-y-1">
+            <button
+              type="button"
+              onClick={() => setMbaExpanded(!mbaExpanded)}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+                isActive("/admin/mba-specializations", false)
+                  ? "text-[#009FE3] bg-[#009FE3]/5"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Layers className="w-4 h-4 shrink-0 text-amber-600" />
+                <span>MBA Specializations</span>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  mbaExpanded ? "rotate-180 text-[#009FE3]" : ""
+                }`}
+              />
+            </button>
+
+            {mbaExpanded && (
+              <div className="pl-6 space-y-1 pt-0.5">
+                <Link
+                  href="/admin/mba-specializations"
+                  onClick={() => setMobileOpen(false)}
+                  className={subNavLinkClass(pathname === "/admin/mba-specializations")}
+                >
+                  <span>All Specializations</span>
+                </Link>
+                <Link
+                  href="/admin/mba-specializations/new"
+                  onClick={() => setMobileOpen(false)}
+                  className={subNavLinkClass(pathname === "/admin/mba-specializations/new")}
+                >
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  <span>Add Specialization</span>
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Student Zone Dropdown */}
+          <div className="space-y-1">
+            <button
+              type="button"
+              onClick={() => setStudentZoneExpanded(!studentZoneExpanded)}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+                isActive("/admin/student-zone", false)
+                  ? "text-[#009FE3] bg-[#009FE3]/5"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <LifeBuoy className="w-4 h-4 shrink-0 text-emerald-600" />
+                <span>Student Zone</span>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  studentZoneExpanded ? "rotate-180 text-[#009FE3]" : ""
+                }`}
+              />
+            </button>
+
+            {studentZoneExpanded && (
+              <div className="pl-6 space-y-1 pt-0.5">
+                <Link
+                  href="/admin/student-zone"
+                  onClick={() => setMobileOpen(false)}
+                  className={subNavLinkClass(pathname === "/admin/student-zone")}
+                >
+                  <span>All Student Resources</span>
+                </Link>
+                <Link
+                  href="/admin/student-zone/new"
+                  onClick={() => setMobileOpen(false)}
+                  className={subNavLinkClass(pathname === "/admin/student-zone/new")}
+                >
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  <span>Add New Resource</span>
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* SECTION: Content & Media */}
+        <div className="space-y-1">
+          <div className="px-3.5 pb-1 text-[10px] font-black uppercase tracking-wider text-slate-400">
+            Content & Media
+          </div>
+
+          {/* Home Page Content Manager */}
+          <Link
+            href="/admin/home-page"
+            onClick={() => setMobileOpen(false)}
+            className={navLinkClass(isActive("/admin/home-page"))}
           >
             <div className="flex items-center gap-3">
-              <LifeBuoy className="w-4 h-4 shrink-0 text-emerald-600" />
-              <span>Student Zone</span>
+              <Globe className="w-4 h-4 shrink-0 text-sky-600" />
+              <span>Home Page Editor</span>
             </div>
-            <ChevronDown
-              className={`w-4 h-4 transition-transform duration-200 ${
-                studentZoneExpanded ? "rotate-180 text-[#009FE3]" : ""
+          </Link>
+
+          {/* Blogs Dropdown */}
+          <div className="space-y-1">
+            <button
+              type="button"
+              onClick={() => setBlogsExpanded(!blogsExpanded)}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+                isActive("/admin/blogs", false)
+                  ? "text-[#009FE3] bg-[#009FE3]/5"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               }`}
-            />
-          </button>
+            >
+              <div className="flex items-center gap-3">
+                <FileText className="w-4 h-4 shrink-0 text-rose-600" />
+                <span>Blogs & Articles</span>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  blogsExpanded ? "rotate-180 text-[#009FE3]" : ""
+                }`}
+              />
+            </button>
 
-          {studentZoneExpanded && (
-            <div className="pl-6 space-y-1 pt-0.5">
-              <Link
-                href="/admin/student-zone"
-                onClick={() => setMobileOpen(false)}
-                className={subNavLinkClass(pathname === "/admin/student-zone")}
-              >
-                <span>All Student Resources</span>
-              </Link>
-              <Link
-                href="/admin/student-zone/new"
-                onClick={() => setMobileOpen(false)}
-                className={subNavLinkClass(pathname === "/admin/student-zone/new")}
-              >
-                <PlusCircle className="w-3.5 h-3.5" />
-                <span>Add New Resource</span>
-              </Link>
-            </div>
-          )}
-        </div>
+            {blogsExpanded && (
+              <div className="pl-6 space-y-1 pt-0.5">
+                <Link
+                  href="/admin/blogs"
+                  onClick={() => setMobileOpen(false)}
+                  className={subNavLinkClass(pathname === "/admin/blogs")}
+                >
+                  <span>All Articles</span>
+                </Link>
+                <Link
+                  href="/admin/blogs/new"
+                  onClick={() => setMobileOpen(false)}
+                  className={subNavLinkClass(pathname === "/admin/blogs/new")}
+                >
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  <span>Write New Article</span>
+                </Link>
+              </div>
+            )}
+          </div>
 
-        {/* Blogs Dropdown */}
-        <div className="space-y-1">
-          <button
-            type="button"
-            onClick={() => setBlogsExpanded(!blogsExpanded)}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-              isActive("/admin/blogs", false)
-                ? "text-[#009FE3] bg-[#009FE3]/5"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-            }`}
+          {/* Media Library */}
+          <Link
+            href="/admin/media"
+            onClick={() => setMobileOpen(false)}
+            className={navLinkClass(isActive("/admin/media"))}
           >
             <div className="flex items-center gap-3">
-              <FileText className="w-4 h-4 shrink-0 text-rose-600" />
-              <span>Blogs & Articles</span>
+              <ImageIcon className="w-4 h-4 shrink-0 text-purple-600" />
+              <span>Media Library</span>
             </div>
-            <ChevronDown
-              className={`w-4 h-4 transition-transform duration-200 ${
-                blogsExpanded ? "rotate-180 text-[#009FE3]" : ""
-              }`}
-            />
-          </button>
-
-          {blogsExpanded && (
-            <div className="pl-6 space-y-1 pt-0.5">
-              <Link
-                href="/admin/blogs"
-                onClick={() => setMobileOpen(false)}
-                className={subNavLinkClass(pathname === "/admin/blogs")}
-              >
-                <span>All Articles</span>
-              </Link>
-              <Link
-                href="/admin/blogs/new"
-                onClick={() => setMobileOpen(false)}
-                className={subNavLinkClass(pathname === "/admin/blogs/new")}
-              >
-                <PlusCircle className="w-3.5 h-3.5" />
-                <span>Write New Article</span>
-              </Link>
-            </div>
-          )}
+          </Link>
         </div>
 
-        {/* Media Library */}
-        <Link
-          href="/admin/media"
-          onClick={() => setMobileOpen(false)}
-          className={navLinkClass(isActive("/admin/media"))}
-        >
-          <ImageIcon className="w-4 h-4 shrink-0" />
-          <span>Media Library</span>
-        </Link>
+        {/* SECTION: Administration */}
+        <div className="space-y-1">
+          <div className="px-3.5 pb-1 text-[10px] font-black uppercase tracking-wider text-slate-400">
+            Administration
+          </div>
 
-        {/* Settings */}
-        <Link
-          href="/admin/settings"
-          onClick={() => setMobileOpen(false)}
-          className={navLinkClass(isActive("/admin/settings"))}
-        >
-          <Settings className="w-4 h-4 shrink-0" />
-          <span>Settings</span>
-        </Link>
+          {/* User Management */}
+          <Link
+            href="/admin/users"
+            onClick={() => setMobileOpen(false)}
+            className={navLinkClass(isActive("/admin/users"))}
+          >
+            <div className="flex items-center gap-3">
+              <ShieldCheck className="w-4 h-4 shrink-0 text-purple-600" />
+              <span>User & Team Access</span>
+            </div>
+          </Link>
 
-        {/* Profile & Password */}
-        <Link
-          href="/admin/profile"
-          onClick={() => setMobileOpen(false)}
-          className={navLinkClass(isActive("/admin/profile"))}
-        >
-          <User className="w-4 h-4 shrink-0" />
-          <span className="flex-1">Profile & Password</span>
-        </Link>
+          {/* Settings */}
+          <Link
+            href="/admin/settings"
+            onClick={() => setMobileOpen(false)}
+            className={navLinkClass(isActive("/admin/settings"))}
+          >
+            <div className="flex items-center gap-3">
+              <Settings className="w-4 h-4 shrink-0 text-slate-600" />
+              <span>Site Settings</span>
+            </div>
+          </Link>
 
-        <div className="pt-4 border-t border-slate-100">
+          {/* Profile & Password */}
+          <Link
+            href="/admin/profile"
+            onClick={() => setMobileOpen(false)}
+            className={navLinkClass(isActive("/admin/profile"))}
+          >
+            <div className="flex items-center gap-3">
+              <User className="w-4 h-4 shrink-0 text-slate-600" />
+              <span>Profile & Password</span>
+            </div>
+          </Link>
+        </div>
+
+        {/* View Public Website */}
+        <div className="pt-2 border-t border-slate-100">
           <Link
             href="/"
             target="_blank"
