@@ -289,7 +289,7 @@ export default function AdminUsersPage() {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Priya Sharma"
+                    placeholder="Enter full name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#009FE3]/20"
@@ -301,7 +301,7 @@ export default function AdminUsersPage() {
                   <input
                     type="email"
                     required
-                    placeholder="counselor@edukyu.com"
+                    placeholder="Enter email address"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#009FE3]/20"
@@ -358,3 +358,4 @@ export default function AdminUsersPage() {
     </AdminLayoutWrapper>
   );
 }
+

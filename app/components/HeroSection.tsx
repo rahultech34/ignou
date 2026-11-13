@@ -516,7 +516,7 @@ export default function HeroSection({
                           name="fullName"
                           value={formData.fullName}
                           onChange={handleFormChange}
-                          placeholder="e.g. Rahul Sharma"
+                          placeholder="Enter your name"
                           className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#009FE3] focus:border-transparent transition-all placeholder:text-slate-400 font-medium text-slate-900"
                         />
                       </div>
@@ -557,7 +557,7 @@ export default function HeroSection({
                             name="email"
                             value={formData.email}
                             onChange={handleFormChange}
-                            placeholder="you@email.com"
+                            placeholder="Enter your email"
                             className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#009FE3] focus:border-transparent transition-all placeholder:text-slate-400 font-medium text-slate-900"
                           />
                         </div>

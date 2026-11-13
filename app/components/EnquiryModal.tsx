@@ -349,7 +349,7 @@ export default function EnquiryModal({
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleChange}
-                    placeholder="e.g. Rahul Sharma"
+                    placeholder="Enter your name"
                     required
                     className="w-full pl-10 pr-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#009FE3] focus:border-transparent font-medium text-slate-900 placeholder:text-slate-400"
                   />
@@ -390,7 +390,7 @@ export default function EnquiryModal({
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="name@example.com"
+                      placeholder="Enter your email"
                       required
                       className="w-full pl-10 pr-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#009FE3] focus:border-transparent font-medium text-slate-900 placeholder:text-slate-400"
                     />

@@ -196,7 +196,7 @@ export function AdmissionForm({
               required
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-              placeholder="e.g. Rahul Sharma"
+              placeholder="Enter your name"
               className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 focus:outline-hidden focus:border-sky-500 focus:ring-1 focus:ring-sky-100 transition-all bg-slate-50/50 font-medium"
             />
           </div>
@@ -219,7 +219,7 @@ export function AdmissionForm({
               onChange={(e) =>
                 setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, "") })
               }
-              placeholder="9876543210"
+              placeholder="Enter 10-digit mobile number"
               className="w-full px-3 py-2 rounded-r-lg border border-slate-200 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 focus:outline-hidden focus:border-sky-500 focus:ring-1 focus:ring-sky-100 transition-all bg-slate-50/50 font-medium"
             />
           </div>
@@ -237,7 +237,7 @@ export function AdmissionForm({
               required
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="student@example.com"
+              placeholder="Enter your email"
               className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 focus:outline-hidden focus:border-sky-500 focus:ring-1 focus:ring-sky-100 transition-all bg-slate-50/50 font-medium"
             />
           </div>
