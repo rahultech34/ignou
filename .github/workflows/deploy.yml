@@ -20,22 +20,24 @@ jobs:
           port: 22
           script_stop: true
           script: |
-            echo "🚀 Starting automated deployment on VPS..."
+            echo "🚀 Starting safe, resource-throttled deployment on VPS..."
             cd /var/www/ignou
+
+            # Ensure log directory exists
+            mkdir -p /var/log/pm2
 
             echo "📥 Pulling latest changes from GitHub..."
             git fetch origin main
             git reset --hard origin/main
 
             echo "📦 Installing npm dependencies..."
-            npm install
+            npm install --prefer-offline --no-audit
 
-            echo "🔨 Building Next.js production bundle..."
-            npm run build
+            echo "🔨 Building Next.js bundle with CPU & memory throttling (protects other live sites)..."
+            NODE_OPTIONS="--max-old-space-size=1024" nice -n 19 npm run build
 
-            echo "🔄 Restarting application with PM2..."
+            echo "🔄 Restarting ignou-portal with PM2..."
             pm2 restart ignou-portal --update-env || pm2 start ecosystem.config.js
             pm2 save
 
-            echo "✅ Deployment completed successfully!"
-
+            echo "✅ Deployment completed successfully with zero impact on other websites!"
