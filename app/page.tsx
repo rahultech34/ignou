@@ -20,6 +20,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: metaTitle,
     description: metaDescription,
+    verification: {
+      google: "BCVtyQQNBt10FiEMIidFjjkHFOyol5Sr3yVt56op8uA",
+    },
     openGraph: {
       title: metaTitle,
       description: metaDescription,
