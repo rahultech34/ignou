@@ -4,7 +4,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { connection } from "next/server";
 import { getBlogs, getSiteSettings } from "@/lib/admin-data";
-import { ArrowRight, BookOpen, Clock, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Clock } from "lucide-react";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 
@@ -35,10 +35,6 @@ export default async function PublicBlogsPage() {
           <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-sky-900/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/10 text-sky-300 border border-white/20 mb-4 backdrop-blur-md">
-              <Sparkles className="w-3.5 h-3.5 text-sky-400" />
-              IGNOU Academic Insights &amp; Guides 2026-27
-            </span>
             <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
               IGNOU Student Blog &amp; News
             </h1>
@@ -89,6 +85,7 @@ export default async function PublicBlogsPage() {
                             src={blog.coverImage}
                             alt={blog.title}
                             fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
@@ -99,22 +96,17 @@ export default async function PublicBlogsPage() {
                       )}
 
                       <div className="p-6">
-                        <div className="flex items-center justify-between text-xs text-slate-500 mb-3">
-                          <span className="px-2.5 py-0.5 rounded-full bg-sky-50 text-[#009FE3] font-bold text-[11px] border border-sky-100">
-                            {blog.category || "Admissions"}
-                          </span>
-                          <span className="flex items-center gap-1 text-[11px] text-slate-400">
-                            <Clock className="w-3 h-3" />
-                            <span>
-                              {blog.readTime ||
-                                `${Math.max(2, Math.ceil((blog.content || "").split(/\s+/).length / 200))} min read`}
-                            </span>
-                          </span>
-                        </div>
-
                         <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#009FE3] transition-colors leading-snug">
                           <Link href={`/blogs/${blog.slug}`}>{blog.title}</Link>
                         </h2>
+
+                        <div className="mt-2 flex items-center gap-2 text-[11px] text-slate-400">
+                          <Clock className="w-3 h-3" />
+                          <span>
+                            {blog.readTime ||
+                              `${Math.max(2, Math.ceil((blog.content || "").split(/\s+/).length / 200))} min read`}
+                          </span>
+                        </div>
 
                         {blog.excerpt && (
                           <p className="mt-2 text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed">

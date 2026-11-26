@@ -89,7 +89,8 @@ export default function CertificateSection({
             
             {/* Table Container */}
             <div className="bg-white rounded-lg shadow-xl overflow-hidden border border-slate-200">
-              <table className="w-full text-left border-collapse">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#e2f2ff] border-b border-slate-200">
                     <th
@@ -122,6 +123,7 @@ export default function CertificateSection({
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
 
             {/* CTA Button below Table */}
@@ -169,14 +171,6 @@ export default function CertificateSection({
                     <span className="text-xs font-bold tracking-wide">View Full Sample</span>
                   </div>
                 </div>
-              </div>
-
-              {/* Verified Certificate Badges */}
-              <div className="mt-3.5 flex items-center justify-center gap-2 text-center">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-sky-200 border border-white/15 text-xs font-semibold backdrop-blur-sm">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  UGC-DEB & AICTE Approved Degree
-                </span>
               </div>
 
             </div>

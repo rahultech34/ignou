@@ -130,7 +130,6 @@ export interface HomePageData {
   metaTitle?: string;
   metaDescription?: string;
   announcementTicker: string;
-  heroBadge: string;
   heroHeadline: string;
   heroSubtitle: string;
   learnersCount: string;
@@ -232,7 +231,7 @@ export interface Lead {
   crm_response?: string;
   status?: "new" | "contacted" | "in-progress" | "enrolled" | "closed";
   notes?: string;
-  created_at?: any;
+  created_at?: string | number | Date;
   created_at_iso?: string;
 }
 

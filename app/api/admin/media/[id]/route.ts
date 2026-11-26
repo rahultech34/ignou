@@ -29,7 +29,10 @@ export async function DELETE(
       return NextResponse.json({ success: true, message: "Media deleted" });
     }
     return NextResponse.json({ error: "Media item not found" }, { status: 404 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to delete media" },
+      { status: 500 }
+    );
   }
 }

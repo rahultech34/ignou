@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   GraduationCap,
@@ -15,7 +15,6 @@ import {
   Phone,
   Mail,
   Scale,
-  Sparkles,
   ChevronRight,
   Send,
   Lock,
@@ -35,32 +34,41 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
   const isMBA =
     program.type === "mba" || program.code.toUpperCase().includes("MBA");
 
-  const navItems = [
-    { id: "overview", label: "Overview" },
-    { id: "eligibility", label: "Eligibility & Admission" },
-    ...(program.curriculum && program.curriculum.length > 0
-      ? [{ id: "curriculum", label: "Curriculum Syllabus" }]
-      : []),
-    { id: "fees", label: "Fee Structure" },
-    ...(program.highlights && program.highlights.length > 0
-      ? [{ id: "highlights", label: "Key Highlights" }]
-      : []),
-    ...(program.faqs && program.faqs.length > 0
-      ? [{ id: "faqs", label: "FAQs" }]
-      : []),
-  ];
+  const navItems = useMemo(
+    () => [
+      { id: "overview", label: "Overview" },
+      { id: "eligibility", label: "Eligibility & Admission" },
+      ...(program.curriculum && program.curriculum.length > 0
+        ? [{ id: "curriculum", label: "Curriculum Syllabus" }]
+        : []),
+      { id: "fees", label: "Fee Structure" },
+      ...(program.highlights && program.highlights.length > 0
+        ? [{ id: "highlights", label: "Key Highlights" }]
+        : []),
+      ...(program.faqs && program.faqs.length > 0
+        ? [{ id: "faqs", label: "FAQs" }]
+        : []),
+    ],
+    [program.curriculum, program.highlights, program.faqs]
+  );
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      const scrollPos = window.scrollY + 160;
-      for (let i = navItems.length - 1; i >= 0; i--) {
-        const item = navItems[i];
-        const el = document.getElementById(item.id);
-        if (el && el.offsetTop <= scrollPos) {
-          setActiveSection(item.id);
-          break;
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const scrollPos = window.scrollY + 160;
+        for (let i = navItems.length - 1; i >= 0; i--) {
+          const item = navItems[i];
+          const el = document.getElementById(item.id);
+          if (el && el.offsetTop <= scrollPos) {
+            setActiveSection((prev) => (prev === item.id ? prev : item.id));
+            break;
+          }
         }
-      }
+        ticking = false;
+      });
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -81,42 +89,23 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
     program.type === "ug"
       ? "/ug-programs"
       : program.type === "pg"
-      ? "/pg-programs"
-      : "/programs";
+        ? "/pg-programs"
+        : "/programs";
   const directoryLabel =
     program.type === "ug"
       ? "UG Programs"
       : program.type === "pg"
-      ? "PG Programs"
-      : "All Programs";
+        ? "PG Programs"
+        : "All Programs";
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col font-sans">
       {/* Draft banner */}
       {program.status === "draft" && (
         <div className="bg-amber-400 text-slate-950 px-4 py-2 text-center text-xs font-bold tracking-wide">
-          ⚠️ Admin Preview Mode — This course is in Draft status and hidden from public visitors.
+          Admin Preview Mode — This course is in Draft status and hidden from public visitors.
         </div>
       )}
-
-      {/* Breadcrumbs Header */}
-      <section className="bg-white border-b border-slate-200/80 py-3">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-slate-500 font-medium overflow-x-auto whitespace-nowrap">
-            <Link href="/" className="hover:text-[#009FE3] transition-colors shrink-0">
-              Home
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
-            <Link href={directoryUrl} className="hover:text-[#009FE3] transition-colors shrink-0">
-              {directoryLabel}
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
-            <span className="text-slate-800 truncate max-w-xs font-semibold">
-              {program.title}
-            </span>
-          </nav>
-        </div>
-      </section>
 
       {/* Hero Showcase */}
       <section className="relative bg-gradient-to-b from-[#0b2545] via-[#0d2d54] to-[#133b6b] text-white py-12 lg:py-16 overflow-hidden">
@@ -126,21 +115,9 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            
+
             {/* Left Column: Course Highlights (7 cols) */}
             <div className="lg:col-span-7 space-y-5">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-1 rounded-full bg-sky-400/20 text-sky-300 text-xs font-bold border border-sky-400/30">
-                  {program.code}
-                </span>
-                <span className="px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold border border-amber-400/30">
-                  {program.badge || (isMBA ? "AICTE Approved" : "UGC-DEB Recognized")}
-                </span>
-                <span className="px-3 py-1 rounded-full bg-white/10 text-slate-200 text-xs font-medium border border-white/15">
-                  {program.mode}
-                </span>
-              </div>
-
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
                 {program.title}
               </h1>
@@ -185,15 +162,14 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
                   Apply for Admission 2026-27
                 </button>
 
-                <a
-                  href="https://edukyu.com/compare-colleges"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  type="button"
+                  onClick={() => window.dispatchEvent(new CustomEvent("open-compare-modal"))}
                   className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-sm backdrop-blur-xs transition-all flex items-center gap-2 cursor-pointer"
                 >
                   <Scale className="w-4 h-4 text-sky-300" />
                   Compare Universities
-                </a>
+                </button>
               </div>
             </div>
 
@@ -203,9 +179,6 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
                 <div className="flex items-center justify-between pb-3 border-b border-white/10">
                   <span className="text-xs font-bold uppercase tracking-wider text-sky-300">
                     Admission Highlights
-                  </span>
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
-                    2026-27 Open
                   </span>
                 </div>
 
@@ -248,11 +221,10 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
                 key={item.id}
                 type="button"
                 onClick={() => scrollToSection(item.id)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer ${
-                  activeSection === item.id
-                    ? "bg-sky-50 text-[#009FE3] ring-1 ring-sky-200/70 shadow-2xs"
-                    : "text-slate-700 hover:text-slate-950 hover:bg-slate-50"
-                }`}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer ${activeSection === item.id
+                  ? "bg-sky-50 text-[#009FE3] ring-1 ring-sky-200/70 shadow-2xs"
+                  : "text-slate-700 hover:text-slate-950 hover:bg-slate-50"
+                  }`}
               >
                 {item.label}
               </button>
@@ -265,20 +237,17 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
       <section className="py-10 sm:py-12 flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-            
+
             {/* Left Column Content (8 cols) */}
             <div className="lg:col-span-8 space-y-10">
-              
+
               {/* 1. Overview */}
               <div
                 id="overview"
                 className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 scroll-mt-36"
               >
                 <div className="border-b border-slate-100 pb-3">
-                  <span className="text-[11px] font-bold text-[#009FE3] uppercase tracking-wider bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100">
-                    Course Summary
-                  </span>
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                     About {program.title}
                   </h2>
                 </div>
@@ -289,13 +258,13 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
 
                 <div className="pt-2 flex flex-wrap gap-2 text-xs">
                   <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-medium">
-                    🏛️ Central University Degree
+                    Central University Degree
                   </span>
                   <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-medium">
-                    📜 UGC-DEB Valid Worldwide
+                    UGC-DEB Valid Worldwide
                   </span>
                   <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-medium">
-                    💼 Campus Placement Cell Support
+                    Campus Placement Cell Support
                   </span>
                 </div>
               </div>
@@ -306,10 +275,7 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
                 className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 scroll-mt-36"
               >
                 <div className="border-b border-slate-100 pb-3">
-                  <span className="text-[11px] font-bold text-[#009FE3] uppercase tracking-wider bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100">
-                    Admission Criteria
-                  </span>
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                     Eligibility &amp; Requirements
                   </h2>
                 </div>
@@ -346,10 +312,7 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
                   className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6 scroll-mt-36"
                 >
                   <div className="border-b border-slate-100 pb-3">
-                    <span className="text-[11px] font-bold text-[#009FE3] uppercase tracking-wider bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100">
-                      Academic Syllabus
-                    </span>
-                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                       Semester-Wise Curriculum Breakdown
                     </h2>
                     <p className="text-xs text-slate-500 mt-0.5">
@@ -389,10 +352,7 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
                 className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 scroll-mt-36"
               >
                 <div className="border-b border-slate-100 pb-3">
-                  <span className="text-[11px] font-bold text-[#009FE3] uppercase tracking-wider bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100">
-                    Tuition &amp; Charges
-                  </span>
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                     Fee Structure &amp; Installments
                   </h2>
                 </div>
@@ -419,10 +379,7 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
                   className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 scroll-mt-36"
                 >
                   <div className="border-b border-slate-100 pb-3">
-                    <span className="text-[11px] font-bold text-[#009FE3] uppercase tracking-wider bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100">
-                      Benefits
-                    </span>
-                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                       Why Choose IGNOU for {program.code}?
                     </h2>
                   </div>
@@ -448,10 +405,7 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
                   className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 scroll-mt-36"
                 >
                   <div className="border-b border-slate-100 pb-3">
-                    <span className="text-[11px] font-bold text-[#009FE3] uppercase tracking-wider bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100">
-                      Help &amp; Answers
-                    </span>
-                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                       Frequently Asked Questions
                     </h2>
                   </div>
@@ -473,9 +427,8 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
                           >
                             <span>{faq.question}</span>
                             <ChevronDown
-                              className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${
-                                isOpen ? "rotate-180" : ""
-                              }`}
+                              className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""
+                                }`}
                             />
                           </button>
                           {isOpen && (
@@ -495,7 +448,7 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
             {/* Right Column Sticky Form (4 cols) — Fixed after touching the header */}
             <aside
               id="admission-form"
-              className="lg:col-span-4 lg:sticky lg:top-[128px] self-start space-y-4 w-full max-w-[370px] mx-auto lg:ml-auto"
+              className="lg:col-span-4 lg:sticky lg:top-[128px] self-start space-y-4 w-full max-w-md lg:max-w-[370px] mx-auto lg:ml-auto"
             >
               {/* 1. Dedicated Admission & Counseling Form */}
               <AdmissionForm

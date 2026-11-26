@@ -8,7 +8,10 @@ export async function GET() {
       getDatabaseStatus(),
     ]);
     return NextResponse.json({ success: true, stats, database });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to load stats" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to load stats" },
+      { status: 500 }
+    );
   }
 }

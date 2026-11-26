@@ -10,7 +10,6 @@ import {
   AlertCircle,
   FileText,
   Clock,
-  Sparkles,
   ChevronDown,
   ChevronUp,
   MapPin,
@@ -22,7 +21,6 @@ import {
   CheckSquare,
   AlertTriangle,
   Lightbulb,
-  ExternalLink,
 } from "lucide-react";
 import { HomeGuideData } from "@/lib/types";
 import { openEnquiryModal } from "./EnquiryModal";
@@ -84,8 +82,8 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
         "Pay the fee online through debit card, credit card or net banking.",
         "Submit the form and save the confirmation.",
       ],
-      linkText: "IGNOU",
-      linkUrl: "https://ignou.distanceeducationschool.com/",
+      linkText: "IGNOU Admission Portal",
+      linkUrl: "/ignou-admission",
     },
     documentsRequired: [
       "Class 10 and 12 marksheets",
@@ -139,10 +137,6 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
         
         {/* Section Header */}
         <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16">
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-sky-50 text-[#009FE3] border border-sky-200/80 mb-3 shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5" />
-            Complete Student Guide 2026-27
-          </span>
           <h2 className="text-2xl sm:text-4xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
             {data.guideTitle}
           </h2>
@@ -199,9 +193,7 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
             <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700">
               {data.whyChoose.items.map((item, idx) => (
                 <li key={idx} className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
-                    ✓
-                  </span>
+                  <span className="w-2 h-2 rounded-full bg-[#009FE3] shrink-0 mt-1.5" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -235,7 +227,7 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
               ))}
             </div>
             <p className="text-xs text-slate-500 italic bg-amber-50/70 border border-amber-200/60 rounded-xl p-3 text-amber-900">
-              ℹ️ {data.coursesOffered.note}
+              {data.coursesOffered.note}
             </p>
           </div>
 
@@ -262,7 +254,7 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
               ))}
             </div>
             <div className="p-3.5 rounded-xl bg-sky-50 border border-sky-100 text-xs text-sky-900 font-semibold flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#009FE3] shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-[#009FE3] shrink-0" />
               <span>{data.eligibility.note}</span>
             </div>
           </div>
@@ -274,10 +266,7 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
           
           <div className="relative z-10">
             <div className="max-w-3xl mb-8">
-              <span className="text-xs font-bold uppercase tracking-wider text-sky-300">
-                Admission Portal Process
-              </span>
-              <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white mt-1">
+              <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
                 How to Apply for IGNOU Admission
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 mt-2">
@@ -310,15 +299,12 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
             {/* Official Link Banner */}
             <div className="p-4 rounded-2xl bg-white/15 border border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
               <div className="text-xs sm:text-sm text-slate-200 text-center sm:text-left">
-                For admission help, official registration &amp; latest updates, visit the{" "}
+                For admission help, registration &amp; latest updates, visit the{" "}
                 <Link
-                  href={data.howToApply.linkUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/ignou-admission"
                   className="font-bold text-[#ffcc00] underline hover:text-amber-300 inline-flex items-center gap-1"
                 >
                   <span>IGNOU Admission Portal</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
                 </Link>{" "}
                 page.
               </div>
@@ -451,9 +437,6 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
         {/* 6. Frequently Asked Questions (Interactive Accordion) */}
         <div className="max-w-4xl mx-auto mb-14">
           <div className="text-center mb-8">
-            <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
-              Got Questions?
-            </span>
             <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
               Frequently Asked Questions
             </h3>

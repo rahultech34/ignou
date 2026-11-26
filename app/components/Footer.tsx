@@ -270,14 +270,14 @@ export default function Footer({ settings }: FooterProps) {
                 </a>
               </li>
               <li>
-                <a href="#privacy" className="hover:text-white transition-colors block truncate">
+                <Link href="/privacy-policy" className="hover:text-white transition-colors block truncate">
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#terms" className="hover:text-white transition-colors block truncate">
-                  Terms & Conditions
-                </a>
+                <Link href="/terms-conditions" className="hover:text-white transition-colors block truncate">
+                  Terms &amp; Conditions
+                </Link>
               </li>
             </ul>
 
@@ -336,11 +336,11 @@ export default function Footer({ settings }: FooterProps) {
             © {new Date().getFullYear()} EduKyu • Independent University Information & Admission Guidance Portal.
           </div>
           <div className="flex items-center gap-5">
-            <Link href="#privacy" className="hover:text-slate-300 transition-colors">
+            <Link href="/privacy-policy" className="hover:text-slate-300 transition-colors">
               Privacy Policy
             </Link>
-            <Link href="#terms" className="hover:text-slate-300 transition-colors">
-              Terms & Conditions
+            <Link href="/terms-conditions" className="hover:text-slate-300 transition-colors">
+              Terms &amp; Conditions
             </Link>
             <Link href="#disclaimer" className="hover:text-slate-300 transition-colors">
               Disclaimer

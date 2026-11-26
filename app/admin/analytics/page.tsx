@@ -9,7 +9,6 @@ import {
   Compass,
   FileText,
   Globe,
-  Zap,
   Activity,
   ArrowUpRight,
   Monitor,
@@ -18,14 +17,58 @@ import {
   CheckCircle2,
   Calendar,
   Layers,
-  Sparkles,
   RefreshCw,
 } from "lucide-react";
+
+interface AnalyticsTimelinePoint {
+  date: string;
+  inquiries: number;
+  visitors: number;
+  conversions: number;
+}
+
+interface AnalyticsFunnelStep {
+  stage: string;
+  count: number;
+  color: string;
+}
+
+interface AnalyticsProgramStat {
+  name: string;
+  count: number;
+  percentage: number;
+}
+
+interface AnalyticsTrafficSource {
+  name: string;
+  percentage: number;
+  count: number;
+}
+
+interface AnalyticsGeographicStat {
+  state: string;
+  count: number;
+}
+
+interface AnalyticsData {
+  overview?: {
+    totalVisitors: number;
+    totalInquiries: number;
+    conversionRate: string;
+    convertedStudents: number;
+    activeCounselors: number;
+  };
+  timeline: AnalyticsTimelinePoint[];
+  funnel: AnalyticsFunnelStep[];
+  topPrograms: AnalyticsProgramStat[];
+  trafficSources: AnalyticsTrafficSource[];
+  geographic: AnalyticsGeographicStat[];
+}
 
 export default function AdminAnalyticsPage() {
   const [period, setPeriod] = useState("7d");
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<AnalyticsData | null>(null);
 
   const fetchAnalytics = async (selectedPeriod: string) => {
     try {
@@ -43,7 +86,21 @@ export default function AdminAnalyticsPage() {
   };
 
   useEffect(() => {
-    fetchAnalytics(period);
+    let active = true;
+    fetch(`/api/admin/analytics?period=${period}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (active && json?.analytics) {
+          setData(json.analytics as AnalyticsData);
+        }
+      })
+      .catch((e) => console.error("Error loading analytics:", e))
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, [period]);
 
   const overview = data?.overview || {
@@ -91,11 +148,10 @@ export default function AdminAnalyticsPage() {
               <button
                 key={tab.id}
                 onClick={() => setPeriod(tab.id)}
-                className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  period === tab.id
+                className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${period === tab.id
                     ? "bg-white text-slate-900 shadow-xs"
                     : "text-slate-600 hover:text-slate-900"
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>
@@ -141,7 +197,7 @@ export default function AdminAnalyticsPage() {
             <div className="flex items-center justify-between text-slate-500">
               <span className="text-xs font-bold uppercase tracking-wider">Conversion Rate</span>
               <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                <Zap className="w-4 h-4" />
+                <TrendingUp className="w-4 h-4" />
               </div>
             </div>
             <div className="text-2xl sm:text-3xl font-black text-slate-900">
@@ -195,11 +251,11 @@ export default function AdminAnalyticsPage() {
                 <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#009FE3]" />
                 <span className="text-xs">Loading trends...</span>
               </div>
-            ) : data?.timeline?.length > 0 ? (
+            ) : data && data.timeline.length > 0 ? (
               <div className="space-y-3 pt-2">
                 <div className="h-44 flex items-end justify-between gap-2 border-b border-slate-100 pb-2">
-                  {data.timeline.slice(-14).map((t: any, i: number) => {
-                    const maxInq = Math.max(...data.timeline.map((x: any) => x.inquiries), 4);
+                  {data.timeline.slice(-14).map((t, i) => {
+                    const maxInq = Math.max(...data.timeline.map((x) => x.inquiries), 4);
                     const heightPercent = Math.max((t.inquiries / maxInq) * 85, 12);
 
                     return (
@@ -244,7 +300,7 @@ export default function AdminAnalyticsPage() {
             </div>
 
             <div className="space-y-3 pt-2">
-              {data?.funnel?.map((step: any, idx: number) => (
+              {data?.funnel?.map((step, idx) => (
                 <div key={idx} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-semibold text-slate-700">{step.stage}</span>
@@ -255,7 +311,7 @@ export default function AdminAnalyticsPage() {
                       className={`h-full ${step.color}`}
                       style={{
                         width: `${Math.max(
-                          (step.count / (data.overview.totalInquiries || 1)) * 100,
+                          (step.count / (data.overview?.totalInquiries || 1)) * 100,
                           8
                         )}%`,
                       }}
@@ -268,7 +324,6 @@ export default function AdminAnalyticsPage() {
             <div className="pt-3 border-t border-slate-100">
               <div className="p-3 bg-sky-50 rounded-xl text-xs text-sky-900 space-y-1">
                 <div className="font-bold flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-[#009FE3]" />
                   <span>Counselor Insight</span>
                 </div>
                 <p className="text-[11px] text-sky-800 leading-relaxed">
@@ -289,8 +344,8 @@ export default function AdminAnalyticsPage() {
             </h3>
 
             <div className="space-y-3">
-              {data?.topPrograms?.length > 0 ? (
-                data.topPrograms.map((prog: any, idx: number) => (
+              {data && data.topPrograms.length > 0 ? (
+                data.topPrograms.map((prog, idx) => (
                   <div key={idx} className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-slate-800 truncate max-w-[200px]">
@@ -320,7 +375,7 @@ export default function AdminAnalyticsPage() {
             </h3>
 
             <div className="space-y-3">
-              {data?.trafficSources?.map((src: any, idx: number) => (
+              {data?.trafficSources?.map((src, idx) => (
                 <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 text-xs">
                   <div className="font-semibold text-slate-800">{src.name}</div>
                   <div className="flex items-center gap-2">
@@ -362,8 +417,8 @@ export default function AdminAnalyticsPage() {
             <div className="pt-2 space-y-2">
               <div className="text-xs font-bold text-slate-700">Top Inquiring Regions</div>
               <div className="flex flex-wrap gap-1.5">
-                {data?.geographic?.length > 0 ? (
-                  data.geographic.map((g: any, idx: number) => (
+                {data && data.geographic.length > 0 ? (
+                  data.geographic.map((g, idx) => (
                     <span
                       key={idx}
                       className="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-800"

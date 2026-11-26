@@ -8,6 +8,7 @@ interface AdminLayoutWrapperProps {
   children: React.ReactNode;
   title: string;
   subtitle?: string;
+  description?: string;
   adminEmail?: string;
   adminName?: string;
 }
@@ -16,6 +17,7 @@ export function AdminLayoutWrapper({
   children,
   title,
   subtitle,
+  description,
   adminEmail,
   adminName,
 }: AdminLayoutWrapperProps) {
@@ -35,7 +37,7 @@ export function AdminLayoutWrapper({
         <AdminHeader
           onToggleMobile={() => setMobileOpen(!mobileOpen)}
           title={title}
-          subtitle={subtitle}
+          subtitle={subtitle || description}
           adminName={adminName}
         />
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">

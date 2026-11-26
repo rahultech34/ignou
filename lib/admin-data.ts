@@ -1,6 +1,18 @@
 import fs from "fs";
 import path from "path";
+import type {
+  Query,
+  QueryDocumentSnapshot,
+  DocumentReference,
+  QuerySnapshot,
+} from "firebase-admin/firestore";
 import { getDb, isFirestoreAvailable, getFirebaseProjectId } from "./firebase-admin";
+import {
+  sanitizeGuideLinkUrl,
+  sanitizePublicHtml,
+  sanitizeResourceLinkUrl,
+  stripDecorativeIcons,
+} from "./sanitize";
 import {
   Program,
   Blog,
@@ -337,7 +349,7 @@ const INITIAL_DATA: DataStore = {
       badge: "Direct Download",
       description: "Download Term-End Examination (TEE) Hall Ticket by entering your 9-digit or 10-digit enrollment number.",
       linkText: "Download Hall Ticket Portal",
-      linkUrl: "https://ignou.ac.in",
+      linkUrl: "/ignou-hall-ticket",
       instructions: [
         "Enter your 9 or 10 digit Enrollment Number",
         "Select your Program Code (e.g., BCA, MBA, BCOM)",
@@ -357,7 +369,7 @@ const INITIAL_DATA: DataStore = {
       badge: "30% Weightage",
       description: "Download official session assignment booklets and check the status of marks uploaded by regional study centers.",
       linkText: "Check Assignment Status",
-      linkUrl: "https://ignou.ac.in",
+      linkUrl: "/student-zone/ignou-assignment",
       instructions: [
         "Download latest assignment question papers for your respective session",
         "Prepare handwritten responses on A4 sheets",
@@ -377,7 +389,7 @@ const INITIAL_DATA: DataStore = {
       badge: "Real-time Sync",
       description: "View consolidated statement of marks for all completed assignment, theory, lab, and project components.",
       linkText: "View Grade Card",
-      linkUrl: "https://ignou.ac.in",
+      linkUrl: "/ignou-gradecard",
       iconName: "Award",
       status: "published",
       createdAt: "2026-01-03T10:00:00.000Z",
@@ -391,7 +403,7 @@ const INITIAL_DATA: DataStore = {
       badge: "Next Semester",
       description: "Official portal to re-register and pay module fees for the next semester/year without waiting for previous results.",
       linkText: "Proceed to Re-Registration",
-      linkUrl: "https://ignou.samarth.edu.in",
+      linkUrl: "/ignou-re-registration",
       iconName: "Clock",
       status: "published",
       createdAt: "2026-01-04T10:00:00.000Z",
@@ -405,7 +417,7 @@ const INITIAL_DATA: DataStore = {
       badge: "100% Free",
       description: "Access the National Digital Repository containing self-learning materials (SLMs) for all IGNOU courses in PDF format.",
       linkText: "Access eGyanKosh",
-      linkUrl: "https://egyankosh.ac.in",
+      linkUrl: "/ignou-study-material",
       iconName: "BookOpen",
       status: "published",
       createdAt: "2026-01-05T10:00:00.000Z",
@@ -415,7 +427,6 @@ const INITIAL_DATA: DataStore = {
 
   homePage: {
     announcementTicker: "",
-    heroBadge: "NAAC A++ Accredited • UGC-DEB Approved Central University",
     heroHeadline: "Empower Your Career with IGNOU Distance & Online Degrees 2026-27",
     heroSubtitle: "Admissions open for July 2026-27 academic session. Choose from 150+ UGC-DEB recognized degree programs with flexible self-paced learning and pan-India exam centers.",
     learnersCount: "4.0M+",
@@ -551,112 +562,176 @@ export async function getDatabaseStatus(): Promise<{
   };
 }
 
-// Auto-seed helper to ensure Firestore is never empty
+// Auto-seed helper to ensure Firestore is never empty (deduplicated + cached reads + backoff)
 let isSeededChecked = false;
+let seedPromise: Promise<void> | null = null;
+let firestoreBackoffUntil = 0;
+const FIRESTORE_BACKOFF_MS = 60_000;
+const CACHE_TTL_MS = 30_000;
+const readCache = new Map<string, { data: unknown; expiresAt: number }>();
+const inFlightCache = new Map<string, Promise<unknown>>();
+
+function getActiveDb() {
+  if (Date.now() < firestoreBackoffUntil) {
+    return null;
+  }
+  return getDb();
+}
+
+function logFirestoreFallback(scope: string, err: unknown): void {
+  const msg = err instanceof Error ? err.message : String(err);
+  firestoreBackoffUntil = Date.now() + FIRESTORE_BACKOFF_MS;
+  console.warn(`[admin-data:firestore] ${scope} fallback to local store: ${msg}`);
+}
+
+async function getCached<T>(key: string, fetcher: () => Promise<T>): Promise<T> {
+  const hit = readCache.get(key);
+  if (hit && hit.expiresAt > Date.now()) {
+    return hit.data as T;
+  }
+  const existing = inFlightCache.get(key);
+  if (existing) {
+    return existing as Promise<T>;
+  }
+  const pending = fetcher()
+    .then((data) => {
+      readCache.set(key, { data, expiresAt: Date.now() + CACHE_TTL_MS });
+      return data;
+    })
+    .finally(() => {
+      inFlightCache.delete(key);
+    });
+  inFlightCache.set(key, pending);
+  return pending;
+}
+
+function invalidateCache(prefix?: string): void {
+  if (!prefix) {
+    readCache.clear();
+    inFlightCache.clear();
+    return;
+  }
+  for (const k of readCache.keys()) {
+    if (k.startsWith(prefix)) readCache.delete(k);
+  }
+  for (const k of inFlightCache.keys()) {
+    if (k.startsWith(prefix)) inFlightCache.delete(k);
+  }
+}
+
 async function ensureFirestoreSeeded(): Promise<void> {
   if (isSeededChecked) return;
-  const db = getDb();
+  if (seedPromise) return seedPromise;
+  const db = getActiveDb();
   if (!db) return;
-  try {
-    const snap = await db.collection("programs").limit(1).get();
-    if (snap.empty) {
-      console.log("[admin-data:firestore] Seeding initial data to Firestore...");
-      const store = getStore();
-      const pBatch = db.batch();
-      store.programs.forEach((p) => {
-        pBatch.set(db.collection("programs").doc(p.id), p);
-      });
-      await pBatch.commit();
-
-      const bBatch = db.batch();
-      store.blogs.forEach((b) => {
-        bBatch.set(db.collection("blogs").doc(b.id), b);
-      });
-      await bBatch.commit();
-
-      const rBatch = db.batch();
-      store.studentResources.forEach((r) => {
-        rBatch.set(db.collection("studentResources").doc(r.id), r);
-      });
-      await rBatch.commit();
-
-      await db.collection("homePage").doc("default").set(store.homePage);
-      await db.collection("settings").doc("default").set(store.settings);
-
-      const uBatch = db.batch();
-      (store.adminUsers || DEFAULT_ADMIN_USERS).forEach((u) => {
-        uBatch.set(db.collection("adminUsers").doc(u.id), u);
-      });
-      await uBatch.commit();
-      console.log("[admin-data:firestore] Seeding completed!");
-    }
-
-    const mbaSnap = await db.collection("mba_specializations").limit(1).get();
-    if (mbaSnap.empty) {
-      const store = getStore();
-      if (store.mbaSpecializations && store.mbaSpecializations.length > 0) {
-        const mBatch = db.batch();
-        store.mbaSpecializations.forEach((m) => {
-          mBatch.set(db.collection("mba_specializations").doc(m.id), m);
+  seedPromise = (async () => {
+    try {
+      const snap = await withTimeout(db.collection("programs").limit(1).get(), 2500);
+      if (snap.empty) {
+        console.log("[admin-data:firestore] Seeding initial data to Firestore...");
+        const store = getStore();
+        const pBatch = db.batch();
+        store.programs.forEach((p) => {
+          pBatch.set(db.collection("programs").doc(p.id), p);
         });
-        await mBatch.commit();
+        await pBatch.commit();
+
+        const bBatch = db.batch();
+        store.blogs.forEach((b) => {
+          bBatch.set(db.collection("blogs").doc(b.id), b);
+        });
+        await bBatch.commit();
+
+        const rBatch = db.batch();
+        store.studentResources.forEach((r) => {
+          rBatch.set(db.collection("studentResources").doc(r.id), r);
+        });
+        await rBatch.commit();
+
+        await db.collection("homePage").doc("default").set(store.homePage);
+        await db.collection("settings").doc("default").set(store.settings);
+
+        const uBatch = db.batch();
+        (store.adminUsers || DEFAULT_ADMIN_USERS).forEach((u) => {
+          uBatch.set(db.collection("adminUsers").doc(u.id), u);
+        });
+        await uBatch.commit();
+        console.log("[admin-data:firestore] Seeding completed!");
       }
+
+      const mbaSnap = await withTimeout(
+        db.collection("mba_specializations").limit(1).get(),
+        2500
+      );
+      if (mbaSnap.empty) {
+        const store = getStore();
+        if (store.mbaSpecializations && store.mbaSpecializations.length > 0) {
+          const mBatch = db.batch();
+          store.mbaSpecializations.forEach((m) => {
+            mBatch.set(db.collection("mba_specializations").doc(m.id), m);
+          });
+          await mBatch.commit();
+        }
+      }
+      isSeededChecked = true;
+    } catch (err) {
+      logFirestoreFallback("ensureFirestoreSeeded", err);
+    } finally {
+      seedPromise = null;
     }
-    isSeededChecked = true;
-  } catch (err) {
-    console.error("[admin-data:firestore] ensureFirestoreSeeded error:", err);
-  }
+  })();
+  return seedPromise;
 }
 
 // PROGRAM CRUD
 export async function getPrograms(type?: "ug" | "pg" | "mba"): Promise<Program[]> {
-  await ensureFirestoreSeeded();
-  const db = getDb();
-  if (db) {
-    try {
-      let query: any = db.collection("programs");
-      if (type) {
-        query = query.where("type", "==", type);
+  const all = await getCached("programs:all", async () => {
+    await ensureFirestoreSeeded();
+    const db = getActiveDb();
+    if (db) {
+      try {
+        const snap = await withTimeout(db.collection("programs").get(), 2500);
+        if (!snap.empty) {
+          const list = snap.docs.map((d: QueryDocumentSnapshot) => d.data() as Program);
+          list.sort((a, b) => {
+            if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
+              return a.displayOrder - b.displayOrder;
+            }
+            return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
+          });
+          return list;
+        }
+      } catch (err) {
+        logFirestoreFallback("getPrograms", err);
       }
-      const snap = await query.get();
-      if (!snap.empty) {
-        const list = snap.docs.map((d: any) => d.data() as Program);
-        list.sort((a: any, b: any) => {
-          if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
-            return a.displayOrder - b.displayOrder;
-          }
-          return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
-        });
-        return list;
-      }
-    } catch (err) {
-      console.error("[admin-data:firestore] getPrograms error:", err);
     }
-  }
+    return getStore().programs;
+  });
 
-  // Fallback to local store
-  const store = getStore();
   if (type) {
-    return store.programs.filter((p) => p.type === type);
+    return all.filter((p) => p.type === type);
   }
-  return store.programs;
+  return all;
 }
 
 export async function getProgramById(id: string): Promise<Program | null> {
   await ensureFirestoreSeeded();
-  const db = getDb();
+  const db = getActiveDb();
   if (db) {
     try {
-      const docSnap = await db.collection("programs").doc(id).get();
+      const docSnap = await withTimeout(db.collection("programs").doc(id).get(), 2500);
       if (docSnap.exists) {
         return docSnap.data() as Program;
       }
-      const slugSnap = await db.collection("programs").where("slug", "==", id).limit(1).get();
+      const slugSnap = await withTimeout(
+        db.collection("programs").where("slug", "==", id).limit(1).get(),
+        2500
+      );
       if (!slugSnap.empty) {
         return slugSnap.docs[0].data() as Program;
       }
     } catch (err) {
-      console.error("[admin-data:firestore] getProgramById error:", err);
+      logFirestoreFallback("getProgramById", err);
     }
   }
 
@@ -665,8 +740,6 @@ export async function getProgramById(id: string): Promise<Program | null> {
 }
 
 export async function getProgramBySlug(slug: string): Promise<Program | null> {
-  const p = await getProgramById(slug);
-  if (p) return p;
   const all = await getPrograms();
   const cleanSlug = slug.toLowerCase().trim();
 
@@ -717,6 +790,7 @@ export async function saveProgram(program: Program): Promise<Program> {
     store.programs.unshift(toSave);
   }
   saveStore(store);
+  invalidateCache("programs:");
 
   return toSave;
 }
@@ -740,60 +814,92 @@ export async function deleteProgram(id: string): Promise<boolean> {
     saveStore(store);
     deleted = true;
   }
+  invalidateCache("programs:");
   return deleted;
 }
 
 // BLOG CRUD
-export async function getBlogs(): Promise<Blog[]> {
-  await ensureFirestoreSeeded();
-  const db = getDb();
-  if (db) {
-    try {
-      const snap = await db.collection("blogs").get();
-      if (!snap.empty) {
-        const list = snap.docs.map((d: any) => d.data() as Blog);
-        list.sort((a: any, b: any) => {
-          if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
-            return a.displayOrder - b.displayOrder;
-          }
-          return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
-        });
-        return list;
-      }
-    } catch (err) {
-      console.error("[admin-data:firestore] getBlogs error:", err);
-    }
-  }
+function sanitizeBlog(b: Blog): Blog {
+  return {
+    ...b,
+    title: stripDecorativeIcons(b.title),
+    excerpt: b.excerpt ? stripDecorativeIcons(b.excerpt) : b.excerpt,
+    content: b.content ? sanitizePublicHtml(b.content) : b.content,
+  };
+}
 
-  const store = getStore();
-  return store.blogs;
+function sanitizeMba(m: MbaSpecialization): MbaSpecialization {
+  return {
+    ...m,
+    title: stripDecorativeIcons(m.title),
+    excerpt: m.excerpt ? stripDecorativeIcons(m.excerpt) : m.excerpt,
+    content: m.content ? sanitizePublicHtml(m.content) : m.content,
+  };
+}
+
+function sanitizeResource(r: StudentResource): StudentResource {
+  return {
+    ...r,
+    title: stripDecorativeIcons(r.title),
+    description: r.description ? stripDecorativeIcons(r.description) : r.description,
+    linkUrl: sanitizeResourceLinkUrl(r.linkUrl, r.slug),
+  };
+}
+
+export async function getBlogs(): Promise<Blog[]> {
+  return getCached("blogs:all", async () => {
+    await ensureFirestoreSeeded();
+    const db = getActiveDb();
+    if (db) {
+      try {
+        const snap = await withTimeout(db.collection("blogs").get(), 2500);
+        if (!snap.empty) {
+          const list = snap.docs.map((d: QueryDocumentSnapshot) => sanitizeBlog(d.data() as Blog));
+          list.sort((a, b) => {
+            if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
+              return a.displayOrder - b.displayOrder;
+            }
+            return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
+          });
+          return list;
+        }
+      } catch (err) {
+        logFirestoreFallback("getBlogs", err);
+      }
+    }
+
+    const store = getStore();
+    return store.blogs.map(sanitizeBlog);
+  });
 }
 
 export async function getBlogById(id: string): Promise<Blog | null> {
   await ensureFirestoreSeeded();
-  const db = getDb();
+  const db = getActiveDb();
   if (db) {
     try {
-      const docSnap = await db.collection("blogs").doc(id).get();
+      const docSnap = await withTimeout(db.collection("blogs").doc(id).get(), 2500);
       if (docSnap.exists) {
-        return docSnap.data() as Blog;
+        return sanitizeBlog(docSnap.data() as Blog);
       }
-      const slugSnap = await db.collection("blogs").where("slug", "==", id).limit(1).get();
+      const slugSnap = await withTimeout(
+        db.collection("blogs").where("slug", "==", id).limit(1).get(),
+        2500
+      );
       if (!slugSnap.empty) {
-        return slugSnap.docs[0].data() as Blog;
+        return sanitizeBlog(slugSnap.docs[0].data() as Blog);
       }
     } catch (err) {
-      console.error("[admin-data:firestore] getBlogById error:", err);
+      logFirestoreFallback("getBlogById", err);
     }
   }
 
   const store = getStore();
-  return store.blogs.find((b) => b.id === id || b.slug === id) || null;
+  const found = store.blogs.find((b) => b.id === id || b.slug === id);
+  return found ? sanitizeBlog(found) : null;
 }
 
 export async function getBlogBySlug(slug: string): Promise<Blog | null> {
-  const b = await getBlogById(slug);
-  if (b) return b;
   const all = await getBlogs();
   const cleanSlug = slug.toLowerCase().trim();
 
@@ -842,6 +948,7 @@ export async function saveBlog(blog: Blog): Promise<Blog> {
     store.blogs.unshift(toSave);
   }
   saveStore(store);
+  invalidateCache("blogs:");
 
   return toSave;
 }
@@ -865,40 +972,45 @@ export async function deleteBlog(id: string): Promise<boolean> {
     saveStore(store);
     deleted = true;
   }
+  invalidateCache("blogs:");
   return deleted;
 }
 
 // MBA SPECIALIZATIONS CRUD
 export async function getMbaSpecializations(): Promise<MbaSpecialization[]> {
-  await ensureFirestoreSeeded();
-  const db = getDb();
-  if (db) {
-    try {
-      const snap = await db.collection("mba_specializations").get();
-      if (!snap.empty) {
-        const list = snap.docs.map((d: any) => d.data() as MbaSpecialization);
-        list.sort((a: any, b: any) => {
-          if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
-            return a.displayOrder - b.displayOrder;
-          }
-          return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
-        });
-        return list;
+  return getCached("mba:all", async () => {
+    await ensureFirestoreSeeded();
+    const db = getActiveDb();
+    if (db) {
+      try {
+        const snap = await withTimeout(db.collection("mba_specializations").get(), 2500);
+        if (!snap.empty) {
+          const list = snap.docs.map((d: QueryDocumentSnapshot) =>
+            sanitizeMba(d.data() as MbaSpecialization)
+          );
+          list.sort((a, b) => {
+            if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
+              return a.displayOrder - b.displayOrder;
+            }
+            return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
+          });
+          return list;
+        }
+      } catch (err) {
+        logFirestoreFallback("getMbaSpecializations", err);
       }
-    } catch (err) {
-      console.error("[admin-data:firestore] getMbaSpecializations error:", err);
     }
-  }
 
-  const store = getStore();
-  const localList = [...(store.mbaSpecializations || [])];
-  localList.sort((a, b) => {
-    if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
-      return a.displayOrder - b.displayOrder;
-    }
-    return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
+    const store = getStore();
+    const localList = [...(store.mbaSpecializations || [])].map(sanitizeMba);
+    localList.sort((a, b) => {
+      if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
+        return a.displayOrder - b.displayOrder;
+      }
+      return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
+    });
+    return localList;
   });
-  return localList;
 }
 
 export async function getMbaSpecializationBySlug(slug: string): Promise<MbaSpecialization | null> {
@@ -917,17 +1029,19 @@ export async function getMbaSpecializationBySlug(slug: string): Promise<MbaSpeci
 // STUDENT RESOURCE CRUD
 export async function getStudentResources(category?: string): Promise<StudentResource[]> {
   await ensureFirestoreSeeded();
-  const db = getDb();
+  const db = getActiveDb();
   if (db) {
     try {
-      let query: any = db.collection("studentResources");
+      let query: Query = db.collection("studentResources");
       if (category) {
         query = query.where("category", "==", category);
       }
-      const snap = await query.get();
+      const snap = await withTimeout(query.get(), 2500);
       if (!snap.empty) {
-        const list = snap.docs.map((d: any) => d.data() as StudentResource);
-        list.sort((a: any, b: any) => {
+        const list = snap.docs.map((d: QueryDocumentSnapshot) =>
+          sanitizeResource(d.data() as StudentResource)
+        );
+        list.sort((a, b) => {
           if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
             return a.displayOrder - b.displayOrder;
           }
@@ -936,37 +1050,41 @@ export async function getStudentResources(category?: string): Promise<StudentRes
         return list;
       }
     } catch (err) {
-      console.error("[admin-data:firestore] getStudentResources error:", err);
+      logFirestoreFallback("getStudentResources", err);
     }
   }
 
   const store = getStore();
-  if (category) {
-    return store.studentResources.filter((r) => r.category === category);
-  }
-  return store.studentResources;
+  const list = category
+    ? store.studentResources.filter((r) => r.category === category)
+    : store.studentResources;
+  return list.map(sanitizeResource);
 }
 
 export async function getStudentResourceById(id: string): Promise<StudentResource | null> {
   await ensureFirestoreSeeded();
-  const db = getDb();
+  const db = getActiveDb();
   if (db) {
     try {
-      const docSnap = await db.collection("studentResources").doc(id).get();
+      const docSnap = await withTimeout(db.collection("studentResources").doc(id).get(), 2500);
       if (docSnap.exists) {
-        return docSnap.data() as StudentResource;
+        return sanitizeResource(docSnap.data() as StudentResource);
       }
-      const slugSnap = await db.collection("studentResources").where("slug", "==", id).limit(1).get();
+      const slugSnap = await withTimeout(
+        db.collection("studentResources").where("slug", "==", id).limit(1).get(),
+        2500
+      );
       if (!slugSnap.empty) {
-        return slugSnap.docs[0].data() as StudentResource;
+        return sanitizeResource(slugSnap.docs[0].data() as StudentResource);
       }
     } catch (err) {
-      console.error("[admin-data:firestore] getStudentResourceById error:", err);
+      logFirestoreFallback("getStudentResourceById", err);
     }
   }
 
   const store = getStore();
-  return store.studentResources.find((r) => r.id === id || r.slug === id) || null;
+  const found = store.studentResources.find((r) => r.id === id || r.slug === id);
+  return found ? sanitizeResource(found) : null;
 }
 
 export async function saveStudentResource(resource: StudentResource): Promise<StudentResource> {
@@ -996,6 +1114,7 @@ export async function saveStudentResource(resource: StudentResource): Promise<St
     store.studentResources.unshift(toSave);
   }
   saveStore(store);
+  invalidateCache("resources:");
 
   return toSave;
 }
@@ -1019,42 +1138,61 @@ export async function deleteStudentResource(id: string): Promise<boolean> {
     saveStore(store);
     deleted = true;
   }
+  invalidateCache("resources:");
   return deleted;
 }
 
 // HOME PAGE DATA
 export async function getHomePageData(): Promise<HomePageData> {
-  await ensureFirestoreSeeded();
-  const store = getStore();
-  const db = getDb();
-  if (db) {
-    try {
-      const snap = await db.collection("homePage").doc("default").get();
-      if (snap.exists) {
-        const firestoreData = snap.data() as HomePageData;
-        return {
-          ...store.homePage,
-          ...firestoreData,
-          metaTitle: firestoreData.metaTitle || store.homePage.metaTitle,
-          metaDescription: firestoreData.metaDescription || store.homePage.metaDescription,
-          guide: firestoreData.guide || store.homePage.guide,
-          aboutTitle: firestoreData.aboutTitle || store.homePage.aboutTitle,
-          aboutParagraphs:
-            firestoreData.aboutParagraphs && firestoreData.aboutParagraphs.length > 0
-              ? firestoreData.aboutParagraphs
-              : store.homePage.aboutParagraphs,
-          latestNews:
-            firestoreData.latestNews && firestoreData.latestNews.length > 0
-              ? firestoreData.latestNews
-              : store.homePage.latestNews,
-        };
+  return getCached("homePage:default", async () => {
+    await ensureFirestoreSeeded();
+    const store = getStore();
+    const db = getActiveDb();
+    let result: HomePageData = store.homePage;
+    if (db) {
+      try {
+        const snap = await withTimeout(
+          db.collection("homePage").doc("default").get(),
+          2500
+        );
+        if (snap.exists) {
+          const firestoreData = snap.data() as HomePageData;
+          result = {
+            ...store.homePage,
+            ...firestoreData,
+            metaTitle: firestoreData.metaTitle || store.homePage.metaTitle,
+            metaDescription: firestoreData.metaDescription || store.homePage.metaDescription,
+            guide: firestoreData.guide || store.homePage.guide,
+            aboutTitle: firestoreData.aboutTitle || store.homePage.aboutTitle,
+            aboutParagraphs:
+              firestoreData.aboutParagraphs && firestoreData.aboutParagraphs.length > 0
+                ? firestoreData.aboutParagraphs
+                : store.homePage.aboutParagraphs,
+            latestNews:
+              firestoreData.latestNews && firestoreData.latestNews.length > 0
+                ? firestoreData.latestNews
+                : store.homePage.latestNews,
+          };
+        }
+      } catch (err) {
+        logFirestoreFallback("getHomePageData", err);
       }
-    } catch (err) {
-      console.error("[admin-data:firestore] getHomePageData error:", err);
     }
-  }
 
-  return store.homePage;
+    if (result.guide?.howToApply) {
+      result = {
+        ...result,
+        guide: {
+          ...result.guide,
+          howToApply: {
+            ...result.guide.howToApply,
+            linkUrl: sanitizeGuideLinkUrl(result.guide.howToApply.linkUrl),
+          },
+        },
+      };
+    }
+    return result;
+  });
 }
 
 export async function saveHomePageData(data: Partial<HomePageData>): Promise<HomePageData> {
@@ -1076,26 +1214,32 @@ export async function saveHomePageData(data: Partial<HomePageData>): Promise<Hom
 
   store.homePage = updated;
   saveStore(store);
+  invalidateCache("homePage:");
   return updated;
 }
 
 // SETTINGS
 export async function getSiteSettings(): Promise<SiteSettings> {
-  await ensureFirestoreSeeded();
-  const db = getDb();
-  if (db) {
-    try {
-      const snap = await db.collection("settings").doc("default").get();
-      if (snap.exists) {
-        return snap.data() as SiteSettings;
+  return getCached("settings:default", async () => {
+    await ensureFirestoreSeeded();
+    const db = getActiveDb();
+    if (db) {
+      try {
+        const snap = await withTimeout(
+          db.collection("settings").doc("default").get(),
+          2500
+        );
+        if (snap.exists) {
+          return snap.data() as SiteSettings;
+        }
+      } catch (err) {
+        logFirestoreFallback("getSiteSettings", err);
       }
-    } catch (err) {
-      console.error("[admin-data:firestore] getSiteSettings error:", err);
     }
-  }
 
-  const store = getStore();
-  return store.settings;
+    const store = getStore();
+    return store.settings;
+  });
 }
 
 export async function saveSiteSettings(data: Partial<SiteSettings>): Promise<SiteSettings> {
@@ -1117,6 +1261,7 @@ export async function saveSiteSettings(data: Partial<SiteSettings>): Promise<Sit
 
   store.settings = updated;
   saveStore(store);
+  invalidateCache("settings:");
   return updated;
 }
 
@@ -1203,17 +1348,17 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 
 // MEDIA CRUD
 export async function getMediaList(): Promise<MediaItem[]> {
-  const db = getDb();
+  const db = getActiveDb();
   if (db) {
     try {
-      const snap = await db.collection("media").get();
+      const snap = await withTimeout(db.collection("media").get(), 2500);
       if (!snap.empty) {
-        const list = snap.docs.map((d: any) => d.data() as MediaItem);
-        list.sort((a: any, b: any) => new Date(b.uploadedAt || 0).getTime() - new Date(a.uploadedAt || 0).getTime());
+        const list = snap.docs.map((d: QueryDocumentSnapshot) => d.data() as MediaItem);
+        list.sort((a, b) => new Date(b.uploadedAt || 0).getTime() - new Date(a.uploadedAt || 0).getTime());
         return list;
       }
     } catch (err) {
-      console.error("[admin-data:firestore] getMediaList error:", err);
+      logFirestoreFallback("getMediaList", err);
     }
   }
 
@@ -1263,15 +1408,15 @@ export async function deleteMediaItem(id: string): Promise<boolean> {
 
 // ADMIN USER & PASSWORD MANAGEMENT
 export async function getAdminUsers(): Promise<StoredAdminUser[]> {
-  const db = getDb();
+  const db = getActiveDb();
   if (db) {
     try {
-      const snap = await db.collection("adminUsers").get();
+      const snap = await withTimeout(db.collection("adminUsers").get(), 2500);
       if (!snap.empty) {
-        return snap.docs.map((d: any) => d.data() as StoredAdminUser);
+        return snap.docs.map((d: QueryDocumentSnapshot) => d.data() as StoredAdminUser);
       }
     } catch (err) {
-      console.error("[admin-data:firestore] getAdminUsers error:", err);
+      logFirestoreFallback("getAdminUsers", err);
     }
   }
 
@@ -1395,13 +1540,16 @@ export async function deleteAdminUser(id: string): Promise<boolean> {
   return deleted;
 }
 
-function withTimeout<T>(promise: Promise<T>, ms: number = 2000): Promise<T> {
+function withTimeout<T>(promise: Promise<T>, ms: number = 2500): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
   return Promise.race([
     promise,
-    new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error(`Operation timed out after ${ms}ms`)), ms)
-    ),
-  ]);
+    new Promise<T>((_, reject) => {
+      timer = setTimeout(() => reject(new Error(`Operation timed out after ${ms}ms`)), ms);
+    }),
+  ]).finally(() => {
+    if (timer) clearTimeout(timer);
+  });
 }
 
 export async function insertLead(leadData: Partial<Lead>): Promise<{ id: string }> {
@@ -1437,7 +1585,10 @@ export async function insertLead(leadData: Partial<Lead>): Promise<{ id: string 
   let createdId = leadId;
   if (db) {
     try {
-      const docRef: any = await withTimeout(db.collection("crm_leads").add(payload), 2000);
+      const docRef: DocumentReference = await withTimeout(
+        db.collection("crm_leads").add(payload),
+        2000
+      );
       createdId = docRef.id;
       payload.id = createdId;
     } catch (err) {
@@ -1474,7 +1625,7 @@ export async function getLeads(options?: {
   const db = getDb();
   if (db) {
     try {
-      const snap: any = await withTimeout(
+      const snap: QuerySnapshot = await withTimeout(
         db
           .collection("crm_leads")
           .orderBy("created_at_iso", "desc")
@@ -1483,7 +1634,7 @@ export async function getLeads(options?: {
         2500
       );
 
-      snap.forEach((doc: any) => {
+      snap.forEach((doc: QueryDocumentSnapshot) => {
         leads.push({ id: doc.id, ...doc.data() } as Lead);
       });
     } catch (err) {

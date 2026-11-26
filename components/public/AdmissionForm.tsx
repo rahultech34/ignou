@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   User,
@@ -10,8 +10,125 @@ import {
   CheckCircle2,
   ArrowRight,
   ShieldCheck,
-  Lock,
+  ChevronDown,
+  Check,
 } from "lucide-react";
+import { INDIAN_STATES, HOME_PAGE_COURSES } from "@/lib/form-constants";
+
+interface DropdownOption {
+  value: string;
+  label: string;
+}
+
+interface DownwardSelectProps {
+  value: string;
+  placeholder: string;
+  options: DropdownOption[];
+  icon: React.ReactNode;
+  onChange: (value: string) => void;
+  ariaLabel: string;
+}
+
+function DownwardSelect({
+  value,
+  placeholder,
+  options,
+  icon,
+  onChange,
+  ariaLabel,
+}: DownwardSelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleMouseDown = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsOpen(false);
+        e.stopPropagation();
+      }
+    };
+
+    document.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("keydown", handleKeyDown, true);
+    };
+  }, [isOpen]);
+
+  const selectedOption = options.find((opt) => opt.value === value);
+
+  return (
+    <div ref={containerRef} className="relative">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+        {icon}
+      </div>
+
+      <button
+        type="button"
+        aria-label={ariaLabel}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        onClick={() => setIsOpen((prev) => !prev)}
+        className={`w-full pl-9 pr-8 py-2 rounded-lg border text-left text-xs sm:text-sm transition-all bg-slate-50/50 font-medium flex items-center justify-between cursor-pointer ${
+          isOpen
+            ? "border-sky-500 ring-1 ring-sky-100 bg-white text-slate-900"
+            : "border-slate-200 hover:border-slate-300 text-slate-900"
+        }`}
+      >
+        <span className={`truncate block ${selectedOption ? "text-slate-900" : "text-slate-400"}`}>
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+      </button>
+
+      <ChevronDown
+        className={`w-4 h-4 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-150 ${
+          isOpen ? "rotate-180 text-[#009FE3]" : ""
+        }`}
+      />
+
+      {isOpen && (
+        <div
+          role="listbox"
+          aria-label={ariaLabel}
+          className="absolute top-full left-0 right-0 mt-1.5 z-50 bg-white rounded-xl border border-slate-200 shadow-xl shadow-slate-900/15 max-h-52 overflow-y-auto overscroll-contain py-1"
+        >
+          {options.map((opt) => {
+            const isSelected = opt.value === value;
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                role="option"
+                aria-selected={isSelected}
+                onClick={() => {
+                  onChange(opt.value);
+                  setIsOpen(false);
+                }}
+                className={`w-full px-3 py-2 text-left text-xs sm:text-[13px] leading-snug flex items-center justify-between gap-2 transition-colors whitespace-normal cursor-pointer ${
+                  isSelected
+                    ? "bg-sky-50 text-[#009FE3] font-bold"
+                    : "text-slate-700 hover:bg-slate-50 hover:text-slate-950 font-medium"
+                }`}
+              >
+                <span className="break-words">{opt.label}</span>
+                {isSelected && <Check className="w-3.5 h-3.5 text-[#009FE3] shrink-0" />}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface AdmissionFormProps {
   formTitle?: string;
@@ -22,35 +139,11 @@ interface AdmissionFormProps {
   defaultCourse?: string;
 }
 
-const INDIAN_STATES = [
-  "Delhi (NCR)",
-  "Uttar Pradesh",
-  "Haryana",
-  "Bihar",
-  "Rajasthan",
-  "Punjab",
-  "Madhya Pradesh",
-  "Maharashtra",
-  "West Bengal",
-  "Uttarakhand",
-  "Jharkhand",
-  "Karnataka",
-  "Tamil Nadu",
-  "Other State",
-];
-
-const IGNOU_COURSES = [
-  { group: "Undergraduate (UG)", courses: ["Online BLIS (100% Digital Mode)", "Online B.Sc (100% Digital Mode)", "Online B.Com (100% Digital Mode)", "Online BCA (100% Digital Mode)", "Online BA (100% Digital Mode)", "Online BBA (100% Digital Mode)", "Distance BA (Arts & Humanities)", "Distance BBA (Business Admin)", "Distance BCA (Computer Applications)", "Distance B.Com (Commerce & Accounts)", "Distance B.Sc (Bachelor of Science)", "Distance B.Ed (Bachelor of Education)", "Distance BLIS (Library Science)", "BSW (Social Work)"] },
-  { group: "Postgraduate (PG)", courses: ["Online MLIS (100% Digital Mode)", "Online M.Sc (100% Digital Mode)", "Online MJMC (100% Digital Mode)", "Online M.Com (100% Digital Mode)", "Online MCA (100% Digital Mode)", "Online MA (100% Digital Mode)", "Distance MLIS (Library Science)", "Distance M.Sc (Master of Science)", "Distance MJMC (Journalism & Mass Comm)", "Distance M.Com (Master of Commerce)", "Distance MCA (Master of Computer Applications)", "Distance MA (Master of Arts)", "M.Com (Master of Commerce)", "MCA (Master of Computer Applications)", "M.A. English (MEG)", "M.A. Hindi (MHD)", "M.A. Political Science (MPS)", "M.A. History (MAH)"] },
-  { group: "Management & MBA", courses: ["Online MBA (100% Digital Mode)", "MBA in Marketing Management (Online/Distance)", "MBA in Business Management (Online/Distance)", "MBA in Business Analytics (Online/Distance)", "MBA in Information Technology (IT)", "MBA in Operations Management (Online/Distance)", "MBA in HR Management (Online/Distance)", "MBA in Finance Management (Online/Distance)", "Distance MBA (General Management)", "MBA (General Management)", "MBA in Banking & Finance (MPB)", "MBA in Human Resource (HRM)", "100% Online MBA"] },
-];
-
 export function AdmissionForm({
   formTitle = "Apply for IGNOU Admission 2026-27",
   formSubtitle = "UGC-DEB Recognized · No CUET Required · Free Counseling",
   source = "Blog Sidebar",
   onSuccess,
-  isCompact = false,
   defaultCourse = "",
 }: AdmissionFormProps) {
   const [formData, setFormData] = useState({
@@ -61,21 +154,39 @@ export function AdmissionForm({
     state: "Delhi (NCR)",
   });
 
-  React.useEffect(() => {
+  const [prevDefaultCourse, setPrevDefaultCourse] = useState(defaultCourse);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [refId, setRefId] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  if (defaultCourse !== prevDefaultCourse) {
+    setPrevDefaultCourse(defaultCourse);
     if (defaultCourse) {
       setFormData((prev) => ({ ...prev, course: defaultCourse }));
     }
+  }
+
+  const courseOptions: DropdownOption[] = React.useMemo(() => {
+    const base = HOME_PAGE_COURSES.map((c) => ({
+      value: c.code,
+      label: c.label,
+    }));
+    if (defaultCourse && !base.some((c) => c.value === defaultCourse)) {
+      return [{ value: defaultCourse, label: defaultCourse }, ...base];
+    }
+    return base;
   }, [defaultCourse]);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const stateOptions: DropdownOption[] = React.useMemo(
+    () => INDIAN_STATES.map((st) => ({ value: st, label: st })),
+    []
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // Basic Validation
     if (!formData.fullName.trim()) {
       setError("Please enter your full name.");
       return;
@@ -123,22 +234,19 @@ export function AdmissionForm({
 
       try {
         localStorage.setItem("ignou_enquiry_submitted", "true");
-      } catch {}
+      } catch {
+        // Storage unavailable
+      }
 
+      setRefId(`IGNOU-2026-${Math.floor(100000 + Math.random() * 900000)}`);
       setIsSubmitted(true);
       if (onSuccess) {
         setTimeout(onSuccess, 2200);
       }
-    } catch (err: any) {
-      console.error("[AdmissionForm] Error submitting lead:", err);
-      // Fallback UX so student isn't blocked
-      try {
-        localStorage.setItem("ignou_enquiry_submitted", "true");
-      } catch {}
-      setIsSubmitted(true);
-      if (onSuccess) {
-        setTimeout(onSuccess, 2200);
-      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to submit enquiry. Please try again.";
+      console.error("[AdmissionForm] Error submitting lead:", msg);
+      setError(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -157,7 +265,7 @@ export function AdmissionForm({
         </p>
         <div className="mt-3.5 p-2 bg-slate-50 rounded-lg border border-slate-200/60 text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-          <span>Ref ID: IGNOU-2026-{Math.floor(100000 + Math.random() * 900000)}</span>
+          <span>Ref ID: {refId}</span>
         </div>
       </div>
     );
@@ -165,12 +273,8 @@ export function AdmissionForm({
 
   return (
     <div className="w-full max-w-[370px] mx-auto bg-white rounded-2xl p-4 sm:p-5 shadow-lg ring-1 ring-slate-900/5 border border-slate-200/80">
-      {/* Header Badge & Title */}
+      {/* Title */}
       <div className="mb-3 text-center">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 text-[#009FE3] text-[10px] font-bold tracking-wide uppercase mb-1 border border-sky-100">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#009FE3] animate-pulse" />
-          Admissions 2026-27 Open
-        </div>
         <h3 className="text-base sm:text-lg font-extrabold text-slate-900 leading-snug">
           {formTitle}
         </h3>
@@ -179,7 +283,7 @@ export function AdmissionForm({
 
       {error && (
         <div className="mb-3 p-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-1.5 animate-in fade-in">
-          <span>⚠️ {error}</span>
+          <span>{error}</span>
         </div>
       )}
 
@@ -187,7 +291,7 @@ export function AdmissionForm({
         {/* Row 1: Full Name */}
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
-            Student Full Name <span className="text-rose-500">*</span>
+            Full Name <span className="text-rose-500">*</span>
           </label>
           <div className="relative">
             <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -205,11 +309,11 @@ export function AdmissionForm({
         {/* Row 2: Mobile Number */}
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
-            Mobile Number (10 Digits) <span className="text-rose-500">*</span>
+            Mobile Number <span className="text-rose-500">*</span>
           </label>
           <div className="relative flex">
             <span className="inline-flex items-center px-2.5 rounded-l-lg border border-r-0 border-slate-200 bg-slate-100 text-slate-600 text-xs font-bold shrink-0">
-              🇮🇳 +91
+              +91
             </span>
             <input
               type="tel"
@@ -219,7 +323,7 @@ export function AdmissionForm({
               onChange={(e) =>
                 setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, "") })
               }
-              placeholder="Enter 10-digit mobile number"
+              placeholder="10-digit number"
               className="w-full px-3 py-2 rounded-r-lg border border-slate-200 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 focus:outline-hidden focus:border-sky-500 focus:ring-1 focus:ring-sky-100 transition-all bg-slate-50/50 font-medium"
             />
           </div>
@@ -243,62 +347,37 @@ export function AdmissionForm({
           </div>
         </div>
 
-        {/* Row 4: Select Course */}
+        {/* Row 4: Select Course (Downward Controlled Dropdown) */}
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
-            Course Interested In <span className="text-rose-500">*</span>
+            Interested Course <span className="text-rose-500">*</span>
           </label>
-          <div className="relative">
-            <GraduationCap className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <select
-              required
-              value={formData.course}
-              onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-              className="w-full pl-9 pr-7 py-2 rounded-lg border border-slate-200 text-slate-900 text-xs sm:text-sm focus:outline-hidden focus:border-sky-500 focus:ring-1 focus:ring-sky-100 transition-all bg-slate-50/50 appearance-none font-medium truncate"
-            >
-              <option value="">Select Course</option>
-              {defaultCourse && (
-                <option value={defaultCourse}>{defaultCourse}</option>
-              )}
-              {IGNOU_COURSES.map((group) => (
-                <optgroup key={group.group} label={group.group}>
-                  {group.courses.map((course) => (
-                    <option key={course} value={course}>
-                      {course}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">
-              ▼
-            </div>
-          </div>
+          <DownwardSelect
+            ariaLabel="Interested Course"
+            value={formData.course}
+            placeholder="Select Course"
+            options={courseOptions}
+            icon={<GraduationCap className="w-4 h-4" />}
+            onChange={(course) => {
+              setFormData((prev) => ({ ...prev, course }));
+              if (error) setError(null);
+            }}
+          />
         </div>
 
-        {/* Row 5: Select State / Region */}
+        {/* Row 5: Select State / Region (Downward Controlled Dropdown) */}
         <div>
           <label className="block text-xs font-semibold text-slate-700 mb-1">
-            Current State / Region
+            State / Regional Center
           </label>
-          <div className="relative">
-            <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <select
-              value={formData.state}
-              onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-              className="w-full pl-9 pr-7 py-2 rounded-lg border border-slate-200 text-slate-900 text-xs sm:text-sm focus:outline-hidden focus:border-sky-500 focus:ring-1 focus:ring-sky-100 transition-all bg-slate-50/50 appearance-none font-medium truncate"
-            >
-              <option value="">Select your state</option>
-              {INDIAN_STATES.map((st) => (
-                <option key={st} value={st}>
-                  {st}
-                </option>
-              ))}
-            </select>
-            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">
-              ▼
-            </div>
-          </div>
+          <DownwardSelect
+            ariaLabel="State / Regional Center"
+            value={formData.state}
+            placeholder="Select your state"
+            options={stateOptions}
+            icon={<MapPin className="w-4 h-4" />}
+            onChange={(state) => setFormData((prev) => ({ ...prev, state }))}
+          />
         </div>
 
         {/* Submit Button */}
@@ -334,4 +413,3 @@ export function AdmissionForm({
     </div>
   );
 }
-

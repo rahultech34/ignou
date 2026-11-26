@@ -13,8 +13,11 @@ export async function GET(
       return NextResponse.json({ error: "Program not found" }, { status: 404 });
     }
     return NextResponse.json({ success: true, program });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to fetch program" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to fetch program" },
+      { status: 500 }
+    );
   }
 }
 
@@ -27,8 +30,11 @@ export async function PUT(
     const body = (await request.json()) as Program;
     const saved = await saveProgram({ ...body, id });
     return NextResponse.json({ success: true, program: saved });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to update program" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to update program" },
+      { status: 500 }
+    );
   }
 }
 
@@ -43,7 +49,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Program not found" }, { status: 404 });
     }
     return NextResponse.json({ success: true, message: "Program deleted successfully" });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to delete program" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to delete program" },
+      { status: 500 }
+    );
   }
 }

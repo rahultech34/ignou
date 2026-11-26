@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -8,7 +9,6 @@ import {
   Menu,
   X,
   Scale,
-  Sparkles,
   Phone,
   BookOpen,
   User,
@@ -25,14 +25,133 @@ import {
   Download,
   AlertCircle,
 } from "lucide-react";
-import CompareModal from "./CompareModal";
-import EnquiryModal from "./EnquiryModal";
 import { HomePageData, SiteSettings } from "@/lib/types";
+
+const CompareModal = dynamic(() => import("./CompareModal"), { ssr: false });
+const EnquiryModal = dynamic(() => import("./EnquiryModal"), { ssr: false });
 
 interface NavbarProps {
   settings?: SiteSettings;
   homePageData?: HomePageData;
 }
+
+const STUDENT_ZONE_ITEMS: { label: string; href: string }[] = [
+  { label: "IGNOU Admission", href: "/ignou-admission" },
+  { label: "IGNOU BEd Admission", href: "/ignou-bed-admission" },
+  { label: "IGNOU Admission Status", href: "/ignou-admission-status" },
+  { label: "IGNOU Re-Registration", href: "/ignou-re-registration" },
+  { label: "IGNOU Hall Ticket", href: "/ignou-hall-ticket" },
+  { label: "IGNOU Grade Card", href: "/ignou-gradecard" },
+  { label: "IGNOU Exam Date Sheet", href: "/ignou-exam-date-sheet" },
+  { label: "IGNOU Exam Result", href: "/ignou-exam-result" },
+  { label: "IGNOU Courses Fees", href: "/ignou-courses-fees-list" },
+  { label: "IGNOU Assignment PDF", href: "/student-zone/ignou-assignment" },
+  { label: "IGNOU DEB ID", href: "/ignou-deb-id" },
+  { label: "IGNOU Study Material", href: "/ignou-study-material" },
+  { label: "IGNOU Helpline Number", href: "/ignou-helpline-number" },
+  { label: "IGNOU Previous Year Question Papers", href: "/student-zone/ignou-previous-year-question-paper" },
+  { label: "IGNOU Regional Centers", href: "/student-zone/ignou-regional-center" },
+  { label: "IGNOU Degree Download", href: "/student-zone/ignou-digital-degree-download-process" },
+];
+
+const MBA_SPECIALIZATIONS: {
+  title: string;
+  short: string;
+  badge: string;
+  href?: string;
+  colSpan?: string;
+}[] = [
+  {
+    title: "IGNOU MBA in Finance Management",
+    short: "Finance & Accounting",
+    badge: "Finance",
+    href: "/mba-specializations/ignou-mba-in-finance-management",
+  },
+  {
+    title: "IGNOU MBA in HR Management",
+    short: "Human Resources & Talent",
+    badge: "HR",
+    href: "/mba-specializations/ignou-mba-in-hr-management",
+  },
+  {
+    title: "IGNOU MBA in Operations Management",
+    short: "Operations & Supply Chain",
+    badge: "Operations",
+    href: "/mba-specializations/ignou-mba-in-operations-management",
+  },
+  {
+    title: "IGNOU MBA in IT",
+    short: "Information Technology",
+    badge: "IT",
+    href: "/mba-specializations/ignou-mba-in-it",
+  },
+  {
+    title: "IGNOU MBA in Business Analytics",
+    short: "Data Analytics & Insights",
+    badge: "Analytics",
+    href: "/mba-specializations/ignou-mba-in-business-analytics",
+  },
+  {
+    title: "IGNOU MBA in Business Management",
+    short: "General Management",
+    badge: "Management",
+    href: "/mba-specializations/ignou-mba-in-business-management",
+  },
+  {
+    title: "IGNOU MBA in Marketing Management",
+    short: "Marketing & Strategy",
+    badge: "Marketing",
+    href: "/mba-specializations/ignou-mba-in-marketing-management",
+  },
+  {
+    title: "IGNOU MBA in Retail Management",
+    short: "Retail & Merchandising",
+    badge: "Retail",
+    href: "/mba-specializations/ignou-mba-in-retail-management",
+  },
+  {
+    title: "IGNOU MBA in Project Management",
+    short: "Project Planning & Delivery",
+    badge: "Project",
+    href: "/mba-specializations/ignou-mba-in-project-management",
+  },
+  {
+    title: "IGNOU MBA in Rural Management",
+    short: "Rural Development & Policy",
+    badge: "Rural",
+    href: "/mba-specializations/ignou-mba-in-rural-management",
+  },
+  {
+    title: "IGNOU MBA in Supply Chain Management",
+    short: "Logistics & Supply Chain",
+    badge: "Supply Chain",
+    href: "/mba-specializations/ignou-mba-in-supply-chain-management",
+  },
+  {
+    title: "IGNOU MBA in International Trade Management",
+    short: "Global Trade & Exports",
+    badge: "Trade",
+    href: "/mba-specializations/ignou-mba-in-international-trade-management",
+  },
+  {
+    title: "IGNOU MBA in Hospital Administration Management",
+    short: "Healthcare & Hospital Ops",
+    badge: "Healthcare",
+    href: "/mba-specializations/ignou-mba-in-hospital-administration-management",
+  },
+  {
+    title: "IGNOU MBA in Agribusiness Management",
+    short: "Agri-Enterprise & Value Chain",
+    badge: "Agribusiness",
+  },
+  {
+    title: "IGNOU MBA in Construction Management",
+    short: "Infrastructure & Site Control",
+    badge: "Construction",
+    href: "/mba-specializations/ignou-mba-in-construction-management",
+    colSpan: "col-span-2",
+  },
+];
 
 export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -47,18 +166,32 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
   const navRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track scroll position for shadow enhancement
+  // Track scroll position for shadow enhancement (rAF-throttled)
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const next = window.scrollY > 20;
+        setIsScrolled((prev) => (prev === next ? prev : next));
+        ticking = false;
+      });
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Lock body scroll when mobile menu drawer is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+    return undefined;
+  }, [mobileMenuOpen]);
 
   // Global event listener for modal triggers across the page
   useEffect(() => {
@@ -217,7 +350,7 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                 <button
                   type="button"
                   onClick={() => setActiveDropdown(activeDropdown === "distance" ? null : "distance")}
-                  className={`flex items-center gap-1.5 px-3 py-2 text-[14px] font-semibold rounded-lg transition-colors whitespace-nowrap ${
+                  className={`flex items-center gap-1.5 px-2 xl:px-3 py-2 text-[13px] xl:text-[14px] font-semibold rounded-lg transition-colors whitespace-nowrap ${
                     activeDropdown === "distance"
                       ? "text-[#009FE3] bg-sky-50 shadow-2xs"
                       : "text-slate-800 hover:text-[#009FE3] hover:bg-slate-50"
@@ -234,7 +367,7 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                 {/* Dropdown Menu - Distance Courses (2 Columns, Centered in Middle of Menu) */}
                 {activeDropdown === "distance" && (
                   <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                    <div className="w-[520px] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-4 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="w-[520px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-4 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-150">
                       
                       {/* Column 1: Undergraduate (UG) */}
                       <div>
@@ -348,7 +481,7 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                 <button
                   type="button"
                   onClick={() => setActiveDropdown(activeDropdown === "online" ? null : "online")}
-                  className={`flex items-center gap-1.5 px-3 py-2 text-[14px] font-semibold rounded-lg transition-colors whitespace-nowrap ${
+                  className={`flex items-center gap-1.5 px-2 xl:px-3 py-2 text-[13px] xl:text-[14px] font-semibold rounded-lg transition-colors whitespace-nowrap ${
                     activeDropdown === "online"
                       ? "text-[#009FE3] bg-sky-50 shadow-2xs"
                       : "text-slate-800 hover:text-[#009FE3] hover:bg-slate-50"
@@ -365,7 +498,7 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                 {/* Dropdown Menu - Online Courses */}
                 {activeDropdown === "online" && (
                   <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                    <div className="w-[520px] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-5 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="w-[520px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-5 animate-in fade-in slide-in-from-top-2 duration-150">
                       <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-100">
                         <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                           UGC-Entitled E-Learning Programs
@@ -436,7 +569,7 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                 <button
                   type="button"
                   onClick={() => setActiveDropdown(activeDropdown === "mba" ? null : "mba")}
-                  className={`flex items-center gap-1.5 px-3 py-2 text-[14px] font-semibold rounded-lg transition-colors whitespace-nowrap ${
+                  className={`flex items-center gap-1.5 px-2 xl:px-3 py-2 text-[13px] xl:text-[14px] font-semibold rounded-lg transition-colors whitespace-nowrap ${
                     activeDropdown === "mba"
                       ? "text-[#009FE3] bg-sky-50 shadow-2xs"
                       : "text-slate-800 hover:text-[#009FE3] hover:bg-slate-50"
@@ -453,7 +586,7 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                 {/* Dropdown Menu - MBA Specializations */}
                 {activeDropdown === "mba" && (
                   <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                    <div className="w-[580px] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-5 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="w-[620px] max-w-[calc(100vw-2rem)] max-h-[80vh] overflow-y-auto bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-5 whitespace-normal animate-in fade-in slide-in-from-top-2 duration-150">
                       <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-100">
                         <span className="flex items-center gap-1.5 text-xs font-bold text-sky-700 uppercase tracking-wider">
                           <Briefcase className="w-4 h-4 text-sky-600" />
@@ -465,70 +598,45 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                       </div>
 
                       <div className="grid grid-cols-2 gap-2">
-                        {[
-                          {
-                            title: "IGNOU MBA in Finance Management",
-                            short: "Finance & Accounting",
-                            badge: "Finance",
-                            href: "/mba-specializations/ignou-mba-in-finance-management",
-                          },
-                          {
-                            title: "IGNOU MBA in HR Management",
-                            short: "Human Resources & Talent",
-                            badge: "HR",
-                            href: "/mba-specializations/ignou-mba-in-hr-management",
-                          },
-                          {
-                            title: "IGNOU MBA in Operations Management",
-                            short: "Operations & Supply Chain",
-                            badge: "Operations",
-                            href: "/mba-specializations/ignou-mba-in-operations-management",
-                          },
-                          {
-                            title: "IGNOU MBA in IT",
-                            short: "Information Technology",
-                            badge: "IT",
-                            href: "/mba-specializations/ignou-mba-in-it",
-                          },
-                          {
-                            title: "IGNOU MBA in Business Analytics",
-                            short: "Data Analytics & Insights",
-                            badge: "Analytics",
-                            href: "/mba-specializations/ignou-mba-in-business-analytics",
-                          },
-                          {
-                            title: "IGNOU MBA in Business Management",
-                            short: "General Management",
-                            badge: "Management",
-                            href: "/mba-specializations/ignou-mba-in-business-management",
-                          },
-                          {
-                            title: "IGNOU MBA in Marketing Management",
-                            short: "Marketing & Strategy",
-                            badge: "Marketing",
-                            href: "/mba-specializations/ignou-mba-in-marketing-management",
-                            colSpan: "col-span-2",
-                          },
-                        ].map((item) => (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={() => setActiveDropdown(null)}
-                            className={`group p-2.5 rounded-xl border border-slate-100 hover:border-sky-300 hover:bg-sky-50/60 transition-all flex flex-col ${
-                              item.colSpan || ""
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="font-bold text-xs text-slate-900 group-hover:text-[#009FE3] transition-colors truncate">
-                                {item.title}
+                        {MBA_SPECIALIZATIONS.map((item) => {
+                          const cardContent = (
+                            <>
+                              <div className="flex items-start justify-between gap-1.5">
+                                <span className="font-bold text-xs text-slate-900 group-hover:text-[#009FE3] transition-colors leading-snug">
+                                  {item.title}
+                                </span>
+                                <span className="text-[9.5px] font-extrabold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 shrink-0">
+                                  {item.badge}
+                                </span>
+                              </div>
+                              <span className="text-[11px] text-slate-500 mt-0.5">
+                                {item.short}
                               </span>
-                              <span className="text-[9.5px] font-extrabold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 shrink-0 ml-1">
-                                {item.badge}
-                              </span>
-                            </div>
-                            <span className="text-[11px] text-slate-500 mt-0.5 truncate">{item.short}</span>
-                          </Link>
-                        ))}
+                            </>
+                          );
+                          const cardClass = `group min-w-0 p-2.5 rounded-xl border border-slate-100 hover:border-sky-300 hover:bg-sky-50/60 transition-all flex flex-col text-left cursor-pointer ${
+                            item.colSpan || ""
+                          }`;
+                          return item.href ? (
+                            <Link
+                              key={item.title}
+                              href={item.href}
+                              onClick={() => setActiveDropdown(null)}
+                              className={cardClass}
+                            >
+                              {cardContent}
+                            </Link>
+                          ) : (
+                            <button
+                              key={item.title}
+                              type="button"
+                              onClick={() => setActiveDropdown(null)}
+                              className={cardClass}
+                            >
+                              {cardContent}
+                            </button>
+                          );
+                        })}
                       </div>
 
                       {/* Dropdown Footer */}
@@ -550,10 +658,57 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                 )}
               </div>
 
-              {/* 4. Blogs */}
+              {/* 4. Student Zone */}
+              <div
+                className="relative shrink-0"
+                onMouseEnter={() => handleMouseEnter("student")}
+                onMouseLeave={handleMouseLeave}
+              >
+                <button
+                  type="button"
+                  onClick={() => setActiveDropdown(activeDropdown === "student" ? null : "student")}
+                  className={`flex items-center gap-1.5 px-2 xl:px-3 py-2 text-[13px] xl:text-[14px] font-semibold rounded-lg transition-colors whitespace-nowrap ${
+                    activeDropdown === "student"
+                      ? "text-[#009FE3] bg-sky-50 shadow-2xs"
+                      : "text-slate-800 hover:text-[#009FE3] hover:bg-slate-50"
+                  }`}
+                >
+                  <span>Student Zone</span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 ${
+                      activeDropdown === "student" ? "rotate-180 text-[#009FE3]" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown Menu - Student Zone */}
+                {activeDropdown === "student" && (
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
+                    <div className="w-[580px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-5 whitespace-normal animate-in fade-in slide-in-from-top-2 duration-150">
+                      <div className="grid grid-cols-2 gap-2">
+                        {STUDENT_ZONE_ITEMS.map((item) => (
+                          <Link
+                            key={item.label}
+                            href={item.href}
+                            onClick={() => setActiveDropdown(null)}
+                            className="group min-w-0 p-2.5 rounded-xl border border-slate-100 hover:border-sky-300 hover:bg-sky-50/60 transition-all flex items-center justify-between gap-2 text-left cursor-pointer"
+                          >
+                            <span className="font-bold text-xs text-slate-900 group-hover:text-[#009FE3] transition-colors leading-snug">
+                              {item.label}
+                            </span>
+                            <ArrowRight className="w-3 h-3 text-slate-300 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-[#009FE3] transition-all shrink-0" />
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 5. Blogs */}
               <Link
                 href="/blogs"
-                className="px-3 py-2 text-[14px] font-semibold text-slate-800 hover:text-[#009FE3] hover:bg-slate-50 rounded-lg transition-colors whitespace-nowrap shrink-0"
+                className="px-2 xl:px-3 py-2 text-[13px] xl:text-[14px] font-semibold text-slate-800 hover:text-[#009FE3] hover:bg-slate-50 rounded-lg transition-colors whitespace-nowrap shrink-0"
               >
                 Blogs
               </Link>
@@ -562,14 +717,13 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
             {/* RIGHT ACTION BUTTON (COMPARE UNIVERSITIES & MOBILE TRIGGER - ONE LINE) */}
             <div className="flex items-center gap-3 shrink-0 whitespace-nowrap">
               {/* "Compare Universities" Primary Button - Hidden on mobile to prevent overlapping hamburger */}
-              <a
-                href="https://edukyu.com/compare-colleges"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => setIsCompareOpen(true)}
                 className="hidden md:inline-flex items-center justify-center px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold text-white bg-[#009FE3] hover:bg-[#008ec9] rounded-lg shadow-xs hover:shadow transition-all whitespace-nowrap shrink-0 active:scale-[0.98] cursor-pointer"
               >
                 Compare Universities
-              </a>
+              </button>
 
               {/* Mobile Menu Hamburger Trigger */}
               <button
@@ -586,7 +740,7 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
 
         {/* MOBILE RESPONSIVE DRAWER / PANEL */}
         {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-x-0 top-[100%] h-[calc(100vh-65px)] bg-slate-900/40 backdrop-blur-xs z-50 overflow-y-auto animate-in fade-in duration-200">
+          <div className="lg:hidden fixed inset-x-0 top-[100%] h-[calc(100dvh-65px)] bg-slate-900/40 backdrop-blur-xs z-50 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
             <div className="bg-white border-b border-slate-200 shadow-xl p-4 sm:p-6 space-y-4 max-h-full overflow-y-auto">
               
               {/* Accordion Menu List */}
@@ -705,30 +859,59 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                   </button>
                   {mobileAccordion === "mba" && (
                     <div className="pl-3 pr-2 py-2 space-y-1.5 text-xs text-slate-600">
-                      <Link href="/mba-specializations/ignou-mba-in-finance-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
-                        • IGNOU MBA in Finance Management
-                      </Link>
-                      <Link href="/mba-specializations/ignou-mba-in-hr-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
-                        • IGNOU MBA in HR Management
-                      </Link>
-                      <Link href="/mba-specializations/ignou-mba-in-operations-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
-                        • IGNOU MBA in Operations Management
-                      </Link>
-                      <Link href="/mba-specializations/ignou-mba-in-it" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
-                        • IGNOU MBA in IT
-                      </Link>
-                      <Link href="/mba-specializations/ignou-mba-in-business-analytics" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
-                        • IGNOU MBA in Business Analytics
-                      </Link>
-                      <Link href="/mba-specializations/ignou-mba-in-business-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
-                        • IGNOU MBA in Business Management
-                      </Link>
-                      <Link href="/mba-specializations/ignou-mba-in-marketing-management" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-medium">
-                        • IGNOU MBA in Marketing Management
-                      </Link>
+                      {MBA_SPECIALIZATIONS.map((item) =>
+                        item.href ? (
+                          <Link
+                            key={item.title}
+                            href={item.href}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="block py-1.5 hover:text-sky-600 font-medium"
+                          >
+                            • {item.title}
+                          </Link>
+                        ) : (
+                          <button
+                            key={item.title}
+                            type="button"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="block w-full text-left py-1.5 hover:text-sky-600 font-medium"
+                          >
+                            • {item.title}
+                          </button>
+                        )
+                      )}
                       <Link href="/mba-specializations" onClick={() => setMobileMenuOpen(false)} className="block py-1.5 hover:text-sky-600 font-bold text-[#009FE3]">
                         • View All MBA Specializations →
                       </Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* Accordion 4: Student Zone */}
+                <div className="pt-2">
+                  <button
+                    onClick={() => toggleMobileAccordion("student")}
+                    className="w-full flex items-center justify-between py-2 text-left font-bold text-slate-900 text-base"
+                  >
+                    <span>Student Zone</span>
+                    <ChevronDown
+                      className={`w-4 h-4 text-slate-500 transition-transform ${
+                        mobileAccordion === "student" ? "rotate-180 text-sky-600" : ""
+                      }`}
+                    />
+                  </button>
+                  {mobileAccordion === "student" && (
+                    <div className="pl-3 pr-2 py-2 space-y-1.5 text-xs text-slate-600">
+                      {STUDENT_ZONE_ITEMS.map((item) => (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="block w-full text-left py-1.5 hover:text-sky-600 font-medium"
+                        >
+                          • {item.label}
+                        </Link>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -747,16 +930,17 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
 
               {/* Mobile Quick Action Buttons */}
               <div className="pt-4 border-t border-slate-200 space-y-2.5">
-                <a
-                  href="https://edukyu.com/compare-colleges"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setMobileMenuOpen(false)}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setIsCompareOpen(true);
+                  }}
                   className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-[#009FE3] shadow-md cursor-pointer"
                 >
                   <Scale className="w-4 h-4" />
                   Compare Top Universities
-                </a>
+                </button>
 
                 <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
                   <a
@@ -780,13 +964,17 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
       </header>
 
       {/* MODALS */}
-      <CompareModal isOpen={isCompareOpen} onClose={() => setIsCompareOpen(false)} />
-      <EnquiryModal
-        isOpen={isEnquiryOpen}
-        onClose={() => setIsEnquiryOpen(false)}
-        defaultCourse={selectedCourse}
-        source={enquirySource}
-      />
+      {isCompareOpen && (
+        <CompareModal isOpen={isCompareOpen} onClose={() => setIsCompareOpen(false)} />
+      )}
+      {isEnquiryOpen && (
+        <EnquiryModal
+          isOpen={isEnquiryOpen}
+          onClose={() => setIsEnquiryOpen(false)}
+          defaultCourse={selectedCourse}
+          source={enquirySource}
+        />
+      )}
     </>
   );
 }

@@ -6,8 +6,11 @@ export async function GET() {
   try {
     const blogs = await getBlogs();
     return NextResponse.json({ success: true, blogs });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to fetch blogs" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to fetch blogs" },
+      { status: 500 }
+    );
   }
 }
 
@@ -19,8 +22,11 @@ export async function POST(request: NextRequest) {
     }
     const saved = await saveBlog(body);
     return NextResponse.json({ success: true, blog: saved });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to save blog" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to save blog" },
+      { status: 500 }
+    );
   }
 }
 

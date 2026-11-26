@@ -24,9 +24,12 @@ export async function GET(request: NextRequest) {
       success: true,
       users: safeUsers,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[api/admin/users] GET error:", error);
-    return NextResponse.json({ error: error.message || "Failed to fetch users" }, { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to fetch users" },
+      { status: 500 }
+    );
   }
 }
 
@@ -66,9 +69,12 @@ export async function POST(request: NextRequest) {
         role: created.role,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[api/admin/users] POST error:", error);
-    return NextResponse.json({ error: error.message || "Failed to create user" }, { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to create user" },
+      { status: 500 }
+    );
   }
 }
 
@@ -96,9 +102,12 @@ export async function DELETE(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, message: "User deleted successfully" });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[api/admin/users] DELETE error:", error);
-    return NextResponse.json({ error: error.message || "Failed to delete user" }, { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to delete user" },
+      { status: 500 }
+    );
   }
 }
 

@@ -13,8 +13,11 @@ export async function GET(
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });
     }
     return NextResponse.json({ success: true, blog });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to fetch blog" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to fetch blog" },
+      { status: 500 }
+    );
   }
 }
 
@@ -27,8 +30,11 @@ export async function PUT(
     const body = (await request.json()) as Blog;
     const saved = await saveBlog({ ...body, id });
     return NextResponse.json({ success: true, blog: saved });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to update blog" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to update blog" },
+      { status: 500 }
+    );
   }
 }
 
@@ -43,7 +49,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });
     }
     return NextResponse.json({ success: true, message: "Blog deleted successfully" });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to delete blog" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to delete blog" },
+      { status: 500 }
+    );
   }
 }

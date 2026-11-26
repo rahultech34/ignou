@@ -8,8 +8,11 @@ export async function GET(request: NextRequest) {
     const type = searchParams.get("type") as "ug" | "pg" | "mba" | null;
     const programs = await getPrograms(type || undefined);
     return NextResponse.json({ success: true, programs });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to fetch programs" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to fetch programs" },
+      { status: 500 }
+    );
   }
 }
 
@@ -21,8 +24,11 @@ export async function POST(request: NextRequest) {
     }
     const saved = await saveProgram(body);
     return NextResponse.json({ success: true, program: saved });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to save program" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to save program" },
+      { status: 500 }
+    );
   }
 }
 

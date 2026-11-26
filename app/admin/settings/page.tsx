@@ -60,10 +60,10 @@ export default function AdminSettingsPage() {
         body: JSON.stringify(settings),
       });
 
-      let json: any = null;
+      let json: { error?: string } | null = null;
       try {
         const text = await res.text();
-        json = text ? JSON.parse(text) : {};
+        json = text ? (JSON.parse(text) as { error?: string }) : {};
       } catch (parseErr) {
         console.warn("Settings response parse warning:", parseErr);
       }
@@ -80,10 +80,10 @@ export default function AdminSettingsPage() {
       setFeedback({ type: "success", text: "Settings saved successfully!" });
       setSaving(false);
       setTimeout(() => setFeedback(null), 3000);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setFeedback({
         type: "error",
-        text: err.message || "Failed to save settings.",
+        text: err instanceof Error ? err.message : "Failed to save settings.",
       });
       setSaving(false);
     }

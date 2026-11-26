@@ -20,7 +20,6 @@ import {
   Trash2,
   Eye,
   RefreshCw,
-  Sparkles,
   GraduationCap,
   X,
   Send,
@@ -76,8 +75,28 @@ export default function AdminLeadsPage() {
   }, [search, selectedStatus, selectedCourse]);
 
   useEffect(() => {
-    fetchLeads();
-  }, [fetchLeads]);
+    let active = true;
+    const params = new URLSearchParams();
+    if (search.trim()) params.append("search", search.trim());
+    if (selectedStatus !== "all") params.append("status", selectedStatus);
+    if (selectedCourse !== "all") params.append("course", selectedCourse);
+
+    fetch(`/api/admin/leads?${params.toString()}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (active && data) {
+          setLeads(data.leads || []);
+          if (data.stats) setStats(data.stats);
+        }
+      })
+      .catch((e) => console.error("Error fetching leads:", e))
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [search, selectedStatus, selectedCourse]);
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {
     try {
@@ -88,11 +107,12 @@ export default function AdminLeadsPage() {
         body: JSON.stringify({ id: leadId, status: newStatus }),
       });
       if (res.ok) {
+        const typedStatus = newStatus as Lead["status"];
         setLeads((prev) =>
-          prev.map((l) => (l.id === leadId ? { ...l, status: newStatus as any } : l))
+          prev.map((l) => (l.id === leadId ? { ...l, status: typedStatus } : l))
         );
         if (selectedLead && selectedLead.id === leadId) {
-          setSelectedLead((prev) => prev ? { ...prev, status: newStatus as any } : null);
+          setSelectedLead((prev) => (prev ? { ...prev, status: typedStatus } : null));
         }
       }
     } catch (e) {
@@ -182,7 +202,7 @@ export default function AdminLeadsPage() {
 
           <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold text-lg">
-              <Sparkles className="w-6 h-6" />
+              <Users className="w-6 h-6" />
             </div>
             <div>
               <div className="text-2xl font-black text-slate-900">{stats.today}</div>
@@ -318,8 +338,9 @@ export default function AdminLeadsPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {leads.map((lead) => {
-                    const dateDisplay = lead.created_at_iso || lead.created_at
-                      ? new Date(lead.created_at_iso || lead.created_at).toLocaleDateString("en-IN", {
+                    const rawDate = lead.created_at_iso || lead.created_at;
+                    const dateDisplay = rawDate
+                      ? new Date(rawDate).toLocaleDateString("en-IN", {
                           day: "numeric",
                           month: "short",
                           year: "numeric",
