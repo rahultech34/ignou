@@ -147,7 +147,7 @@ export default function AdminLoginPage() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center gap-3 p-3 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md mb-4 shadow-xl">
             <Image
-              src="/image/edukyu.png"
+              src="/edukyu-logo.png"
               alt="EduKyu Logo"
               width={100}
               height={28}
@@ -156,7 +156,7 @@ export default function AdminLoginPage() {
             />
             <div className="w-px h-5 bg-white/30" />
             <Image
-              src="/image/logo.png"
+              src="/ignou-logo.png"
               alt="IGNOU Logo"
               width={100}
               height={28}
