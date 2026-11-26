@@ -48,7 +48,21 @@ export function BlogListPage() {
   };
 
   useEffect(() => {
-    fetchBlogs();
+    let active = true;
+    fetch("/api/admin/blogs")
+      .then(async (res) => ({ ok: res.ok, data: await res.json() }))
+      .then(({ ok, data }) => {
+        if (active && ok) {
+          setBlogs(data.blogs || []);
+        }
+      })
+      .catch((e) => console.error("Error fetching blogs:", e))
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   const handleDelete = async (id: string) => {

@@ -18,9 +18,15 @@ export async function GET(request: NextRequest) {
       success: true,
       analytics,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[api/admin/analytics] GET error:", error);
-    return NextResponse.json({ error: error.message || "Failed to fetch analytics" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to fetch analytics",
+      },
+      { status: 500 }
+    );
   }
 }
 

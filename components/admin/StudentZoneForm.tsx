@@ -49,7 +49,7 @@ export function StudentZoneForm({
     initialData?.linkText || "Open Official Portal"
   );
   const [linkUrl, setLinkUrl] = useState(
-    initialData?.linkUrl || "https://ignou.ac.in"
+    initialData?.linkUrl || "/ignou-admission"
   );
   const [status, setStatus] = useState<"published" | "draft">(
     initialData?.status || "published"
@@ -161,10 +161,10 @@ export function StudentZoneForm({
         router.push("/admin/student-zone");
         router.refresh();
       }, 1000);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setFeedback({
         type: "error",
-        text: err.message || "Network error. Please try again.",
+        text: err instanceof Error ? err.message : "Network error. Please try again.",
       });
       setSaving(false);
     }
@@ -258,7 +258,7 @@ export function StudentZoneForm({
             </label>
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value as any)}
+              onChange={(e) => setCategory(e.target.value as StudentResource["category"])}
               className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs sm:text-sm outline-none focus:border-[#009FE3]"
             >
               {CATEGORIES.map((cat) => (
@@ -288,7 +288,7 @@ export function StudentZoneForm({
             </label>
             <select
               value={status}
-              onChange={(e) => setStatus(e.target.value as any)}
+              onChange={(e) => setStatus(e.target.value as "published" | "draft")}
               className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs sm:text-sm outline-none focus:border-[#009FE3]"
             >
               <option value="published">Published</option>
@@ -307,7 +307,7 @@ export function StudentZoneForm({
               required
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
-              placeholder="https://hall_ticket.ignou.ac.in"
+              placeholder="/ignou-hall-ticket"
               className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-[#009FE3] focus:ring-2 focus:ring-[#009FE3]/10 outline-none text-xs sm:text-sm font-mono text-slate-900"
             />
           </div>

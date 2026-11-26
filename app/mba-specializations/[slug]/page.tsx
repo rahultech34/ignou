@@ -7,17 +7,52 @@ import {
   getMbaSpecializations,
   getSiteSettings,
 } from "@/lib/admin-data";
+import { MBA_SPECIALIZATION_STATIC_PAGES } from "@/lib/mba-specializations-static";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import { MbaDetailPage } from "@/components/public/MbaDetailPage";
+import { StudentZoneGuidePage } from "@/components/public/StudentZoneGuidePage";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
+function getStaticMbaPageBySlug(slug: string) {
+  const cleanSlug = slug.toLowerCase().trim();
+  const normalizedSlug = cleanSlug.startsWith("ignou-")
+    ? cleanSlug
+    : `ignou-${cleanSlug}`;
+  return (
+    MBA_SPECIALIZATION_STATIC_PAGES[`/mba-specializations/${cleanSlug}`] ||
+    MBA_SPECIALIZATION_STATIC_PAGES[`/mba-specializations/${normalizedSlug}`] ||
+    null
+  );
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  await connection();
   const { slug } = await params;
+  const staticPage = getStaticMbaPageBySlug(slug);
+
+  if (staticPage) {
+    return {
+      title: staticPage.metaTitle,
+      description: staticPage.metaDescription,
+      openGraph: {
+        title: staticPage.metaTitle,
+        description: staticPage.metaDescription,
+        images: [{ url: "/IGNOU-img.webp" }],
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: staticPage.metaTitle,
+        description: staticPage.metaDescription,
+        images: ["/IGNOU-img.webp"],
+      },
+    };
+  }
+
+  await connection();
   const item = await getMbaSpecializationBySlug(slug);
 
   if (!item) {
@@ -52,8 +87,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function MbaSpecializationDetailPage({ params }: Props) {
-  await connection();
   const { slug } = await params;
+  const staticPage = getStaticMbaPageBySlug(slug);
+
+  if (staticPage) {
+    return (
+      <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-sky-500 selection:text-white">
+        <Navbar />
+        <main className="flex-1 flex flex-col">
+          <StudentZoneGuidePage page={staticPage} />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  await connection();
   const [mbaItem, allMba, siteSettings] = await Promise.all([
     getMbaSpecializationBySlug(slug),
     getMbaSpecializations(),
@@ -64,13 +113,12 @@ export default async function MbaSpecializationDetailPage({ params }: Props) {
     notFound();
   }
 
-  // Other specializations (up to 6)
   const otherSpecializations = allMba
     .filter((m) => m.id !== mbaItem.id && m.status !== "draft")
     .slice(0, 6);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-slate-900 selection:bg-sky-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-sky-500 selection:text-white">
       <Navbar settings={siteSettings} />
       <main className="flex-1 flex flex-col">
         <MbaDetailPage

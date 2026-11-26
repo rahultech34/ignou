@@ -7,7 +7,6 @@ import {
   Save,
   ArrowLeft,
   Globe,
-  Sparkles,
   AlertCircle,
   CheckCircle2,
   Calendar,
@@ -139,8 +138,8 @@ export function BlogForm({ initialData, isEdit = false }: BlogFormProps) {
         router.push("/admin/blogs");
         router.refresh();
       }, 1000);
-    } catch (err: any) {
-      setError(err.message || "Failed to connect to admin server.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to connect to admin server.");
       setSaving(false);
     }
   };
@@ -309,7 +308,7 @@ export function BlogForm({ initialData, isEdit = false }: BlogFormProps) {
               </label>
               <select
                 value={status}
-                onChange={(e) => setStatus(e.target.value as any)}
+                onChange={(e) => setStatus(e.target.value as "published" | "draft")}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs sm:text-sm outline-none focus:border-[#009FE3]"
               >
                 <option value="published">Published Live</option>

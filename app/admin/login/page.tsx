@@ -39,7 +39,7 @@ function LoginForm() {
 
       router.push(redirectTo);
       router.refresh();
-    } catch (err: any) {
+    } catch {
       setError("Network or server error. Please try again.");
       setLoading(false);
     }

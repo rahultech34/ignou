@@ -75,7 +75,21 @@ export function ProgramListPage({ type }: ProgramListPageProps) {
   };
 
   useEffect(() => {
-    fetchPrograms();
+    let active = true;
+    fetch(`/api/admin/programs?type=${type}`)
+      .then(async (res) => ({ ok: res.ok, data: await res.json() }))
+      .then(({ ok, data }) => {
+        if (active && ok) {
+          setPrograms(data.programs || []);
+        }
+      })
+      .catch((e) => console.error("Error fetching programs:", e))
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, [type]);
 
   const handleDelete = async (id: string) => {

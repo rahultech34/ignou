@@ -42,7 +42,21 @@ export default function AdminMediaPage() {
   };
 
   useEffect(() => {
-    fetchMedia();
+    let active = true;
+    fetch("/api/admin/media")
+      .then(async (res) => ({ ok: res.ok, data: await res.json() }))
+      .then(({ ok, data }) => {
+        if (active && ok) {
+          setMedia(data.media || []);
+        }
+      })
+      .catch((e) => console.error(e))
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,10 +85,10 @@ export default function AdminMediaPage() {
           text: data.error || "Failed to upload media.",
         });
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       setFeedback({
         type: "error",
-        text: e.message || "Network error while uploading.",
+        text: e instanceof Error ? e.message : "Network error while uploading.",
       });
     } finally {
       setUploading(false);

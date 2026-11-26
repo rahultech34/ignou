@@ -125,10 +125,10 @@ export default function AdminProfilePage() {
       setConfirmPassword("");
       setChangingPass(false);
       setTimeout(() => setPassFeedback(null), 5000);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setPassFeedback({
         type: "error",
-        text: err.message || "Network error. Please try again.",
+        text: err instanceof Error ? err.message : "Network error. Please try again.",
       });
       setChangingPass(false);
     }

@@ -50,10 +50,11 @@ export function getDb(): Firestore | null {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { getFirestore } = require("firebase-admin/firestore");
         // Target 'default' database provisioned in ignou-fe1a9
-        dbInstance = getFirestore(app, "default");
+        const instance: Firestore = getFirestore(app, "default");
+        dbInstance = instance;
         try {
-          dbInstance.settings({ ignoreUndefinedProperties: true });
-        } catch (_) {
+          instance.settings({ ignoreUndefinedProperties: true });
+        } catch {
           // settings can only be called once; ignore if already applied
         }
         console.log("[firebase-admin] Connected to Cloud Firestore ('default' on ignou-fe1a9)");

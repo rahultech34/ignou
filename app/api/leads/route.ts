@@ -127,7 +127,7 @@ const PROGRAM_MAPPING: Record<string, string> = {
   "MBA (HM) Healthcare Management": "P0281",
 };
 
-export function resolveProgramId(courseName?: string): string {
+function resolveProgramId(courseName?: string): string {
   if (!courseName) return "SD00000002";
   const trimmed = courseName.trim();
   if (PROGRAM_MAPPING[trimmed]) return PROGRAM_MAPPING[trimmed];
@@ -141,7 +141,7 @@ export function resolveProgramId(courseName?: string): string {
   return "SD00000002";
 }
 
-function sanitizeText(val: any): string {
+function sanitizeText(val: unknown): string {
   if (typeof val !== "string") return String(val || "").trim();
   return val.replace(/[\r\n\t]+/g, " ").trim().substring(0, 250);
 }
@@ -165,9 +165,12 @@ export async function GET(req: NextRequest) {
 
     const leads = await getLeads({ limit, search, course });
     return NextResponse.json({ success: true, count: leads.length, leads });
-  } catch (err: any) {
+  } catch (err: unknown) {
     return NextResponse.json(
-      { success: false, error: err?.message || "Failed to retrieve leads." },
+      {
+        success: false,
+        error: err instanceof Error ? err.message : "Failed to retrieve leads.",
+      },
       { status: 500 }
     );
   }
@@ -314,9 +317,13 @@ export async function POST(req: NextRequest) {
       });
 
       const crmText = await crmRes.text();
-      let crmData: any = null;
+      let crmData: { status?: string; lead_id?: string; message?: string } | null = null;
       try {
-        crmData = JSON.parse(crmText);
+        crmData = JSON.parse(crmText) as {
+          status?: string;
+          lead_id?: string;
+          message?: string;
+        };
       } catch {}
 
       if (crmRes.ok && (crmData?.status === "success" || crmRes.status === 200)) {
@@ -326,9 +333,10 @@ export async function POST(req: NextRequest) {
       } else {
         crmMsg = crmData?.message || crmText || `HTTP ${crmRes.status}`;
       }
-    } catch (crmErr: any) {
+    } catch (crmErr: unknown) {
       console.error("[leads API] Pujariwala CRM dispatch error:", crmErr);
-      crmMsg = crmErr?.message || "Network error while connecting to CRM";
+      crmMsg =
+        crmErr instanceof Error ? crmErr.message : "Network error while connecting to CRM";
     }
 
     // 4. Optional Enqbooks secondary forward
@@ -383,10 +391,14 @@ export async function POST(req: NextRequest) {
         },
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[leads API] Unhandled exception:", error);
     return NextResponse.json(
-      { success: false, message: error?.message || "Failed to process lead submission." },
+      {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "Failed to process lead submission.",
+      },
       { status: 500 }
     );
   }

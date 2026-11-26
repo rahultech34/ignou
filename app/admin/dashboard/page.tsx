@@ -14,7 +14,6 @@ import {
   Database,
   CheckCircle2,
   ExternalLink,
-  Sparkles,
   Users,
   BarChart3,
   TrendingUp,
@@ -101,10 +100,6 @@ export default function AdminDashboardPage() {
         <div className="bg-gradient-to-r from-[#0b2545] via-[#00609C] to-[#009FE3] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
           <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-white/5 transform skew-x-12 pointer-events-none" />
           <div className="relative z-10 max-w-2xl space-y-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-white text-xs font-bold backdrop-blur-xs">
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>IGNOU Admissions Session 2026-27 Active</span>
-            </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               Welcome back, {admin.name}
             </h2>

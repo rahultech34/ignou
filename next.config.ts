@@ -10,12 +10,7 @@ const nextConfig: NextConfig = {
     "@google-cloud/firestore",
   ],
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "edukyu.com",
-      },
-    ],
+    unoptimized: true,
   },
   turbopack: {
     rules: {

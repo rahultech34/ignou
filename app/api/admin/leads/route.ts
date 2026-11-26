@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
         `"${(l.state || "").replace(/"/g, '""')}"`,
         `"${(l.crm_status || "pending").replace(/"/g, '""')}"`,
         `"${(l.status || "new").replace(/"/g, '""')}"`,
-        `"${(l.created_at_iso || l.created_at || "").replace(/"/g, '""')}"`,
+        `"${String(l.created_at_iso || l.created_at || "").replace(/"/g, '""')}"`,
       ]);
 
       const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
@@ -62,9 +62,12 @@ export async function GET(request: NextRequest) {
       leads,
       stats,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[api/admin/leads] GET error:", error);
-    return NextResponse.json({ error: error.message || "Failed to fetch leads" }, { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to fetch leads" },
+      { status: 500 }
+    );
   }
 }
 
@@ -82,7 +85,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Lead ID is required" }, { status: 400 });
     }
 
-    const updates: any = {};
+    const updates: Record<string, string> = {};
     if (status !== undefined) updates.status = status;
     if (notes !== undefined) updates.notes = notes;
     updates.updated_at = new Date().toISOString();
@@ -94,9 +97,12 @@ export async function PATCH(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, message: "Lead updated successfully" });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[api/admin/leads] PATCH error:", error);
-    return NextResponse.json({ error: error.message || "Failed to update lead" }, { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to update lead" },
+      { status: 500 }
+    );
   }
 }
 
@@ -120,9 +126,12 @@ export async function DELETE(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, message: "Lead deleted successfully" });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[api/admin/leads] DELETE error:", error);
-    return NextResponse.json({ error: error.message || "Failed to delete lead" }, { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to delete lead" },
+      { status: 500 }
+    );
   }
 }
 

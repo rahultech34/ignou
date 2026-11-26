@@ -11,7 +11,10 @@ export async function GET(request: NextRequest) {
   try {
     const media = await getMediaList();
     return NextResponse.json({ media });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to load media" },
+      { status: 500 }
+    );
   }
 }

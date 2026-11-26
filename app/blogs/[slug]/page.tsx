@@ -5,6 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { connection } from "next/server";
 import { getBlogBySlug, getBlogs, getSiteSettings, getMbaSpecializationBySlug } from "@/lib/admin-data";
+import { sanitizePublicHtml } from "@/lib/sanitize";
 import {
   Calendar,
   Clock,
@@ -13,7 +14,6 @@ import {
   CheckCircle2,
   Phone,
   Mail,
-  Sparkles,
   ChevronRight,
   BookOpen,
   Tag,
@@ -113,7 +113,7 @@ export default async function BlogPostPage({ params }: Props) {
       : "+91 83368 89553";
   const email =
     siteSettings?.supportEmail &&
-    !siteSettings.supportEmail.includes("distanceeducationschool.com")
+      !siteSettings.supportEmail.includes("distanceeducationschool.com")
       ? siteSettings.supportEmail
       : "hi@edukyu.com";
 
@@ -125,42 +125,19 @@ export default async function BlogPostPage({ params }: Props) {
         {/* Draft Banner if applicable */}
         {blog.status === "draft" && (
           <div className="bg-amber-400 text-slate-950 px-4 py-2 text-center text-xs font-bold tracking-wide">
-            ⚠️ Admin Preview Mode — This article is currently a Draft and hidden from the public.
+            Admin Preview Mode — This article is currently a Draft and hidden from the public.
           </div>
         )}
-
-        {/* Breadcrumb Header Bar */}
-        <section className="bg-white border-b border-slate-200/80 py-3.5">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-slate-500 font-medium overflow-x-auto whitespace-nowrap">
-              <Link href="/" className="hover:text-[#009FE3] transition-colors shrink-0">
-                Home
-              </Link>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
-              <Link href="/blogs" className="hover:text-[#009FE3] transition-colors shrink-0">
-                Blogs
-              </Link>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
-              <span className="text-slate-800 truncate max-w-[220px] sm:max-w-md font-semibold">
-                {blog.title}
-              </span>
-            </nav>
-          </div>
-        </section>
 
         {/* 2-Column Main Section: Content on Left (8 cols), Sticky Form on Right (4 cols) */}
         <section className="py-8 sm:py-12 flex-1">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-              
+
               {/* LEFT COLUMN: Main Blog Content (8 cols) */}
               <article className="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-10 lg:p-12 border border-slate-200/80 shadow-xs space-y-7">
-                {/* Category & Read Time */}
+                {/* Read Time */}
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-sky-50 text-[#009FE3] border border-sky-200/80">
-                    <Sparkles className="w-3 h-3 text-[#009FE3]" />
-                    <span>{blog.category || "Admission Guide"}</span>
-                  </span>
                   <span className="inline-flex items-center gap-1 text-xs text-slate-500 font-medium">
                     <Clock className="w-3.5 h-3.5 text-slate-400" />
                     <span>{readingTime}</span>
@@ -201,6 +178,7 @@ export default async function BlogPostPage({ params }: Props) {
                       src={blog.coverImage}
                       alt={blog.title}
                       fill
+                      sizes="(max-width: 1024px) 100vw, 66vw"
                       priority
                       className="object-cover"
                     />
@@ -215,9 +193,9 @@ export default async function BlogPostPage({ params }: Props) {
                 )}
 
                 {/* Rich Article Body Content */}
-                <div className="prose prose-slate max-w-none prose-headings:text-slate-900 prose-headings:font-bold prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-3 prose-p:text-slate-700 prose-p:leading-relaxed prose-p:text-sm sm:prose-p:text-base prose-li:text-slate-700 prose-a:text-[#009FE3] prose-a:font-semibold hover:prose-a:underline">
+                <div className="prose prose-slate max-w-none overflow-x-hidden prose-headings:text-slate-900 prose-headings:font-bold prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-3 prose-p:text-slate-700 prose-p:leading-relaxed prose-p:text-sm sm:prose-p:text-base prose-li:text-slate-700 prose-a:text-[#009FE3] prose-a:font-semibold hover:prose-a:underline [&_table]:block [&_table]:overflow-x-auto [&_img]:max-w-full [&_img]:h-auto">
                   {blog.content.includes("<") && blog.content.includes(">") ? (
-                    <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+                    <div dangerouslySetInnerHTML={{ __html: sanitizePublicHtml(blog.content) }} />
                   ) : (
                     <div className="space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed whitespace-pre-line">
                       {blog.content}
@@ -247,9 +225,6 @@ export default async function BlogPostPage({ params }: Props) {
                 {/* Need Admission Help Bottom Callout */}
                 <div className="mt-8 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-[#0b2545] to-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-lg">
                   <div className="space-y-1.5 text-center sm:text-left">
-                    <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
-                      Free Counseling &amp; Admission Desk
-                    </span>
                     <h3 className="text-lg sm:text-xl font-black">
                       Need Direct Assistance with IGNOU Admissions?
                     </h3>
@@ -279,7 +254,7 @@ export default async function BlogPostPage({ params }: Props) {
               {/* RIGHT COLUMN: Sticky Sidebar with Form */}
               <aside
                 id="counseling-form"
-                className="lg:col-span-4 lg:sticky lg:top-[76px] self-start z-20 w-full max-w-[370px] mx-auto lg:ml-auto"
+                className="lg:col-span-4 lg:sticky lg:top-[96px] self-start z-20 w-full max-w-[370px] mx-auto lg:ml-auto scroll-mt-28"
               >
                 {/* Quick Admission Counseling Form (Sticks below navbar) */}
                 <AdmissionForm
@@ -299,8 +274,7 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <span className="text-xs font-bold text-[#009FE3] uppercase tracking-wider">Keep Reading</span>
-                  <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                     Related Admissions Guides
                   </h3>
                 </div>
@@ -321,9 +295,6 @@ export default async function BlogPostPage({ params }: Props) {
                     className="bg-slate-50 hover:bg-white p-6 rounded-2xl border border-slate-200/80 hover:border-sky-300 hover:shadow-lg transition-all group flex flex-col justify-between"
                   >
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#009FE3] mb-2 block">
-                        {item.category || "Guide"}
-                      </span>
                       <h4 className="text-base font-bold text-slate-900 group-hover:text-[#009FE3] transition-colors leading-snug line-clamp-2">
                         {item.title}
                       </h4>

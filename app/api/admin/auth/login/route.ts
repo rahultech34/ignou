@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("[Login API] Error:", err);
     return NextResponse.json(
       { error: "An unexpected error occurred during login." },

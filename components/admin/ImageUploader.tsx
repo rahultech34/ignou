@@ -46,8 +46,8 @@ export function ImageUploader({
 
       onChange(data.url);
       setUploading(false);
-    } catch (err: any) {
-      setError(err.message || "Failed to upload image");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to upload image");
       setUploading(false);
     }
   };

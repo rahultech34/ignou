@@ -13,8 +13,11 @@ export async function GET(
       return NextResponse.json({ error: "Resource not found" }, { status: 404 });
     }
     return NextResponse.json({ success: true, resource });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to fetch resource" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to fetch resource" },
+      { status: 500 }
+    );
   }
 }
 
@@ -27,8 +30,11 @@ export async function PUT(
     const body = (await request.json()) as StudentResource;
     const saved = await saveStudentResource({ ...body, id });
     return NextResponse.json({ success: true, resource: saved });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to update resource" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to update resource" },
+      { status: 500 }
+    );
   }
 }
 
@@ -43,7 +49,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Resource not found" }, { status: 404 });
     }
     return NextResponse.json({ success: true, message: "Resource deleted successfully" });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || "Failed to delete resource" }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Failed to delete resource" },
+      { status: 500 }
+    );
   }
 }

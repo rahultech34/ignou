@@ -50,7 +50,21 @@ export function StudentZoneListPage() {
   };
 
   useEffect(() => {
-    fetchItems();
+    let active = true;
+    fetch("/api/admin/student-zone")
+      .then(async (res) => ({ ok: res.ok, data: await res.json() }))
+      .then(({ ok, data }) => {
+        if (active && ok) {
+          setItems(data.items || []);
+        }
+      })
+      .catch((e) => console.error("Error fetching student zone items:", e))
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   const handleDelete = async (id: string) => {

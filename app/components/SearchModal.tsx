@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, X, BookOpen, GraduationCap, FileText, ArrowRight, Sparkles, ExternalLink } from "lucide-react";
+import { Search, X, BookOpen, GraduationCap, FileText, ArrowRight, ExternalLink } from "lucide-react";
 
 interface SearchItem {
   id: string;
@@ -138,10 +138,11 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50);
-    } else {
-      setQuery("");
+      const timer = setTimeout(() => inputRef.current?.focus(), 50);
+      return () => clearTimeout(timer);
     }
+    const resetTimer = setTimeout(() => setQuery(""), 0);
+    return () => clearTimeout(resetTimer);
   }, [isOpen]);
 
   // Close on Escape
@@ -254,7 +255,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             ))
           ) : (
             <div className="text-center py-10 px-4 text-slate-500">
-              <Sparkles className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+              <Search className="w-8 h-8 text-slate-300 mx-auto mb-2" />
               <p className="font-medium text-sm">No exact matches found for &quot;{query}&quot;</p>
               <p className="text-xs text-slate-400 mt-1">
                 Try searching for MBA, MCA, BCA, assignment, or syllabus

@@ -270,8 +270,8 @@ export function ProgramForm({ type, initialData, isEdit = false }: ProgramFormPr
         router.push(targetListUrl);
         router.refresh();
       }, 1000);
-    } catch (err: any) {
-      setError(err.message || "Failed to connect to admin server.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to connect to admin server.");
       setSaving(false);
     }
   };
@@ -364,7 +364,11 @@ export function ProgramForm({ type, initialData, isEdit = false }: ProgramFormPr
             <button
               key={tab.id}
               type="button"
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() =>
+                setActiveTab(
+                  tab.id as "basic" | "overview" | "curriculum" | "faqs" | "seo"
+                )
+              }
               className={`flex items-center gap-2 px-4 py-3 text-xs font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
                 isActive
                   ? "border-[#009FE3] text-[#009FE3]"
@@ -432,7 +436,9 @@ export function ProgramForm({ type, initialData, isEdit = false }: ProgramFormPr
               </label>
               <select
                 value={mode}
-                onChange={(e) => setMode(e.target.value as any)}
+                onChange={(e) =>
+                  setMode(e.target.value as "Distance" | "Online" | "Distance & Online")
+                }
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs sm:text-sm outline-none focus:border-[#009FE3]"
               >
                 <option value="Distance & Online">Distance & Online (ODL + OL)</option>
@@ -475,7 +481,7 @@ export function ProgramForm({ type, initialData, isEdit = false }: ProgramFormPr
               </label>
               <select
                 value={status}
-                onChange={(e) => setStatus(e.target.value as any)}
+                onChange={(e) => setStatus(e.target.value as "draft" | "published")}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs sm:text-sm outline-none focus:border-[#009FE3]"
               >
                 <option value="published">Published</option>

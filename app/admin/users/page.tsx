@@ -14,7 +14,6 @@ import {
   X,
   Lock,
   UserCheck,
-  Sparkles,
 } from "lucide-react";
 
 interface AdminAccount {
@@ -55,7 +54,21 @@ export default function AdminUsersPage() {
   };
 
   useEffect(() => {
-    fetchUsers();
+    let active = true;
+    fetch("/api/admin/users")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((json) => {
+        if (active && json) {
+          setUsers(json.users || []);
+        }
+      })
+      .catch((e) => console.error("Failed to fetch users:", e))
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   const handleCreateUser = async (e: React.FormEvent) => {
@@ -85,8 +98,8 @@ export default function AdminUsersPage() {
         setShowAddModal(false);
         fetchUsers();
       }
-    } catch (err: any) {
-      setError(err.message || "Network error while creating account.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Network error while creating account.");
     } finally {
       setSubmitting(false);
     }
@@ -190,7 +203,8 @@ export default function AdminUsersPage() {
               Loading users...
             </div>
           ) : (
-            <table className="w-full text-left text-xs sm:text-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs sm:text-sm">
               <thead className="bg-slate-50/75 border-b border-slate-200/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                 <tr>
                   <th className="py-3 px-4">User</th>
@@ -254,14 +268,15 @@ export default function AdminUsersPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+              </table>
+            </div>
           )}
         </div>
 
         {/* Modal: Add New Admin / Counselor */}
         {showAddModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs">
-            <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-slate-100 space-y-4 animate-in fade-in zoom-in-95 duration-150">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-sky-50 text-[#009FE3] flex items-center justify-center font-bold">
@@ -324,7 +339,7 @@ export default function AdminUsersPage() {
                   <label className="font-bold text-slate-700 block mb-1">Assign Role</label>
                   <select
                     value={formData.role}
-                    onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value as AdminAccount["role"] })}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#009FE3]/20"
                   >
                     <option value="counselor">Admission Counselor (CRM & Leads focus)</option>

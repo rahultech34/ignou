@@ -13,7 +13,7 @@ export interface SessionPayload {
   userId: string;
   email: string;
   name: string;
-  role: "admin" | "superadmin";
+  role: "admin" | "superadmin" | "counselor" | "editor";
 }
 
 export async function createSessionToken(payload: SessionPayload): Promise<string> {
@@ -31,7 +31,7 @@ export async function verifySessionToken(token: string): Promise<SessionPayload 
       userId: payload.userId as string,
       email: payload.email as string,
       name: payload.name as string,
-      role: (payload.role as "admin" | "superadmin") || "admin",
+      role: (payload.role as SessionPayload["role"]) || "admin",
     };
   } catch (err) {
     return null;
