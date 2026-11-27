@@ -29,10 +29,17 @@ export default async function PublicBlogsPage() {
 
       <main className="flex-1 flex flex-col">
         {/* Hero Header */}
-        <section className="bg-gradient-to-b from-[#0b2545] via-slate-900 to-[#030619] text-white py-14 sm:py-20 relative overflow-hidden">
-          {/* Subtle Glows */}
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#009FE3]/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-sky-900/20 rounded-full blur-3xl pointer-events-none" />
+        <section className="relative overflow-hidden bg-slate-950 text-white py-14 sm:py-20">
+          <Image
+            src="/IGNOU-img.webp"
+            alt="Indira Gandhi National Open University (IGNOU)"
+            fill
+            sizes="100vw"
+            quality={75}
+            priority
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-slate-950/75" />
 
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">

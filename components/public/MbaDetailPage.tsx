@@ -19,7 +19,6 @@ interface ParsedFaq {
 interface ParsedSection {
   heading: string;
   bodyHtml: string;
-  isFinalThoughts: boolean;
   faqs: ParsedFaq[];
 }
 
@@ -106,15 +105,9 @@ function parseMbaHtmlContent(rawHtml: string, fallbackExcerpt?: string): ParsedM
       headingLower.includes("frequently asked") || headingLower === "faqs";
     const faqs = isFaqHeading ? parseFaqItems(bodyHtml) : [];
 
-    const isFinalThoughts =
-      headingLower.includes("final thoughts") ||
-      headingLower === "conclusion" ||
-      headingLower === "the short version";
-
     sections.push({
       heading,
       bodyHtml,
-      isFinalThoughts,
       faqs,
     });
   }
@@ -258,42 +251,27 @@ export function MbaDetailPage({ item }: MbaDetailPageProps) {
                 return (
                   <div
                     key={`${section.heading}-${sIdx}`}
-                    className={
-                      section.isFinalThoughts
-                        ? "bg-gradient-to-br from-[#0b2545] to-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-md space-y-3"
-                        : "bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4"
-                    }
+                    className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4"
                   >
-                    <h2
-                      className={`text-xl sm:text-2xl font-extrabold ${section.isFinalThoughts ? "text-white" : "text-slate-900"
-                        }`}
-                    >
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                       {section.heading}
                     </h2>
 
                     <div
-                      className={
-                        section.isFinalThoughts
-                          ? `space-y-3 text-sm sm:text-base leading-relaxed overflow-x-hidden
-                              [&>p]:text-slate-200 [&>p>strong]:text-white [&>p>a]:text-sky-300 [&>p>a]:underline
-                              [&_div.bg-gradient-to-r]:bg-white/10 [&_div.bg-gradient-to-r]:border-white/15 [&_div.bg-gradient-to-r]:text-white
-                              [&_div.bg-gradient-to-r_h3]:text-white [&_div.bg-gradient-to-r_p]:text-slate-200
-                              [&_img]:max-w-full [&_img]:h-auto`
-                          : `space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed overflow-x-hidden
-                              [&_h3]:text-base sm:[&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-slate-900 [&_h3]:pt-2
-                              [&_p]:text-sm sm:[&_p]:text-base [&_p]:leading-relaxed [&_p]:text-slate-700
-                              [&_strong]:font-bold [&_strong]:text-slate-900
-                              [&_a:not([class*='bg-'])]:font-bold [&_a:not([class*='bg-'])]:text-[#009FE3] [&_a:not([class*='bg-'])]:hover:underline
-                              [&_ul]:space-y-2.5 [&_ul]:list-none [&_ul]:pl-0
-                              [&_ul>li]:p-3 [&_ul>li]:rounded-xl [&_ul>li]:bg-slate-50 [&_ul>li]:border [&_ul>li]:border-slate-100 [&_ul>li]:text-sm sm:[&_ul>li]:text-base [&_ul>li]:text-slate-700
-                              [&_ol]:space-y-2.5 [&_ol]:pl-5
-                              [&_ol>li]:p-3.5 [&_ol>li]:rounded-xl [&_ol>li]:bg-sky-50/50 [&_ol>li]:border [&_ol>li]:border-sky-100 [&_ol>li]:text-sm sm:[&_ol>li]:text-base [&_ol>li]:text-slate-800
-                              [&_table]:w-full [&_table]:text-left [&_table]:border-collapse [&_table]:text-xs sm:[&_table]:text-sm
-                              [&_th]:px-4 [&_th]:py-3 [&_th]:font-extrabold [&_th]:bg-slate-100 [&_th]:text-slate-900 [&_th]:border-b [&_th]:border-slate-200
-                              [&_td]:px-4 [&_td]:py-2.5 [&_td]:text-slate-700 [&_td]:border-b [&_td]:border-slate-100
-                              [&_span:empty]:hidden [&_.w-8:empty]:hidden
-                              [&_img]:max-w-full [&_img]:h-auto`
-                      }
+                      className={`space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed overflow-x-hidden
+                        [&_h3]:text-base sm:[&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-slate-900 [&_h3]:pt-2
+                        [&_p]:text-sm sm:[&_p]:text-base [&_p]:leading-relaxed [&_p]:text-slate-700
+                        [&_strong]:font-bold [&_strong]:text-slate-900
+                        [&_a:not([class*='bg-'])]:font-bold [&_a:not([class*='bg-'])]:text-[#009FE3] [&_a:not([class*='bg-'])]:hover:underline
+                        [&_ul]:space-y-2.5 [&_ul]:list-none [&_ul]:pl-0
+                        [&_ul>li]:p-3 [&_ul>li]:rounded-xl [&_ul>li]:bg-slate-50 [&_ul>li]:border [&_ul>li]:border-slate-100 [&_ul>li]:text-sm sm:[&_ul>li]:text-base [&_ul>li]:text-slate-700
+                        [&_ol]:space-y-2.5 [&_ol]:pl-5
+                        [&_ol>li]:p-3.5 [&_ol>li]:rounded-xl [&_ol>li]:bg-sky-50/50 [&_ol>li]:border [&_ol>li]:border-sky-100 [&_ol>li]:text-sm sm:[&_ol>li]:text-base [&_ol>li]:text-slate-800
+                        [&_table]:w-full [&_table]:text-left [&_table]:border-collapse [&_table]:text-xs sm:[&_table]:text-sm
+                        [&_th]:px-4 [&_th]:py-3 [&_th]:font-extrabold [&_th]:bg-slate-100 [&_th]:text-slate-900 [&_th]:border-b [&_th]:border-slate-200
+                        [&_td]:px-4 [&_td]:py-2.5 [&_td]:text-slate-700 [&_td]:border-b [&_td]:border-slate-100
+                        [&_span:empty]:hidden [&_.w-8:empty]:hidden
+                        [&_img]:max-w-full [&_img]:h-auto`}
                       dangerouslySetInnerHTML={{ __html: section.bodyHtml }}
                     />
                   </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   GraduationCap,
@@ -9,7 +10,6 @@ import {
   ArrowRight,
   ShieldCheck,
   Search,
-  Scale,
 } from "lucide-react";
 import { Program } from "@/lib/types";
 import { openEnquiryModal } from "@/app/components/EnquiryModal";
@@ -64,10 +64,17 @@ export function ProgramDirectoryPage({
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col font-sans">
       {/* Hero Header */}
-      <section className="relative bg-gradient-to-b from-[#0b2545] via-[#0d2d54] to-[#133b6b] text-white py-14 sm:py-20 overflow-hidden">
-        {/* Ambient Glows */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative overflow-hidden bg-slate-950 text-white py-14 sm:py-20">
+        <Image
+          src="/IGNOU-img.webp"
+          alt="Indira Gandhi National Open University (IGNOU)"
+          fill
+          sizes="100vw"
+          quality={75}
+          priority
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-slate-950/75" />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
@@ -238,29 +245,6 @@ export function ProgramDirectoryPage({
               })}
             </div>
           )}
-        </div>
-      </section>
-
-      {/* Comparison Bottom Banner */}
-      <section className="bg-gradient-to-r from-sky-950 via-[#0b2545] to-[#030619] text-white py-12 px-4 sm:px-6 lg:px-8 border-t border-sky-900/40">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="max-w-2xl">
-            <h3 className="text-2xl font-black text-white">
-              Confused between IGNOU, DU SOL, Amity or NMIMS?
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
-              Compare fees, NAAC grades, approvals, exam mode, and syllabus across top universities in 30 seconds.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new CustomEvent("open-compare-modal"))}
-            className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 shadow-lg hover:shadow-xl transition-all cursor-pointer"
-          >
-            <Scale className="w-4 h-4 text-slate-950" />
-            Launch Side-by-Side Comparison
-          </button>
         </div>
       </section>
     </main>

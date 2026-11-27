@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { BackButton } from "@/components/public/BackButton";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | IGNOU Admission & Course Guidance (ignouadmission.edukyu.com)",
@@ -51,6 +52,8 @@ export default function PrivacyPolicyPage() {
         {/* Content Cards */}
         <section className="py-10 sm:py-14 flex-1">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <BackButton />
+
             {/* Your Consent */}
             <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed">
               <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
@@ -445,8 +448,8 @@ export default function PrivacyPolicyPage() {
             </div>
 
             {/* Governing Law, Consent & Contact Us */}
-            <div className="bg-gradient-to-br from-[#0b2545] to-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-md space-y-4 text-sm sm:text-base text-slate-200 leading-relaxed">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-white">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 Governing Law
               </h2>
               <p>
@@ -454,18 +457,18 @@ export default function PrivacyPolicyPage() {
                 India and are subject to the jurisdiction of the courts in New Delhi, Delhi only.
               </p>
 
-              <h3 className="text-base sm:text-lg font-bold text-white pt-1">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 pt-1">
                 Your Consent
               </h3>
               <p>
                 By using our website, including our mobile applications you legally accept all our
                 Terms and Conditions, under all headers, listed here. If you are using{" "}
-                <strong className="text-white">ignouadmission.edukyu.com</strong> on behalf of a company or a
+                <strong>ignouadmission.edukyu.com</strong> on behalf of a company or a
                 group, you are nevertheless individually bound by this Agreement even if your
                 company or group has a separate agreement with us.
               </p>
 
-              <h3 className="text-base sm:text-lg font-bold text-white pt-1">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 pt-1">
                 Contact Us
               </h3>
               <p>
@@ -473,13 +476,15 @@ export default function PrivacyPolicyPage() {
                 Website and its services,{" "}
                 <Link
                   href="/#admission-form"
-                  className="text-sky-300 font-bold underline hover:text-sky-200"
+                  className="text-[#009FE3] font-bold underline hover:text-[#008ec9]"
                 >
                   click here
                 </Link>
                 .
               </p>
             </div>
+
+            <BackButton />
           </div>
         </section>
       </main>

@@ -66,14 +66,12 @@ function renderRichText(rich: string, keyPrefix = "rt"): React.ReactNode[] {
   return parts;
 }
 
-function renderBlock(block: ContentBlock, idx: number, isDarkCard: boolean) {
+function renderBlock(block: ContentBlock, idx: number) {
   if (block.type === "subheading") {
     return (
       <h3
         key={idx}
-        className={`text-base sm:text-lg font-bold pt-2 ${
-          isDarkCard ? "text-white" : "text-slate-900"
-        }`}
+        className="text-base sm:text-lg font-bold pt-2 text-slate-900"
       >
         {block.text}
       </h3>
@@ -84,11 +82,9 @@ function renderBlock(block: ContentBlock, idx: number, isDarkCard: boolean) {
     return (
       <p
         key={idx}
-        className={`text-sm sm:text-base leading-relaxed ${
-          isDarkCard ? "text-slate-200" : "text-slate-700"
-        }`}
+        className="text-sm sm:text-base leading-relaxed text-slate-700"
       >
-        {isDarkCard ? block.rich.replace(/<\/?b>/g, "").replace(/<LINK:[^>]+>|<\/LINK>/g, "") : renderRichText(block.rich, `p-${idx}`)}
+        {renderRichText(block.rich, `p-${idx}`)}
       </p>
     );
   }
@@ -240,34 +236,17 @@ export function StudentZoneGuidePage({ page }: StudentZoneGuidePageProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
             {/* LEFT COLUMN: Structured Guide Content */}
             <article className="lg:col-span-8 space-y-6">
-              {page.sections.map((section, sIdx) => {
-                const headingLower = section.heading.toLowerCase();
-                const isFinalThoughts =
-                  headingLower.includes("final thoughts") ||
-                  headingLower === "conclusion" ||
-                  headingLower === "the short version";
-                return (
-                  <div
-                    key={`${section.heading}-${sIdx}`}
-                    className={
-                      isFinalThoughts
-                        ? "bg-gradient-to-br from-[#0b2545] to-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-md space-y-3"
-                        : "bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4"
-                    }
-                  >
-                    <h2
-                      className={`text-xl sm:text-2xl font-extrabold ${
-                        isFinalThoughts ? "text-white" : "text-slate-900"
-                      }`}
-                    >
-                      {section.heading}
-                    </h2>
-                    {section.blocks.map((block, bIdx) =>
-                      renderBlock(block, bIdx, isFinalThoughts)
-                    )}
-                  </div>
-                );
-              })}
+              {page.sections.map((section, sIdx) => (
+                <div
+                  key={`${section.heading}-${sIdx}`}
+                  className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4"
+                >
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                    {section.heading}
+                  </h2>
+                  {section.blocks.map((block, bIdx) => renderBlock(block, bIdx))}
+                </div>
+              ))}
 
               {/* Frequently Asked Questions (FAQs) */}
               {page.faqs.length > 0 && (

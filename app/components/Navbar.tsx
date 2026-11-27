@@ -13,7 +13,6 @@ import {
   BookOpen,
   User,
   GraduationCap,
-  Laptop,
   Briefcase,
   FileText,
   Award,
@@ -27,7 +26,6 @@ import {
 } from "lucide-react";
 import { HomePageData, SiteSettings } from "@/lib/types";
 
-const CompareModal = dynamic(() => import("./CompareModal"), { ssr: false });
 const EnquiryModal = dynamic(() => import("./EnquiryModal"), { ssr: false });
 
 interface NavbarProps {
@@ -153,11 +151,155 @@ const MBA_SPECIALIZATIONS: {
   },
 ];
 
+interface CourseDropdownItem {
+  code: string;
+  title: string;
+  href: string;
+}
+
+const DISTANCE_UG_COURSES: CourseDropdownItem[] = [
+  { code: "BA", title: "Distance BA (Arts)", href: "/programs/bachelor-of-arts-bag" },
+  { code: "BBA", title: "Distance BBA", href: "/programs/bachelor-of-business-administration-bba" },
+  { code: "BCA", title: "Distance BCA", href: "/programs/bachelor-of-computer-applications-bca" },
+  { code: "B.Com", title: "Distance B.Com", href: "/programs/bachelor-of-commerce-bcom" },
+  { code: "B.Sc", title: "Distance B.Sc", href: "/programs/bachelor-of-science-bscg" },
+  { code: "B.Ed", title: "Distance B.Ed", href: "/programs/bachelor-of-education-bed" },
+  { code: "BLIS", title: "Distance BLIS", href: "/programs/bachelor-of-library-and-information-science-blis" },
+  { code: "BSW", title: "Social Work", href: "/ug-programs" },
+];
+
+const DISTANCE_PG_COURSES: CourseDropdownItem[] = [
+  { code: "MBA", title: "Distance MBA", href: "/programs/master-of-business-administration-mba" },
+  { code: "M.Sc", title: "Distance M.Sc", href: "/programs/master-of-science-msc" },
+  { code: "MA", title: "Distance MA", href: "/programs/master-of-arts-ma" },
+  { code: "MCA", title: "Distance MCA", href: "/programs/master-of-computer-applications-mca" },
+  { code: "M.Com", title: "Distance M.Com", href: "/programs/master-of-commerce-mcom" },
+  { code: "MJMC", title: "Distance MJMC", href: "/programs/master-of-arts-journalism-and-mass-communication-majmc" },
+  { code: "MLIS", title: "Distance MLIS", href: "/programs/master-of-library-and-information-science-mlis" },
+];
+
+const ONLINE_UG_COURSES: CourseDropdownItem[] = [
+  { code: "BA", title: "Online BA (Arts)", href: "/programs/bachelor-of-arts-bag" },
+  { code: "BBA", title: "Online BBA", href: "/programs/bachelor-of-business-administration-bba" },
+  { code: "BCA", title: "Online BCA", href: "/programs/bachelor-of-computer-applications-bca" },
+  { code: "B.Com", title: "Online B.Com", href: "/programs/bachelor-of-commerce-bcom" },
+  { code: "B.Sc", title: "Online B.Sc", href: "/programs/bachelor-of-science-bscg" },
+  { code: "BLIS", title: "Online BLIS", href: "/programs/bachelor-of-library-and-information-science-blis" },
+];
+
+const ONLINE_PG_COURSES: CourseDropdownItem[] = [
+  { code: "MBA", title: "Online MBA", href: "/programs/master-of-business-administration-mba" },
+  { code: "M.Sc", title: "Online M.Sc", href: "/programs/master-of-science-msc" },
+  { code: "MA", title: "Online MA", href: "/programs/master-of-arts-ma" },
+  { code: "MCA", title: "Online MCA", href: "/programs/master-of-computer-applications-mca" },
+  { code: "M.Com", title: "Online M.Com", href: "/programs/master-of-commerce-mcom" },
+  { code: "MJMC", title: "Online MJMC", href: "/programs/master-of-arts-journalism-and-mass-communication-majmc" },
+  { code: "MLIS", title: "Online MLIS", href: "/programs/master-of-library-and-information-science-mlis" },
+];
+
+function CourseDropdownPanel({
+  ugCourses,
+  pgCourses,
+  footerLabel,
+  onSelect,
+}: {
+  ugCourses: CourseDropdownItem[];
+  pgCourses: CourseDropdownItem[];
+  footerLabel: string;
+  onSelect: () => void;
+}) {
+  return (
+    <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
+      <div className="w-[520px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-4 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-150">
+        {/* Column 1: Undergraduate (UG) */}
+        <div>
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+            <span className="flex items-center gap-1.5 text-xs font-bold text-sky-700 uppercase tracking-wider">
+              <GraduationCap className="w-4 h-4 text-sky-600" />
+              Undergraduate (UG)
+            </span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-100">
+              3 Years
+            </span>
+          </div>
+          <ul className="space-y-1">
+            {ugCourses.map((item) => (
+              <li key={item.code}>
+                <Link
+                  href={item.href}
+                  onClick={onSelect}
+                  className="group flex items-center justify-between p-2 rounded-xl hover:bg-sky-50/70 border border-transparent hover:border-sky-100 transition-all duration-150"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="shrink-0 px-2 py-0.5 text-[11px] font-extrabold rounded-md bg-sky-100/80 text-sky-800 group-hover:bg-sky-200 group-hover:text-sky-900 transition-colors">
+                      {item.code}
+                    </span>
+                    <span className="text-xs font-medium text-slate-700 group-hover:text-slate-900 truncate">
+                      {item.title}
+                    </span>
+                  </div>
+                  <ArrowRight className="w-3 h-3 text-slate-300 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-sky-600 transition-all shrink-0" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Column 2: Postgraduate (PG) */}
+        <div>
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+            <span className="flex items-center gap-1.5 text-xs font-bold text-indigo-700 uppercase tracking-wider">
+              <Award className="w-4 h-4 text-indigo-600" />
+              Postgraduate (PG)
+            </span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+              2 Years
+            </span>
+          </div>
+          <ul className="space-y-1">
+            {pgCourses.map((item) => (
+              <li key={item.code}>
+                <Link
+                  href={item.href}
+                  onClick={onSelect}
+                  className="group flex items-center justify-between p-2 rounded-xl hover:bg-indigo-50/70 border border-transparent hover:border-indigo-100 transition-all duration-150"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="shrink-0 px-2 py-0.5 text-[11px] font-extrabold rounded-md bg-indigo-100/80 text-indigo-800 group-hover:bg-indigo-200 group-hover:text-indigo-900 transition-colors">
+                      {item.code}
+                    </span>
+                    <span className="text-xs font-medium text-slate-700 group-hover:text-slate-900 truncate">
+                      {item.title}
+                    </span>
+                  </div>
+                  <ArrowRight className="w-3 h-3 text-slate-300 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-indigo-600 transition-all shrink-0" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Bottom Quick Action Bar */}
+        <div className="col-span-2 pt-2.5 mt-1 border-t border-slate-100 flex items-center justify-between text-xs bg-slate-50/70 -mx-4 -mb-4 px-4 py-2.5 rounded-b-2xl">
+          <span className="text-slate-500 font-medium">{footerLabel}</span>
+          <Link
+            href="/programs"
+            onClick={onSelect}
+            className="font-bold text-[#009FE3] hover:underline inline-flex items-center gap-1"
+          >
+            <span>Explore All Programs</span>
+            <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileAccordion, setMobileAccordion] = useState<string | null>(null);
-  const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState("MBA");
   const [enquirySource, setEnquirySource] = useState("Navbar");
@@ -195,7 +337,6 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
 
   // Global event listener for modal triggers across the page
   useEffect(() => {
-    const handleOpenCompare = () => setIsCompareOpen(true);
     const handleOpenEnquiry = (e: Event) => {
       const customEvent = e as CustomEvent<{ course?: string; source?: string }>;
       if (customEvent.detail?.course) {
@@ -207,11 +348,9 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
       setIsEnquiryOpen(true);
     };
 
-    window.addEventListener("open-compare-modal", handleOpenCompare);
     window.addEventListener("open-enquiry-modal", handleOpenEnquiry);
 
     return () => {
-      window.removeEventListener("open-compare-modal", handleOpenCompare);
       window.removeEventListener("open-enquiry-modal", handleOpenEnquiry);
     };
   }, []);
@@ -366,109 +505,12 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
 
                 {/* Dropdown Menu - Distance Courses (2 Columns, Centered in Middle of Menu) */}
                 {activeDropdown === "distance" && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                    <div className="w-[520px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-4 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-150">
-                      
-                      {/* Column 1: Undergraduate (UG) */}
-                      <div>
-                        <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
-                          <span className="flex items-center gap-1.5 text-xs font-bold text-sky-700 uppercase tracking-wider">
-                            <GraduationCap className="w-4 h-4 text-sky-600" />
-                            Undergraduate (UG)
-                          </span>
-                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-100">
-                            3 Years
-                          </span>
-                        </div>
-                        <ul className="space-y-1">
-                          {[
-                            { code: "BA", title: "Distance BA (Arts)", href: "/programs/bachelor-of-arts-bag" },
-                            { code: "BBA", title: "Distance BBA", href: "/programs/bachelor-of-business-administration-bba" },
-                            { code: "BCA", title: "Distance BCA", href: "/programs/bachelor-of-computer-applications-bca" },
-                            { code: "B.Com", title: "Distance B.Com", href: "/programs/bachelor-of-commerce-bcom" },
-                            { code: "B.Sc", title: "Distance B.Sc", href: "/programs/bachelor-of-science-bscg" },
-                            { code: "B.Ed", title: "Distance B.Ed", href: "/programs/bachelor-of-education-bed" },
-                            { code: "BLIS", title: "Distance BLIS", href: "/programs/bachelor-of-library-and-information-science-blis" },
-                            { code: "BSW", title: "Social Work", href: "/ug-programs" },
-                          ].map((item) => (
-                            <li key={item.code}>
-                              <Link
-                                href={item.href}
-                                onClick={() => setActiveDropdown(null)}
-                                className="group flex items-center justify-between p-2 rounded-xl hover:bg-sky-50/70 border border-transparent hover:border-sky-100 transition-all duration-150"
-                              >
-                                <div className="flex items-center gap-2 min-w-0">
-                                  <span className="shrink-0 px-2 py-0.5 text-[11px] font-extrabold rounded-md bg-sky-100/80 text-sky-800 group-hover:bg-sky-200 group-hover:text-sky-900 transition-colors">
-                                    {item.code}
-                                  </span>
-                                  <span className="text-xs font-medium text-slate-700 group-hover:text-slate-900 truncate">
-                                    {item.title}
-                                  </span>
-                                </div>
-                                <ArrowRight className="w-3 h-3 text-slate-300 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-sky-600 transition-all shrink-0" />
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Column 2: Postgraduate (PG) */}
-                      <div>
-                        <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
-                          <span className="flex items-center gap-1.5 text-xs font-bold text-indigo-700 uppercase tracking-wider">
-                            <Award className="w-4 h-4 text-indigo-600" />
-                            Postgraduate (PG)
-                          </span>
-                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
-                            2 Years
-                          </span>
-                        </div>
-                        <ul className="space-y-1">
-                          {[
-                            { code: "MBA", title: "Distance MBA", href: "/programs/master-of-business-administration-mba" },
-                            { code: "M.Sc", title: "Distance M.Sc", href: "/programs/master-of-science-msc" },
-                            { code: "MA", title: "Distance MA", href: "/programs/master-of-arts-ma" },
-                            { code: "MCA", title: "Distance MCA", href: "/programs/master-of-computer-applications-mca" },
-                            { code: "M.Com", title: "Distance M.Com", href: "/programs/master-of-commerce-mcom" },
-                            { code: "MJMC", title: "Distance MJMC", href: "/programs/master-of-arts-journalism-and-mass-communication-majmc" },
-                            { code: "MLIS", title: "Distance MLIS", href: "/programs/master-of-library-and-information-science-mlis" },
-                          ].map((item) => (
-                            <li key={item.code}>
-                              <Link
-                                href={item.href}
-                                onClick={() => setActiveDropdown(null)}
-                                className="group flex items-center justify-between p-2 rounded-xl hover:bg-indigo-50/70 border border-transparent hover:border-indigo-100 transition-all duration-150"
-                              >
-                                <div className="flex items-center gap-2 min-w-0">
-                                  <span className="shrink-0 px-2 py-0.5 text-[11px] font-extrabold rounded-md bg-indigo-100/80 text-indigo-800 group-hover:bg-indigo-200 group-hover:text-indigo-900 transition-colors">
-                                    {item.code}
-                                  </span>
-                                  <span className="text-xs font-medium text-slate-700 group-hover:text-slate-900 truncate">
-                                    {item.title}
-                                  </span>
-                                </div>
-                                <ArrowRight className="w-3 h-3 text-slate-300 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-indigo-600 transition-all shrink-0" />
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Bottom Quick Action Bar */}
-                      <div className="col-span-2 pt-2.5 mt-1 border-t border-slate-100 flex items-center justify-between text-xs bg-slate-50/70 -mx-4 -mb-4 px-4 py-2.5 rounded-b-2xl">
-                        <span className="text-slate-500 font-medium">UGC-DEB Approved Distance Degrees</span>
-                        <Link
-                          href="/programs"
-                          onClick={() => setActiveDropdown(null)}
-                          className="font-bold text-[#009FE3] hover:underline inline-flex items-center gap-1"
-                        >
-                          <span>Explore All Programs</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </Link>
-                      </div>
-
-                    </div>
-                  </div>
+                  <CourseDropdownPanel
+                    ugCourses={DISTANCE_UG_COURSES}
+                    pgCourses={DISTANCE_PG_COURSES}
+                    footerLabel="UGC-DEB Approved Distance Degrees"
+                    onSelect={() => setActiveDropdown(null)}
+                  />
                 )}
               </div>
 
@@ -495,68 +537,14 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
                   />
                 </button>
 
-                {/* Dropdown Menu - Online Courses */}
+                {/* Dropdown Menu - Online Courses (2 Columns: UG & PG) */}
                 {activeDropdown === "online" && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                    <div className="w-[520px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl shadow-slate-900/15 border border-slate-200/90 p-5 animate-in fade-in slide-in-from-top-2 duration-150">
-                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-100">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                          UGC-Entitled E-Learning Programs
-                        </span>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          100% Digital
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2.5">
-                        {[
-                          { title: "Online BA", desc: "Arts & Humanities", tag: "UG", href: "/programs/bachelor-of-arts-bag" },
-                          { title: "Online BBA", desc: "Business Administration", tag: "UG", href: "/programs/bachelor-of-business-administration-bba" },
-                          { title: "Online BCA", desc: "Computer Applications", tag: "Tech", href: "/programs/bachelor-of-computer-applications-bca" },
-                          { title: "Online B.Com", desc: "Digital Commerce", tag: "UG", href: "/programs/bachelor-of-commerce-bcom" },
-                          { title: "Online B.Sc", desc: "Science & Lab Modules", tag: "UG", href: "/programs/bachelor-of-science-bscg" },
-                          { title: "Online BLIS", desc: "Library & Info Science", tag: "1-Yr", href: "/programs/bachelor-of-library-and-information-science-blis" },
-                          { title: "Online MCA", desc: "Software & Cloud", tag: "Hot", href: "/programs/master-of-computer-applications-mca" },
-                          { title: "Online MBA", desc: "Master of Business", tag: "Top Rated", href: "/programs/master-of-business-administration-mba" },
-                          { title: "Online MA", desc: "Arts & Humanities (All)", tag: "PG", href: "/programs/master-of-arts-ma" },
-                          { title: "Online M.Com", desc: "Commerce & Finance", tag: "PG", href: "/programs/master-of-commerce-mcom" },
-                          { title: "Online MJMC", desc: "Media & Journalism", tag: "PG", href: "/programs/master-of-arts-journalism-and-mass-communication-majmc" },
-                          { title: "Online M.Sc", desc: "Science & Research", tag: "PG", href: "/programs/master-of-science-msc" },
-                          { title: "Online MLIS", desc: "Master of Library Sci", tag: "PG", href: "/programs/master-of-library-and-information-science-mlis" },
-                          { title: "Explore All Online", desc: "View Full Online Catalog", tag: "100%", href: "/programs" },
-                        ].map((item) => (
-                          <Link
-                            key={item.title}
-                            href={item.href}
-                            onClick={() => setActiveDropdown(null)}
-                            className="group p-2.5 rounded-xl border border-slate-100 hover:border-sky-300 hover:bg-sky-50/60 transition-all flex flex-col"
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="font-bold text-sm text-slate-900 group-hover:text-[#009FE3] transition-colors">
-                                {item.title}
-                              </span>
-                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-100 text-sky-800">
-                                {item.tag}
-                              </span>
-                            </div>
-                            <span className="text-xs text-slate-500 mt-0.5">{item.desc}</span>
-                          </Link>
-                        ))}
-                      </div>
-
-                      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600 bg-sky-50/50 -mx-5 -mb-5 px-5 py-3 rounded-b-2xl">
-                        <span className="flex items-center gap-1.5 font-medium text-slate-700">
-                          <Laptop className="w-4 h-4 text-sky-600" /> Complete with LMS, e-tutorials &amp; online exams
-                        </span>
-                        <Link
-                          href="/programs"
-                          onClick={() => setActiveDropdown(null)}
-                          className="font-bold text-sky-700 hover:underline"
-                        >
-                          Explore Programs →
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
+                  <CourseDropdownPanel
+                    ugCourses={ONLINE_UG_COURSES}
+                    pgCourses={ONLINE_PG_COURSES}
+                    footerLabel="UGC-Entitled 100% Online Degrees"
+                    onSelect={() => setActiveDropdown(null)}
+                  />
                 )}
               </div>
 
@@ -717,13 +705,14 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
             {/* RIGHT ACTION BUTTON (COMPARE UNIVERSITIES & MOBILE TRIGGER - ONE LINE) */}
             <div className="flex items-center gap-3 shrink-0 whitespace-nowrap">
               {/* "Compare Universities" Primary Button - Hidden on mobile to prevent overlapping hamburger */}
-              <button
-                type="button"
-                onClick={() => setIsCompareOpen(true)}
+              <a
+                href="https://edukyu.com/compare-colleges"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hidden md:inline-flex items-center justify-center px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold text-white bg-[#009FE3] hover:bg-[#008ec9] rounded-lg shadow-xs hover:shadow transition-all whitespace-nowrap shrink-0 active:scale-[0.98] cursor-pointer"
               >
                 Compare Universities
-              </button>
+              </a>
 
               {/* Mobile Menu Hamburger Trigger */}
               <button
@@ -930,17 +919,16 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
 
               {/* Mobile Quick Action Buttons */}
               <div className="pt-4 border-t border-slate-200 space-y-2.5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setIsCompareOpen(true);
-                  }}
+                <a
+                  href="https://edukyu.com/compare-colleges"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMobileMenuOpen(false)}
                   className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-[#009FE3] shadow-md cursor-pointer"
                 >
                   <Scale className="w-4 h-4" />
                   Compare Top Universities
-                </button>
+                </a>
 
                 <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
                   <a
@@ -964,9 +952,6 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
       </header>
 
       {/* MODALS */}
-      {isCompareOpen && (
-        <CompareModal isOpen={isCompareOpen} onClose={() => setIsCompareOpen(false)} />
-      )}
       {isEnquiryOpen && (
         <EnquiryModal
           isOpen={isEnquiryOpen}

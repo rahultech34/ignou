@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { BackButton } from "@/components/public/BackButton";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions | IGNOU Admission & Course Guidance (ignouadmission.edukyu.com)",
@@ -50,6 +51,8 @@ export default function TermsAndConditionsPage() {
         {/* Content Cards */}
         <section className="py-10 sm:py-14 flex-1">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <BackButton />
+
             {/* Overview & Revisions */}
             <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed">
               <p>
@@ -230,12 +233,12 @@ export default function TermsAndConditionsPage() {
             </div>
 
             {/* VI. General */}
-            <div className="bg-gradient-to-br from-[#0b2545] to-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-md space-y-4 text-sm sm:text-base text-slate-200 leading-relaxed">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-white">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 VI. General
               </h2>
               <p>
-                <strong className="text-white">ignouadmission.edukyu.com</strong> will not be deemed in
+                <strong>ignouadmission.edukyu.com</strong> will not be deemed in
                 default hereunder or held responsible for any cessation, interruption or delay in
                 the performance of its obligations hereunder due to earthquake, flood, fire, storm,
                 natural disaster, act of God, war, terrorism, armed conflict, labor strike or
@@ -243,7 +246,7 @@ export default function TermsAndConditionsPage() {
               </p>
               <p>
                 This agreement comprises the entire terms and conditions between you and{" "}
-                <strong className="text-white">ignouadmission.edukyu.com</strong> and supersedes any prior
+                <strong>ignouadmission.edukyu.com</strong> and supersedes any prior
                 agreements pertaining to the subject matter contained herein.
               </p>
               <p>
@@ -253,25 +256,25 @@ export default function TermsAndConditionsPage() {
                 this terms and conditions must be asserted individually.
               </p>
               <p>
-                <strong className="text-white">ignouadmission.edukyu.com</strong> reserves the right to
+                <strong>ignouadmission.edukyu.com</strong> reserves the right to
                 terminate your access to the website if it reasonably believes, in its sole
                 discretion, that you have breached any of the terms and conditions. Following
                 termination, you will not be permitted to use the website and{" "}
-                <strong className="text-white">ignouadmission.edukyu.com</strong> may, in its sole
+                <strong>ignouadmission.edukyu.com</strong> may, in its sole
                 discretion and without advance notice to you, cancel any outstanding order of
                 services. If your access to the website is terminated,{" "}
-                <strong className="text-white">ignouadmission.edukyu.com</strong> reserves the right to
+                <strong>ignouadmission.edukyu.com</strong> reserves the right to
                 exercise whatever means it deems necessary to prevent unauthorized access of the
                 website. This agreement will survive indefinitely unless and until{" "}
-                <strong className="text-white">ignouadmission.edukyu.com</strong> chooses, in its sole
+                <strong>ignouadmission.edukyu.com</strong> chooses, in its sole
                 discretion and without advance notice to you, to terminate it.
               </p>
               <p>
-                <strong className="text-white">ignouadmission.edukyu.com</strong> makes no representation
+                <strong>ignouadmission.edukyu.com</strong> makes no representation
                 that the website is appropriate or available for use in locations outside India.
                 Users who access the website from outside India do so at their own risk and
                 initiative and must bear all responsibility for compliance with any applicable local
-                laws. <strong className="text-white">ignouadmission.edukyu.com</strong> may assign its
+                laws. <strong>ignouadmission.edukyu.com</strong> may assign its
                 rights and obligations under this agreement in its sole discretion and without
                 advance notice to you.
               </p>
@@ -280,6 +283,8 @@ export default function TermsAndConditionsPage() {
                 bound by all of the terms and conditions of this agreement.
               </p>
             </div>
+
+            <BackButton />
           </div>
         </section>
       </main>

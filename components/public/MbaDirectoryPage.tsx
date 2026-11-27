@@ -330,13 +330,6 @@ export function MbaDirectoryPage({ specializations }: MbaDirectoryPageProps) {
             >
               Get Free Career Guidance
             </button>
-            <button
-              type="button"
-              onClick={() => window.dispatchEvent(new CustomEvent("open-compare-modal"))}
-              className="px-6 py-3 rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-800 text-sm font-bold shadow-2xs transition-all cursor-pointer"
-            >
-              Compare Online MBA Degrees
-            </button>
           </div>
         </div>
       </section>
