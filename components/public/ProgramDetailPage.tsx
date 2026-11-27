@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   GraduationCap,
@@ -14,7 +15,6 @@ import {
   HelpCircle,
   Phone,
   Mail,
-  Scale,
   ChevronRight,
   Send,
   Lock,
@@ -108,10 +108,17 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
       )}
 
       {/* Hero Showcase */}
-      <section className="relative bg-gradient-to-b from-[#0b2545] via-[#0d2d54] to-[#133b6b] text-white py-12 lg:py-16 overflow-hidden">
-        {/* Glows */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative overflow-hidden bg-slate-950 text-white py-12 lg:py-16">
+        <Image
+          src="/IGNOU-img.webp"
+          alt="Indira Gandhi National Open University (IGNOU)"
+          fill
+          sizes="100vw"
+          quality={75}
+          priority
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-slate-950/75" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -160,15 +167,6 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
                   className="px-6 py-3 rounded-xl bg-[#ffcc00] hover:bg-[#ffb700] text-slate-950 font-extrabold text-sm shadow-lg hover:shadow-xl transition-all cursor-pointer"
                 >
                   Apply for Admission 2026-27
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => window.dispatchEvent(new CustomEvent("open-compare-modal"))}
-                  className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-sm backdrop-blur-xs transition-all flex items-center gap-2 cursor-pointer"
-                >
-                  <Scale className="w-4 h-4 text-sky-300" />
-                  Compare Universities
                 </button>
               </div>
             </div>

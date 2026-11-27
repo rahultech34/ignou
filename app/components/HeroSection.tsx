@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import {
   Award,
   CheckCircle,
@@ -8,7 +9,6 @@ import {
   BookOpen,
   FileText,
   Clock,
-  Scale,
   Phone
 } from "lucide-react";
 import { HomePageData, Program, SiteSettings } from "@/lib/types";
@@ -19,7 +19,6 @@ import { openEnquiryModal } from "./EnquiryModal";
 import { AdmissionForm } from "@/components/public/AdmissionForm";
 
 interface HeroSectionProps {
-  onOpenCompare?: () => void;
   onOpenSearch?: () => void;
   homePageData?: HomePageData;
   programsList?: Program[];
@@ -27,11 +26,6 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({
-  onOpenCompare = () => {
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("open-compare-modal"));
-    }
-  },
   homePageData,
   programsList,
 }: HeroSectionProps) {
@@ -194,14 +188,18 @@ export default function HeroSection({
 
   return (
     <div className="flex flex-col w-full bg-slate-50 font-sans">
-      {/* 1. DARK BLUE HERO BANNER WITH ADMISSION FORM */}
-      <section className="relative bg-gradient-to-b from-[#0b2545] via-[#0d2d54] to-[#133b6b] text-white pt-10 sm:pt-14 pb-16 overflow-x-clip">
-        {/* Subtle Background Glows and Grid */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400/15 via-transparent to-transparent" />
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl" />
-        </div>
+      {/* 1. HERO BANNER WITH ADMISSION FORM */}
+      <section className="relative overflow-hidden bg-slate-950 text-white pt-10 sm:pt-14 pb-16">
+        <Image
+          src="/IGNOU-img.webp"
+          alt="Indira Gandhi National Open University (IGNOU)"
+          fill
+          sizes="100vw"
+          quality={75}
+          priority
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-slate-950/75" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
@@ -406,32 +404,23 @@ export default function HeroSection({
               <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
                 <button
                   type="button"
-                  onClick={onOpenCompare}
-                  className="text-xs font-semibold text-slate-600 hover:text-sky-600 flex items-center gap-1 cursor-pointer"
+                  onClick={() => openEnquiryModal({ course: c.code, source: `Course Card - ${c.code}` })}
+                  className="inline-flex items-center gap-1 text-xs font-extrabold px-3 py-1.5 rounded-lg bg-[#ffcc00] hover:bg-[#ffb700] text-slate-950 shadow-xs hover:shadow transition-all cursor-pointer"
                 >
-                  <Scale className="w-3.5 h-3.5 text-sky-500" /> Compare
+                  <span>Enquire</span>
+                  <ArrowRight className="w-3 h-3" />
                 </button>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => openEnquiryModal({ course: c.code, source: `Course Card - ${c.code}` })}
-                    className="inline-flex items-center gap-1 text-xs font-extrabold px-3 py-1.5 rounded-lg bg-[#ffcc00] hover:bg-[#ffb700] text-slate-950 shadow-xs hover:shadow transition-all cursor-pointer"
-                  >
-                    <span>Enquire</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </button>
-                  <a
-                    href={`#course-${c.code.toLowerCase()}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      openEnquiryModal({ course: c.code, source: `Syllabus & Fee - ${c.code}` });
-                    }}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-sky-600 hover:text-sky-700"
-                  >
-                    <span>Syllabus & Fee</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </a>
-                </div>
+                <a
+                  href={`#course-${c.code.toLowerCase()}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openEnquiryModal({ course: c.code, source: `Syllabus & Fee - ${c.code}` });
+                  }}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-sky-600 hover:text-sky-700"
+                >
+                  <span>Syllabus & Fee</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </a>
               </div>
             </div>
           ))}
