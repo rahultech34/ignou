@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getPrograms, getMbaSpecializations, getBlogs } from "@/lib/admin-data";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ignou.edukyu.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ignouadmission.edukyu.com";
 
   // Fetch dynamic collections
   const [programs, mbaSpecs, blogs] = await Promise.all([

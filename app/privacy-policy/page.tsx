@@ -6,13 +6,13 @@ import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | IGNOU Admission & Course Guidance (ignou.edukyu.com)",
+  title: "Privacy Policy | IGNOU Admission & Course Guidance (ignouadmission.edukyu.com)",
   description:
-    "Read the Privacy Policy, Cookie Policy, Copyrights Policy, and Intellectual Property guidelines for ignou.edukyu.com.",
+    "Read the Privacy Policy, Cookie Policy, Copyrights Policy, and Intellectual Property guidelines for ignouadmission.edukyu.com.",
   openGraph: {
-    title: "Privacy Policy | ignou.edukyu.com",
+    title: "Privacy Policy | ignouadmission.edukyu.com",
     description:
-      "Read the Privacy Policy, Cookie Policy, Copyrights Policy, and data protection practices for ignou.edukyu.com.",
+      "Read the Privacy Policy, Cookie Policy, Copyrights Policy, and data protection practices for ignouadmission.edukyu.com.",
     images: [{ url: "/IGNOU-img.webp" }],
     type: "website",
   },
@@ -43,7 +43,7 @@ export default function PrivacyPolicyPage() {
             </h1>
             <p className="text-sm sm:text-base text-slate-200 max-w-2xl mx-auto leading-relaxed">
               Privacy Policy, Cookie Policy, Copyrights &amp; Intellectual Property guidelines for{" "}
-              <strong className="text-white">ignou.edukyu.com</strong>.
+              <strong className="text-white">ignouadmission.edukyu.com</strong>.
             </p>
           </div>
         </section>
@@ -59,7 +59,7 @@ export default function PrivacyPolicyPage() {
               <p>
                 By using our website, including our mobile applications you legally accept all our
                 Terms and Conditions, under all headers, listed here. If you are using{" "}
-                <strong>ignou.edukyu.com</strong> on behalf of a company or a group, you are
+                <strong>ignouadmission.edukyu.com</strong> on behalf of a company or a group, you are
                 nevertheless individually bound by this Agreement even if your company or group has
                 a separate agreement with us.
               </p>
@@ -254,12 +254,12 @@ export default function PrivacyPolicyPage() {
               <p>
                 By using our website, including our mobile applications you legally accept all our
                 Terms and Conditions, under all headers, listed here. If you are using{" "}
-                <strong>ignou.edukyu.com</strong> on behalf of a company or a group, you are
+                <strong>ignouadmission.edukyu.com</strong> on behalf of a company or a group, you are
                 nevertheless individually bound by this Agreement even if your company or group has
-                a separate agreement with us. By using the <strong>ignou.edukyu.com</strong>{" "}
+                a separate agreement with us. By using the <strong>ignouadmission.edukyu.com</strong>{" "}
                 Site, you are consenting to our use of cookies in accordance with this Cookie
                 Policy. If you do not agree to our use of cookies in this way, you should set your
-                browser settings accordingly or not use <strong>ignou.edukyu.com</strong>. If you
+                browser settings accordingly or not use <strong>ignouadmission.edukyu.com</strong>. If you
                 disable the cookies that we use, this may impact your user experience.
               </p>
 
@@ -370,7 +370,7 @@ export default function PrivacyPolicyPage() {
               <p>
                 By using our website, including our mobile applications you legally accept all our
                 Terms and Conditions, under all headers, listed here. If you are using{" "}
-                <strong>ignou.edukyu.com</strong> on behalf of a company or a group, you are
+                <strong>ignouadmission.edukyu.com</strong> on behalf of a company or a group, you are
                 nevertheless individually bound by this Agreement even if your company or group has
                 a separate agreement with us.
               </p>
@@ -381,12 +381,12 @@ export default function PrivacyPolicyPage() {
               <p>
                 All materials appearing on this Site, including site design, text, graphics, icons
                 interfaces, and the selection, assembly and arrangements are owned or licensed by{" "}
-                <strong>ignou.edukyu.com</strong>. You may copy material in limited quantities from
+                <strong>ignouadmission.edukyu.com</strong>. You may copy material in limited quantities from
                 this website for Your personal non-commercial use provided that our copyright notice
                 is affixed to the copied material. Any other use of materials on this Site,
                 including but not limited to, reproduction for purposes other than those noted on
                 our Site, modification, transmission, display, distribution or republication,
-                without the prior written permission of <strong>ignou.edukyu.com</strong> is
+                without the prior written permission of <strong>ignouadmission.edukyu.com</strong> is
                 strictly prohibited. Users are not permitted to use &ldquo;web crawlers&rdquo; or
                 other types of software or hardware technology to automatically download large
                 amounts of materials from the Site. Elements of the website are also protected by
@@ -394,7 +394,7 @@ export default function PrivacyPolicyPage() {
                 in part on other websites.
               </p>
               <p>
-                <strong>ignou.edukyu.com</strong> believes that some of the information on this
+                <strong>ignouadmission.edukyu.com</strong> believes that some of the information on this
                 Site as well as underlying business model has high commercial value and any use of
                 the same or replication of same without consulting us shall be treated as loss of
                 business for us and accordingly recovered from You in case of use of the same for
@@ -412,15 +412,15 @@ export default function PrivacyPolicyPage() {
               <p>
                 Unless otherwise indicated or anything contained to the contrary or any proprietary
                 material owned by a third party and so expressly mentioned,{" "}
-                <strong>ignou.edukyu.com</strong> owns all intellectual property rights to and in
+                <strong>ignouadmission.edukyu.com</strong> owns all intellectual property rights to and in
                 the website, including, without limitation, any and all rights, title and interest
                 in and to copyright, related rights, patents, utility models, trademarks, trade
                 names, service marks, designs, know-how, trade secrets and inventions (whether
                 patentable or not), goodwill, source code, meta tags, databases, text, content,
                 graphics, icons, and hyperlinks. You acknowledge and agree that you shall not use,
                 reproduce or distribute any content from the website belonging to{" "}
-                <strong>ignou.edukyu.com</strong> without obtaining authorization from{" "}
-                <strong>ignou.edukyu.com</strong>.
+                <strong>ignouadmission.edukyu.com</strong> without obtaining authorization from{" "}
+                <strong>ignouadmission.edukyu.com</strong>.
               </p>
               <p>
                 Notwithstanding the foregoing, it is expressly clarified that you will retain
@@ -460,7 +460,7 @@ export default function PrivacyPolicyPage() {
               <p>
                 By using our website, including our mobile applications you legally accept all our
                 Terms and Conditions, under all headers, listed here. If you are using{" "}
-                <strong className="text-white">ignou.edukyu.com</strong> on behalf of a company or a
+                <strong className="text-white">ignouadmission.edukyu.com</strong> on behalf of a company or a
                 group, you are nevertheless individually bound by this Agreement even if your
                 company or group has a separate agreement with us.
               </p>

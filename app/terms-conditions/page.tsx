@@ -5,13 +5,13 @@ import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | IGNOU Admission & Course Guidance (ignou.edukyu.com)",
+  title: "Terms & Conditions | IGNOU Admission & Course Guidance (ignouadmission.edukyu.com)",
   description:
-    "Read the Terms & Conditions, independent educational portal disclaimer, privacy guidelines, license, and liability policies for ignou.edukyu.com.",
+    "Read the Terms & Conditions, independent educational portal disclaimer, privacy guidelines, license, and liability policies for ignouadmission.edukyu.com.",
   openGraph: {
-    title: "Terms & Conditions | ignou.edukyu.com",
+    title: "Terms & Conditions | ignouadmission.edukyu.com",
     description:
-      "Read the Terms & Conditions, educational information portal disclaimer, privacy, license, and service guidelines for ignou.edukyu.com.",
+      "Read the Terms & Conditions, educational information portal disclaimer, privacy, license, and service guidelines for ignouadmission.edukyu.com.",
     images: [{ url: "/IGNOU-img.webp" }],
     type: "website",
   },
@@ -42,7 +42,7 @@ export default function TermsAndConditionsPage() {
             </h1>
             <p className="text-sm sm:text-base text-slate-200 max-w-2xl mx-auto leading-relaxed">
               We thank you and appreciate your service or product purchase with us on our website{" "}
-              <strong className="text-white">ignou.edukyu.com</strong>.
+              <strong className="text-white">ignouadmission.edukyu.com</strong>.
             </p>
           </div>
         </section>
@@ -53,17 +53,17 @@ export default function TermsAndConditionsPage() {
             {/* Overview & Revisions */}
             <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed">
               <p>
-                Please read this policy and the <strong>ignou.edukyu.com</strong> terms and
+                Please read this policy and the <strong>ignouadmission.edukyu.com</strong> terms and
                 conditions carefully as they will give you important information and guidelines about
                 your rights and obligations as our customer, with respect to any purchase or service
-                we provide to you. <strong>ignou.edukyu.com</strong> reserves the right to change or
-                revise terms and conditions on this website. <strong>ignou.edukyu.com</strong> will
+                we provide to you. <strong>ignouadmission.edukyu.com</strong> reserves the right to change or
+                revise terms and conditions on this website. <strong>ignouadmission.edukyu.com</strong> will
                 alert you that changes or revisions have been made by indicating on the top of the
                 website with the date it was last revised. The changes will be effective immediately
                 after it is posted on this website. Your use of the website following the posting
                 any such changes will constitute your acceptance of any such changes or revisions.
                 This terms and conditions don’t alter in any way the written conditions you may have
-                with <strong>ignou.edukyu.com</strong> for other products and services. If you do
+                with <strong>ignouadmission.edukyu.com</strong> for other products and services. If you do
                 not agree to these terms and conditions including the referenced policies and
                 guidelines, please immediately terminate your use of the website.
               </p>
@@ -89,7 +89,7 @@ export default function TermsAndConditionsPage() {
               <p>
                 We make every effort to provide the service to you as per the specifications and
                 timelines mentioned against each service or product purchased by you from{" "}
-                <strong>ignou.edukyu.com</strong>. However if, due to any reason, we are unable to
+                <strong>ignouadmission.edukyu.com</strong>. However if, due to any reason, we are unable to
                 provide to you the service or product you purchased from us, then you shall be
                 entitled to a refund which shall be subject to the following situations.
               </p>
@@ -104,7 +104,7 @@ export default function TermsAndConditionsPage() {
                 <li className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
                   <span className="w-2 h-2 rounded-full bg-[#009FE3] shrink-0 mt-2" />
                   <span>
-                    <strong>ignou.edukyu.com</strong> is not responsible for any damage resulting
+                    <strong>ignouadmission.edukyu.com</strong> is not responsible for any damage resulting
                     from use of this website.
                   </span>
                 </li>
@@ -152,13 +152,13 @@ export default function TermsAndConditionsPage() {
                 to your communication and about your usage of our services on the website.
               </p>
               <p>
-                <strong>ignou.edukyu.com</strong> believes strongly in protecting user privacy,
+                <strong>ignouadmission.edukyu.com</strong> believes strongly in protecting user privacy,
                 unless required by law, not make the other&rsquo;s confidential information
                 accessible to any other third party or use the confidential information for any
                 personal purpose or greed.
               </p>
               <p>
-                <strong>ignou.edukyu.com</strong> adheres to the privacy policy relating to the
+                <strong>ignouadmission.edukyu.com</strong> adheres to the privacy policy relating to the
                 privacy and security of your data available in the website as such document may be
                 amended on timely basis by us.
               </p>
@@ -177,7 +177,7 @@ export default function TermsAndConditionsPage() {
               <p>
                 You may not copy, reproduce, transmit, distribute or create derivative works of such
                 content or information without express written authorization from{" "}
-                <strong>ignou.edukyu.com</strong>.
+                <strong>ignouadmission.edukyu.com</strong>.
               </p>
             </div>
 
@@ -190,7 +190,7 @@ export default function TermsAndConditionsPage() {
                 <li className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
                   <span className="w-2 h-2 rounded-full bg-[#009FE3] shrink-0 mt-2" />
                   <span>
-                    <strong>ignou.edukyu.com</strong> will not be liable for any direct, indirect,
+                    <strong>ignouadmission.edukyu.com</strong> will not be liable for any direct, indirect,
                     incidental, special or consequential damages for the services in any manner.
                   </span>
                 </li>
@@ -235,7 +235,7 @@ export default function TermsAndConditionsPage() {
                 VI. General
               </h2>
               <p>
-                <strong className="text-white">ignou.edukyu.com</strong> will not be deemed in
+                <strong className="text-white">ignouadmission.edukyu.com</strong> will not be deemed in
                 default hereunder or held responsible for any cessation, interruption or delay in
                 the performance of its obligations hereunder due to earthquake, flood, fire, storm,
                 natural disaster, act of God, war, terrorism, armed conflict, labor strike or
@@ -243,7 +243,7 @@ export default function TermsAndConditionsPage() {
               </p>
               <p>
                 This agreement comprises the entire terms and conditions between you and{" "}
-                <strong className="text-white">ignou.edukyu.com</strong> and supersedes any prior
+                <strong className="text-white">ignouadmission.edukyu.com</strong> and supersedes any prior
                 agreements pertaining to the subject matter contained herein.
               </p>
               <p>
@@ -253,25 +253,25 @@ export default function TermsAndConditionsPage() {
                 this terms and conditions must be asserted individually.
               </p>
               <p>
-                <strong className="text-white">ignou.edukyu.com</strong> reserves the right to
+                <strong className="text-white">ignouadmission.edukyu.com</strong> reserves the right to
                 terminate your access to the website if it reasonably believes, in its sole
                 discretion, that you have breached any of the terms and conditions. Following
                 termination, you will not be permitted to use the website and{" "}
-                <strong className="text-white">ignou.edukyu.com</strong> may, in its sole
+                <strong className="text-white">ignouadmission.edukyu.com</strong> may, in its sole
                 discretion and without advance notice to you, cancel any outstanding order of
                 services. If your access to the website is terminated,{" "}
-                <strong className="text-white">ignou.edukyu.com</strong> reserves the right to
+                <strong className="text-white">ignouadmission.edukyu.com</strong> reserves the right to
                 exercise whatever means it deems necessary to prevent unauthorized access of the
                 website. This agreement will survive indefinitely unless and until{" "}
-                <strong className="text-white">ignou.edukyu.com</strong> chooses, in its sole
+                <strong className="text-white">ignouadmission.edukyu.com</strong> chooses, in its sole
                 discretion and without advance notice to you, to terminate it.
               </p>
               <p>
-                <strong className="text-white">ignou.edukyu.com</strong> makes no representation
+                <strong className="text-white">ignouadmission.edukyu.com</strong> makes no representation
                 that the website is appropriate or available for use in locations outside India.
                 Users who access the website from outside India do so at their own risk and
                 initiative and must bear all responsibility for compliance with any applicable local
-                laws. <strong className="text-white">ignou.edukyu.com</strong> may assign its
+                laws. <strong className="text-white">ignouadmission.edukyu.com</strong> may assign its
                 rights and obligations under this agreement in its sole discretion and without
                 advance notice to you.
               </p>
