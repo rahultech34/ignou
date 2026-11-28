@@ -189,7 +189,7 @@ export default function AdminLeadsPage() {
     >
       <div className="space-y-6">
         {/* KPI Summary Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 site-gutter">
           <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">
               <Users className="w-6 h-6" />
@@ -233,7 +233,7 @@ export default function AdminLeadsPage() {
 
         {/* Filters and Controls */}
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
             {/* Search Input */}
             <div className="relative flex-1">
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -478,7 +478,7 @@ export default function AdminLeadsPage() {
         {/* Lead Detail Modal */}
         {selectedLead && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs">
-            <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
                   <div className="w-9 h-9 rounded-xl bg-[#009FE3]/10 text-[#009FE3] flex items-center justify-center font-bold">
@@ -497,7 +497,7 @@ export default function AdminLeadsPage() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div className="p-3 bg-slate-50 rounded-xl">
                   <div className="text-slate-400 font-medium">Mobile Number</div>
                   <div className="font-bold text-slate-900 mt-0.5">{selectedLead.mobile}</div>

@@ -6,46 +6,25 @@ import {
   PlusCircle,
   Search,
   Filter,
-  Eye,
   Edit2,
   Trash2,
   AlertCircle,
   CheckCircle2,
-  ExternalLink,
   BookOpen,
-  Calendar,
-  User,
-  Clock,
-  Download,
 } from "lucide-react";
 import { AdminLayoutWrapper } from "@/components/admin/AdminLayoutWrapper";
 import { Blog } from "@/lib/types";
+import { BLOG_CATEGORIES } from "@/lib/blog-constants";
 
 export function BlogListPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
-
-  const fetchBlogs = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch("/api/admin/blogs");
-      const data = await res.json();
-      if (res.ok) {
-        setBlogs(data.blogs || []);
-      }
-    } catch (e) {
-      console.error("Error fetching blogs:", e);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     let active = true;
@@ -75,7 +54,7 @@ export function BlogListPage() {
       } else {
         setFeedback({ type: "error", text: "Failed to delete blog." });
       }
-    } catch (e) {
+    } catch {
       setFeedback({ type: "error", text: "Network error while deleting." });
     } finally {
       setDeleting(false);
@@ -102,10 +81,14 @@ export function BlogListPage() {
         });
         setTimeout(() => setFeedback(null), 3000);
       }
-    } catch (e) {
+    } catch {
       setFeedback({ type: "error", text: "Failed to update status." });
     }
   };
+
+  const availableCategories = Array.from(
+    new Set([...BLOG_CATEGORIES, ...blogs.map((b) => b.category).filter(Boolean)])
+  );
 
   const filteredBlogs = blogs.filter((blog) => {
     const matchesSearch =
@@ -174,8 +157,20 @@ export function BlogListPage() {
             />
           </div>
 
-          <div className="flex items-center gap-2 text-xs w-full sm:w-auto">
+          <div className="flex flex-wrap items-center gap-2 text-xs w-full sm:w-auto">
             <Filter className="w-3.5 h-3.5 text-slate-400" />
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-semibold outline-none focus:border-[#009FE3]"
+            >
+              <option value="all">All Categories</option>
+              {availableCategories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}

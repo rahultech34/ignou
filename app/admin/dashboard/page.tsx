@@ -110,7 +110,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Primary KPI Metrics: CRM + Catalog + Analytics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 site-gutter">
           {/* Total Student Leads */}
           <Link
             href="/admin/leads"
@@ -321,9 +321,9 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Two-Column Lower Section: Recent CMS Activity (8 cols) + System Status (4 cols) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="site-grid">
           {/* Recent Activity List (8 cols) */}
-          <div className="lg:col-span-8 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-2xs">
+          <div className="col-span-4 md:col-span-8 lg:col-span-8 bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-2xs min-w-0">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <Clock className="w-4 h-4 text-slate-500" />
@@ -400,7 +400,7 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* System & Database Status Box (4 cols) */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="col-span-4 md:col-span-8 lg:col-span-4 space-y-6 min-w-0">
             <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-2xs">
               <h3 className="text-sm font-bold text-slate-900 mb-4 flex items-center justify-between">
                 <span className="flex items-center gap-2">

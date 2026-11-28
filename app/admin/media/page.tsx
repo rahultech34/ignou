@@ -204,7 +204,7 @@ export default function AdminMediaPage() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 min-[1920px]:grid-cols-5 site-gutter">
               {media.map((item) => {
                 const isImage = item.mimeType?.startsWith("image/");
                 return (

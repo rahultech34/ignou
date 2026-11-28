@@ -38,7 +38,7 @@ export default function PrivacyPolicyPage() {
           />
           <div className="absolute inset-0 bg-slate-950/75" />
 
-          <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+          <div className="relative z-10 site-container text-center space-y-4">
             <h1 className="text-2xl sm:text-4xl lg:text-[42px] font-black tracking-tight text-white leading-tight">
               Privacy Policy
             </h1>
@@ -51,8 +51,9 @@ export default function PrivacyPolicyPage() {
 
         {/* Content Cards */}
         <section className="py-10 sm:py-14 flex-1">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-            <BackButton />
+          <div className="site-container">
+            <div className="max-w-5xl mx-auto space-y-6">
+              <BackButton />
 
             {/* Your Consent */}
             <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed">
@@ -485,6 +486,7 @@ export default function PrivacyPolicyPage() {
             </div>
 
             <BackButton />
+            </div>
           </div>
         </section>
       </main>

@@ -133,7 +133,7 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
 
   return (
     <section id="ignou-student-guide" className="py-16 sm:py-20 bg-slate-50/80 border-t border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         
         {/* Section Header */}
         <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16">
@@ -146,10 +146,10 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
         </div>
 
         {/* 1. What Is IGNOU & Why Choose IGNOU Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+        <div className="site-grid mb-10 sm:mb-12">
           
           {/* What is IGNOU Card */}
-          <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
+          <div className="col-span-4 md:col-span-8 lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
             <div className="w-12 h-12 rounded-2xl bg-sky-50 text-[#009FE3] flex items-center justify-center mb-5 border border-sky-100">
               <Building className="w-6 h-6" />
             </div>
@@ -180,7 +180,7 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
           </div>
 
           {/* Why Choose IGNOU Card */}
-          <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
+          <div className="col-span-4 md:col-span-8 lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
             <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-5 border border-amber-100">
               <Award className="w-6 h-6" />
             </div>
@@ -202,10 +202,10 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
         </div>
 
         {/* 2. Courses Offered & Eligibility Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+        <div className="site-grid mb-10 sm:mb-12">
           
           {/* Courses Offered */}
-          <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
+          <div className="col-span-4 md:col-span-8 lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
             <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-5 border border-indigo-100">
               <GraduationCap className="w-6 h-6" />
             </div>
@@ -232,7 +232,7 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
           </div>
 
           {/* Eligibility for IGNOU Programmes */}
-          <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
+          <div className="col-span-4 md:col-span-8 lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm">
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5 border border-emerald-100">
               <ShieldCheck className="w-6 h-6" />
             </div>
@@ -340,7 +340,7 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
         </div>
 
         {/* 4. Academic Lifecycle: Study Material, Results & Regional Centres */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 site-gutter mb-12">
           
           {/* Study Material, Assignments and Exams */}
           <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-sm flex flex-col justify-between">
@@ -399,10 +399,10 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
         </div>
 
         {/* 5. Common Mistakes to Avoid & Tips for Students */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-14">
+        <div className="site-grid mb-14">
           
           {/* Common Mistakes */}
-          <div className="lg:col-span-6 bg-rose-50/60 rounded-3xl p-6 sm:p-8 border border-rose-200/70">
+          <div className="col-span-4 md:col-span-4 lg:col-span-6 bg-rose-50/60 rounded-3xl p-6 sm:p-8 border border-rose-200/70">
             <div className="flex items-center gap-3 mb-3 text-rose-700">
               <AlertTriangle className="w-6 h-6 shrink-0" />
               <h3 className="text-lg sm:text-xl font-bold text-slate-900">
@@ -415,7 +415,7 @@ export default function HomeGuideSection({ guide }: HomeGuideSectionProps) {
           </div>
 
           {/* Tips for Students */}
-          <div className="lg:col-span-6 bg-emerald-50/60 rounded-3xl p-6 sm:p-8 border border-emerald-200/70">
+          <div className="col-span-4 md:col-span-4 lg:col-span-6 bg-emerald-50/60 rounded-3xl p-6 sm:p-8 border border-emerald-200/70">
             <div className="flex items-center gap-3 mb-3 text-emerald-700">
               <Lightbulb className="w-6 h-6 shrink-0" />
               <h3 className="text-lg sm:text-xl font-bold text-slate-900">

@@ -170,10 +170,10 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-6 pt-16 sm:pt-24 animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-6 pt-12 sm:pt-20 animate-in fade-in duration-150">
       <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-10">
+      <div className="relative w-full max-w-2xl max-h-[85dvh] flex flex-col bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-10">
         {/* Search Input Bar */}
         <div className="flex items-center gap-3 px-4 py-3.5 border-b border-slate-200">
           <Search className="w-5 h-5 text-sky-600 shrink-0" />

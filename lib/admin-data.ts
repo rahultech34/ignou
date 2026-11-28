@@ -11,8 +11,10 @@ import {
   sanitizeGuideLinkUrl,
   sanitizePublicHtml,
   sanitizeResourceLinkUrl,
+  sanitizeSafeUrl,
   stripDecorativeIcons,
 } from "./sanitize";
+import { slugify } from "./slug";
 import {
   Program,
   Blog,
@@ -846,6 +848,20 @@ function sanitizeResource(r: StudentResource): StudentResource {
   };
 }
 
+function sortBlogsList(list: Blog[]): Blog[] {
+  return [...list].sort((a, b) => {
+    const aHasOrder = typeof a.displayOrder === "number" && Number.isFinite(a.displayOrder);
+    const bHasOrder = typeof b.displayOrder === "number" && Number.isFinite(b.displayOrder);
+    if (aHasOrder && bHasOrder && a.displayOrder !== b.displayOrder) {
+      return (a.displayOrder as number) - (b.displayOrder as number);
+    }
+    if (aHasOrder !== bHasOrder) {
+      return aHasOrder ? -1 : 1;
+    }
+    return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
+  });
+}
+
 export async function getBlogs(): Promise<Blog[]> {
   return getCached("blogs:all", async () => {
     await ensureFirestoreSeeded();
@@ -855,13 +871,7 @@ export async function getBlogs(): Promise<Blog[]> {
         const snap = await withTimeout(db.collection("blogs").get(), 2500);
         if (!snap.empty) {
           const list = snap.docs.map((d: QueryDocumentSnapshot) => sanitizeBlog(d.data() as Blog));
-          list.sort((a, b) => {
-            if (a.displayOrder !== undefined && b.displayOrder !== undefined) {
-              return a.displayOrder - b.displayOrder;
-            }
-            return new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime();
-          });
-          return list;
+          return sortBlogsList(list);
         }
       } catch (err) {
         logFirestoreFallback("getBlogs", err);
@@ -869,7 +879,7 @@ export async function getBlogs(): Promise<Blog[]> {
     }
 
     const store = getStore();
-    return store.blogs.map(sanitizeBlog);
+    return sortBlogsList(store.blogs.map(sanitizeBlog));
   });
 }
 
@@ -899,44 +909,93 @@ export async function getBlogById(id: string): Promise<Blog | null> {
   return found ? sanitizeBlog(found) : null;
 }
 
+export class BlogValidationError extends Error {
+  statusCode: number;
+  constructor(message: string, statusCode: number = 400) {
+    super(message);
+    this.name = "BlogValidationError";
+    this.statusCode = statusCode;
+  }
+}
+
 export async function getBlogBySlug(slug: string): Promise<Blog | null> {
   const all = await getBlogs();
   const cleanSlug = slug.toLowerCase().trim();
 
-  // 1. Exact match on slug or id
-  const exact = all.find(
-    (item) =>
-      item.slug.toLowerCase() === cleanSlug ||
-      item.id.toLowerCase() === cleanSlug
-  );
-  if (exact) return exact;
-
-  // 2. Flexible match
   return (
     all.find(
       (item) =>
-        item.slug.toLowerCase().includes(cleanSlug) ||
-        cleanSlug.includes(item.slug.toLowerCase())
+        item.slug.toLowerCase() === cleanSlug ||
+        item.id.toLowerCase() === cleanSlug
     ) || null
   );
 }
 
 export async function saveBlog(blog: Blog): Promise<Blog> {
+  const cleanTitle = blog.title?.trim() || "";
+  if (!cleanTitle) {
+    throw new BlogValidationError("Article title is required.", 400);
+  }
+
+  const normalizedSlug = slugify(blog.slug || cleanTitle);
+  if (!normalizedSlug) {
+    throw new BlogValidationError(
+      "A valid URL slug (using letters, numbers, or hyphens) is required.",
+      400
+    );
+  }
+
   const now = new Date().toISOString();
-  const id = blog.id || `blog-${Date.now()}`;
+  const id =
+    blog.id || `blog-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+
+  const existingBlogs = await getBlogs();
+  const existing = existingBlogs.find((b) => b.id === id);
+  const duplicate = existingBlogs.find(
+    (b) => b.slug.toLowerCase() === normalizedSlug && b.id !== id
+  );
+  if (duplicate) {
+    throw new BlogValidationError(
+      `A blog with the URL slug "${normalizedSlug}" already exists. Please choose a unique slug.`,
+      409
+    );
+  }
+
+  const normalizedDisplayOrder =
+    blog.displayOrder !== undefined &&
+    blog.displayOrder !== null &&
+    String(blog.displayOrder).trim() !== "" &&
+    Number.isFinite(Number(blog.displayOrder))
+      ? Number(blog.displayOrder)
+      : undefined;
+
   const toSave: Blog = {
     ...blog,
     id,
-    createdAt: blog.createdAt || now,
+    title: stripDecorativeIcons(cleanTitle),
+    slug: normalizedSlug,
+    excerpt: blog.excerpt ? stripDecorativeIcons(blog.excerpt) : blog.excerpt,
+    content: blog.content ? sanitizePublicHtml(blog.content) : blog.content,
+    coverImage: blog.coverImage ? sanitizeSafeUrl(blog.coverImage) || "" : blog.coverImage,
+    createdAt: blog.createdAt || existing?.createdAt || now,
     updatedAt: now,
   };
+
+  if (normalizedDisplayOrder !== undefined) {
+    toSave.displayOrder = normalizedDisplayOrder;
+  } else {
+    delete toSave.displayOrder;
+  }
 
   const db = getDb();
   if (db) {
     try {
-      await db.collection("blogs").doc(id).set(toSave, { merge: true });
+      await withTimeout(db.collection("blogs").doc(id).set(toSave), 4000);
     } catch (err) {
       console.error("[admin-data:firestore] saveBlog error:", err);
+      throw new Error(
+        "Failed to save blog to Cloud Firestore. Local fallback was skipped to prevent out-of-sync data."
+      );
     }
   }
 

@@ -19,17 +19,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    const allowedTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/webp",
-      "image/gif",
-      "image/svg+xml",
-      "application/pdf",
-    ];
-    if (!allowedTypes.includes(file.type)) {
+    const allowedMimeToExt: Record<string, string> = {
+      "image/jpeg": ".jpg",
+      "image/png": ".png",
+      "image/webp": ".webp",
+      "image/gif": ".gif",
+      "application/pdf": ".pdf",
+    };
+    const safeExt = allowedMimeToExt[file.type];
+    if (!safeExt) {
       return NextResponse.json(
-        { error: "Invalid file type. Supported types: JPG, PNG, WebP, GIF, SVG, PDF." },
+        { error: "Invalid file type. Supported types: JPG, PNG, WebP, GIF, PDF." },
         { status: 400 }
       );
     }
@@ -46,13 +46,17 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const ext = path.extname(file.name) || ".png";
+    const rawExt = path.extname(file.name).toLowerCase();
+    const ext =
+      file.type === "image/jpeg" && (rawExt === ".jpg" || rawExt === ".jpeg")
+        ? rawExt
+        : safeExt;
     const baseName = path
-      .basename(file.name, ext)
+      .basename(file.name, path.extname(file.name))
       .replace(/[^a-zA-Z0-9-_]/g, "_")
       .toLowerCase();
     const randomHash = crypto.randomBytes(4).toString("hex");
-    const uniqueFileName = `${baseName}_${randomHash}${ext}`;
+    const uniqueFileName = `${baseName || "upload"}_${randomHash}${ext}`;
 
     const uploadsDir = path.join(process.cwd(), "public", "uploads");
     await fs.mkdir(uploadsDir, { recursive: true });

@@ -272,7 +272,7 @@ export function AdmissionForm({
   }
 
   return (
-    <div className="w-full max-w-[370px] mx-auto bg-white rounded-2xl p-4 sm:p-5 shadow-lg ring-1 ring-slate-900/5 border border-slate-200/80">
+    <div className="w-full max-w-[420px] lg:max-w-[440px] mx-auto bg-white rounded-2xl p-4 sm:p-5 shadow-lg ring-1 ring-slate-900/5 border border-slate-200/80">
       {/* Title */}
       <div className="mb-3 text-center">
         <h3 className="text-base sm:text-lg font-extrabold text-slate-900 leading-snug">

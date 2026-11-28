@@ -63,13 +63,13 @@ export default function CertificateSection({
   return (
     <section
       id="eligibility-certificate"
-      className="bg-[#003057] text-white py-14 sm:py-16 px-4 sm:px-6 lg:px-8 border-y border-sky-900/50 relative overflow-hidden"
+      className="bg-[#003057] text-white py-14 sm:py-16 border-y border-sky-900/50 relative overflow-hidden"
     >
       {/* Background Glow Accents */}
       <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#009FE3]/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="site-container relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-12">
@@ -82,10 +82,10 @@ export default function CertificateSection({
         </div>
 
         {/* Two-Column Grid: Left (Table + Button) & Right (Certificate Showcase) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="site-grid items-center">
           
-          {/* Left Column: Eligibility Table (7 cols on lg) */}
-          <div className="lg:col-span-7 xl:col-span-7 flex flex-col justify-center">
+          {/* Left Column: Eligibility Table */}
+          <div className="col-span-4 md:col-span-8 lg:col-span-7 flex flex-col justify-center min-w-0">
             
             {/* Table Container */}
             <div className="bg-white rounded-lg shadow-xl overflow-hidden border border-slate-200">
@@ -142,8 +142,8 @@ export default function CertificateSection({
 
           </div>
 
-          {/* Right Column: Degree Certificate Showcase (5 cols on lg) */}
-          <div className="lg:col-span-5 xl:col-span-5 flex flex-col items-center justify-center">
+          {/* Right Column: Degree Certificate Showcase */}
+          <div className="col-span-4 md:col-span-8 lg:col-span-5 flex flex-col items-center justify-center">
             
             <div className="relative group max-w-[320px] sm:max-w-[360px] w-full">
               

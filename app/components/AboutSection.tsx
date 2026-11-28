@@ -99,12 +99,12 @@ export default function AboutSection({ homePageData }: AboutSectionProps) {
 
   return (
     <section id="about-ignou" className="py-14 sm:py-16 bg-white border-b border-slate-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div className="site-grid items-start">
           
           {/* LEFT COLUMN: About IGNOU Text Content */}
-          <div className="lg:col-span-7 xl:col-span-7 space-y-4 sm:space-y-5">
+          <div className="col-span-4 md:col-span-8 lg:col-span-7 space-y-4 sm:space-y-5">
             <div>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0b2545] tracking-tight leading-snug">
                 {title}
@@ -148,7 +148,7 @@ export default function AboutSection({ homePageData }: AboutSectionProps) {
           </div>
 
           {/* RIGHT COLUMN: Latest News Upward Scrolling Box */}
-          <div className="lg:col-span-5 xl:col-span-5 w-full">
+          <div className="col-span-4 md:col-span-8 lg:col-span-5 w-full">
             <div className="rounded-2xl border border-sky-100 bg-white shadow-xl shadow-slate-900/5 overflow-hidden flex flex-col">
               
               {/* Box Header */}

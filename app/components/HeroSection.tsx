@@ -201,11 +201,11 @@ export default function HeroSection({
         />
         <div className="absolute inset-0 bg-slate-950/75" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+        <div className="site-container relative z-10">
+          <div className="site-grid items-center">
             
-            {/* Left Column: Heading, Value Props & Stats (7 Cols) */}
-            <div className="lg:col-span-7 flex flex-col items-start text-left">
+            {/* Left Column: Heading, Value Props & Stats */}
+            <div className="col-span-4 md:col-span-8 lg:col-span-7 flex flex-col items-start text-left">
               {/* Main Headline */}
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
                 {heroHeadline}
@@ -258,8 +258,8 @@ export default function HeroSection({
               </div>
             </div>
 
-            {/* Right Column: Unified AdmissionForm Card (5 Cols) */}
-            <div id="admission-form" className="lg:col-span-5 w-full flex justify-center lg:justify-end pt-2 sm:pt-3 lg:pt-0 scroll-mt-28">
+            {/* Right Column: Unified AdmissionForm Card */}
+            <div id="admission-form" className="col-span-4 md:col-span-8 lg:col-span-5 w-full flex justify-center lg:justify-end pt-2 sm:pt-3 lg:pt-0 scroll-mt-28">
               <AdmissionForm
                 formTitle="Book 100% Free Counseling"
                 formSubtitle={formSubheading}
@@ -273,59 +273,61 @@ export default function HeroSection({
       </section>
 
       {/* 2. STUDENT UTILITIES QUICK STRIP */}
-      <section className="bg-white border-b border-slate-200 py-6 -mt-4 relative z-20 mx-4 sm:mx-8 lg:mx-auto max-w-7xl rounded-2xl shadow-lg shadow-slate-900/5 px-6">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-center divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
-          <a href="#hall-ticket" className="p-2 group flex flex-col items-center">
-            <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-sky-600 group-hover:text-white transition-all">
-              <FileText className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-slate-800 mt-2 group-hover:text-sky-600">
-              Hall Ticket TEE
-            </span>
-            <span className="text-[10px] text-slate-400">Download Admit Card</span>
-          </a>
+      <div className="site-container -mt-4 relative z-20">
+        <section className="bg-white border border-slate-200/80 py-5 sm:py-6 rounded-2xl shadow-lg shadow-slate-900/5 px-4 sm:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 lg:gap-6 text-center md:divide-x divide-slate-100">
+            <a href="#hall-ticket" className="p-2 group flex flex-col items-center">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-sky-600 group-hover:text-white transition-all">
+                <FileText className="w-5 h-5" />
+              </div>
+              <span className="text-xs font-bold text-slate-800 mt-2 group-hover:text-sky-600">
+                Hall Ticket TEE
+              </span>
+              <span className="text-[10px] text-slate-400">Download Admit Card</span>
+            </a>
 
-          <a href="#assignments" className="p-2 group flex flex-col items-center pt-3 sm:pt-2">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all">
-              <CheckCircle className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-slate-800 mt-2 group-hover:text-emerald-600">
-              Assignment Status
-            </span>
-            <span className="text-[10px] text-slate-400">Question Paper & Marks</span>
-          </a>
+            <a href="#assignments" className="p-2 group flex flex-col items-center">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                <CheckCircle className="w-5 h-5" />
+              </div>
+              <span className="text-xs font-bold text-slate-800 mt-2 group-hover:text-emerald-600">
+                Assignment Status
+              </span>
+              <span className="text-[10px] text-slate-400">Question Paper & Marks</span>
+            </a>
 
-          <a href="#grade-card" className="p-2 group flex flex-col items-center pt-3 sm:pt-2">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-amber-600 group-hover:text-white transition-all">
-              <Award className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-slate-800 mt-2 group-hover:text-amber-600">
-              Grade Card & Result
-            </span>
-            <span className="text-[10px] text-slate-400">Check Marks & Status</span>
-          </a>
+            <a href="#grade-card" className="p-2 group flex flex-col items-center">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-amber-600 group-hover:text-white transition-all">
+                <Award className="w-5 h-5" />
+              </div>
+              <span className="text-xs font-bold text-slate-800 mt-2 group-hover:text-amber-600">
+                Grade Card & Result
+              </span>
+              <span className="text-[10px] text-slate-400">Check Marks & Status</span>
+            </a>
 
-          <a href="#re-registration" className="p-2 group flex flex-col items-center pt-3 sm:pt-2">
-            <div className="w-10 h-10 rounded-xl bg-sky-50 text-[#009FE3] flex items-center justify-center group-hover:scale-110 group-hover:bg-[#009FE3] group-hover:text-white transition-all">
-              <Clock className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-slate-800 mt-2 group-hover:text-[#009FE3]">
-              Re-Registration
-            </span>
-            <span className="text-[10px] text-slate-400">Samarth Portal Portal</span>
-          </a>
+            <a href="#re-registration" className="p-2 group flex flex-col items-center">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-[#009FE3] flex items-center justify-center group-hover:scale-110 group-hover:bg-[#009FE3] group-hover:text-white transition-all">
+                <Clock className="w-5 h-5" />
+              </div>
+              <span className="text-xs font-bold text-slate-800 mt-2 group-hover:text-[#009FE3]">
+                Re-Registration
+              </span>
+              <span className="text-[10px] text-slate-400">Samarth Portal</span>
+            </a>
 
-          <a href="#egyankosh" className="p-2 group flex flex-col items-center pt-3 sm:pt-2">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
-              <BookOpen className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-slate-800 mt-2 group-hover:text-blue-600">
-              eGyanKosh Books
-            </span>
-            <span className="text-[10px] text-slate-400">Free PDF Downloads</span>
-          </a>
-        </div>
-      </section>
+            <a href="#egyankosh" className="col-span-2 md:col-span-1 p-2 group flex flex-col items-center">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <span className="text-xs font-bold text-slate-800 mt-2 group-hover:text-blue-600">
+                eGyanKosh Books
+              </span>
+              <span className="text-[10px] text-slate-400">Free PDF Downloads</span>
+            </a>
+          </div>
+        </section>
+      </div>
 
       {/* 2.5 ABOUT IGNOU & LATEST NEWS TICKER SECTION */}
       <AboutSection homePageData={homePageData} />
@@ -334,7 +336,7 @@ export default function HeroSection({
       <CertificateSection admissionYear="2026" />
 
       {/* 3. POPULAR COURSES EXPLORER */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section className="site-container py-14 sm:py-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
@@ -371,7 +373,7 @@ export default function HeroSection({
         </div>
 
         {/* Course Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-[1920px]:grid-cols-4 site-gutter">
           {filteredCourses.map((c) => (
             <div
               key={c.code}

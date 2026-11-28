@@ -438,8 +438,8 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
             : "border-slate-100 shadow-xs py-3"
         }`}
       >
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-3 lg:gap-6 flex-nowrap whitespace-nowrap">
+        <div className="site-container">
+          <div className="flex items-center justify-between gap-2 sm:gap-3 lg:gap-6 flex-nowrap whitespace-nowrap">
             
             {/* BRAND LOGO AREA (LEFT: EDUKYU LOGO THEN IGNOU LOGO) */}
             <Link
@@ -729,8 +729,8 @@ export default function Navbar({ settings, homePageData }: NavbarProps = {}) {
 
         {/* MOBILE RESPONSIVE DRAWER / PANEL */}
         {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-x-0 top-[100%] h-[calc(100dvh-65px)] bg-slate-900/40 backdrop-blur-xs z-50 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
-            <div className="bg-white border-b border-slate-200 shadow-xl p-4 sm:p-6 space-y-4 max-h-full overflow-y-auto">
+          <div className="lg:hidden fixed inset-x-0 top-full h-[calc(100dvh-64px)] bg-slate-900/40 backdrop-blur-xs z-50 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+            <div className="bg-white border-b border-slate-200 shadow-xl px-5 py-4 md:py-6 space-y-4 max-h-full overflow-y-auto">
               
               {/* Accordion Menu List */}
               <div className="space-y-1 divide-y divide-slate-100 font-sans">

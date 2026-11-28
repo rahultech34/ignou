@@ -616,13 +616,13 @@ export function ProgramForm({ type, initialData, isEdit = false }: ProgramFormPr
                 key={sIdx}
                 className="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-3"
               >
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <input
                     type="text"
                     value={sem.semester}
                     onChange={(e) => updateSemesterTitle(sIdx, e.target.value)}
                     placeholder={`Semester ${sIdx + 1}`}
-                    className="font-bold text-sm text-slate-900 bg-white px-3 py-1.5 rounded-lg border border-slate-200 outline-none max-w-xs"
+                    className="font-bold text-sm text-slate-900 bg-white px-3 py-1.5 rounded-lg border border-slate-200 outline-none w-full sm:max-w-xs"
                   />
                   <button
                     type="button"

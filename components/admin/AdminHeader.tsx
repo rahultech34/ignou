@@ -6,8 +6,6 @@ import {
   Menu,
   ExternalLink,
   LogOut,
-  ShieldCheck,
-  CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -16,6 +14,10 @@ interface AdminHeaderProps {
   title: string;
   subtitle?: string;
   adminName?: string;
+  storageStatus?: {
+    connected: boolean;
+    provider: string;
+  } | null;
 }
 
 export function AdminHeader({
@@ -23,6 +25,7 @@ export function AdminHeader({
   title,
   subtitle,
   adminName = "Administrator",
+  storageStatus,
 }: AdminHeaderProps) {
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
@@ -33,41 +36,59 @@ export function AdminHeader({
       await fetch("/api/admin/auth/logout", { method: "POST" });
       router.push("/admin/login");
       router.refresh();
-    } catch (e) {
+    } catch {
       setLoggingOut(false);
     }
   };
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-20 px-4 sm:px-6 flex items-center justify-between">
-      {/* Left: Mobile hamburger & Page Title */}
-      <div className="flex items-center gap-3">
+    <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-20 px-5 lg:px-10 flex items-center justify-between gap-3">
+      {/* Left: Mobile/Tablet hamburger & Page Title */}
+      <div className="flex items-center gap-3 min-w-0">
         <button
           type="button"
           onClick={onToggleMobile}
-          className="p-2 -ml-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 md:hidden cursor-pointer"
+          className="p-2 -ml-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 lg:hidden cursor-pointer shrink-0"
           aria-label="Open sidebar"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        <div>
-          <h1 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
+        <div className="min-w-0">
+          <h1 className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 leading-tight truncate">
             {title}
           </h1>
           {subtitle && (
-            <p className="text-[11px] text-slate-500 hidden sm:block">{subtitle}</p>
+            <p className="text-[11px] text-slate-500 hidden sm:block truncate">{subtitle}</p>
           )}
         </div>
       </div>
 
       {/* Right: Status badge & Actions */}
       <div className="flex items-center gap-2.5 sm:gap-4">
-        {/* Real-time Storage / Database Synced Indicator */}
-        <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-[11px] font-semibold text-emerald-700">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Storage Synced</span>
-        </div>
+        {/* Real-time Storage / Database Status Indicator */}
+        {storageStatus ? (
+          <div
+            title={storageStatus.provider}
+            className={`hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-semibold ${
+              storageStatus.connected
+                ? "bg-emerald-50 border-emerald-200/80 text-emerald-700"
+                : "bg-amber-50 border-amber-200/80 text-amber-700"
+            }`}
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                storageStatus.connected ? "bg-emerald-500 animate-pulse" : "bg-amber-500"
+              }`}
+            />
+            <span>{storageStatus.connected ? "Firestore Synced" : "Local File Store"}</span>
+          </div>
+        ) : (
+          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-[11px] font-semibold text-slate-500">
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+            <span>Checking Storage...</span>
+          </div>
+        )}
 
         {/* Live Site Link */}
         <Link

@@ -110,7 +110,7 @@ export function AdminSidebar({
         {mobileOpen && (
           <button
             onClick={() => setMobileOpen(false)}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 md:hidden"
+            className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 lg:hidden"
           >
             <X className="w-5 h-5" />
           </button>
@@ -510,19 +510,19 @@ export function AdminSidebar({
 
   return (
     <>
-      {/* Desktop Persistent Sidebar */}
-      <aside className="hidden md:block w-64 h-screen sticky top-0 shrink-0 z-30">
+      {/* Desktop Persistent Sidebar (1024px+) */}
+      <aside className="hidden lg:block w-64 h-screen sticky top-0 shrink-0 z-30">
         {sidebarContent}
       </aside>
 
-      {/* Mobile Off-canvas Drawer */}
+      {/* Mobile & Tablet Off-canvas Drawer (<1024px) */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div className="fixed inset-0 z-50 lg:hidden">
           <div
             className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs transition-opacity"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl z-50 animate-in slide-in-from-left duration-200">
+          <div className="fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-white shadow-2xl z-50 animate-in slide-in-from-left duration-200">
             {sidebarContent}
           </div>
         </div>

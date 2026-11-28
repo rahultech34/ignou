@@ -37,13 +37,13 @@ export default function Footer({ settings }: FooterProps) {
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#009FE3]/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-blue-950/20 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-10 relative z-10">
+      <div className="site-container pt-14 pb-10 relative z-10">
         
-        {/* 5-Column Main Grid with perfect 3+2+2+2+3=12 alignment */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 items-start">
+        {/* Responsive Grid: 4 cols (mobile), 8 cols (tablet), 12 cols (laptop/desktop) */}
+        <div className="site-grid items-start">
           
-          {/* COLUMN 1: Brand & Accreditation (3 cols on lg) */}
-          <div className="sm:col-span-2 md:col-span-3 lg:col-span-3 min-w-0 space-y-4">
+          {/* COLUMN 1: Brand & Accreditation */}
+          <div className="col-span-4 md:col-span-4 lg:col-span-3 min-w-0 space-y-4">
             
             {/* Logo + University Brand Badge */}
             <div className="flex items-center flex-wrap gap-y-2">
@@ -95,8 +95,8 @@ export default function Footer({ settings }: FooterProps) {
 
           </div>
 
-          {/* COLUMN 2: UG PROGRAMS (2 cols on lg) */}
-          <div className="lg:col-span-2 min-w-0 space-y-3">
+          {/* COLUMN 2: UG PROGRAMS */}
+          <div className="col-span-2 md:col-span-2 lg:col-span-2 min-w-0 space-y-3">
             <div className="flex items-center gap-2 text-white font-bold text-xs sm:text-sm tracking-wider uppercase mb-3.5 whitespace-nowrap">
               <GraduationCap className="w-4 h-4 text-[#009FE3] shrink-0" />
               <span>UG PROGRAMS</span>
@@ -156,8 +156,8 @@ export default function Footer({ settings }: FooterProps) {
             </div>
           </div>
 
-          {/* COLUMN 3: PG & MBA (2 cols on lg) */}
-          <div className="lg:col-span-2 min-w-0 space-y-3">
+          {/* COLUMN 3: PG & MBA */}
+          <div className="col-span-2 md:col-span-2 lg:col-span-2 min-w-0 space-y-3">
             <div className="flex items-center gap-2 text-white font-bold text-xs sm:text-sm tracking-wider uppercase mb-3.5 whitespace-nowrap">
               <BookOpen className="w-4 h-4 text-[#009FE3] shrink-0" />
               <span>PG &amp; MBA</span>
@@ -227,8 +227,8 @@ export default function Footer({ settings }: FooterProps) {
             </div>
           </div>
 
-          {/* COLUMN 4: STUDENT ZONE (2 cols on lg) */}
-          <div className="lg:col-span-2 min-w-0 space-y-3">
+          {/* COLUMN 4: STUDENT ZONE */}
+          <div className="col-span-2 md:col-span-4 lg:col-span-2 min-w-0 space-y-3">
             <div className="text-white font-bold text-xs sm:text-sm tracking-wider uppercase mb-3.5 whitespace-nowrap">
               STUDENT ZONE
             </div>
@@ -292,8 +292,8 @@ export default function Footer({ settings }: FooterProps) {
             </div>
           </div>
 
-          {/* COLUMN 5: CONTACT US (3 cols on lg) */}
-          <div className="sm:col-span-2 md:col-span-3 lg:col-span-3 min-w-0 space-y-4">
+          {/* COLUMN 5: CONTACT US */}
+          <div className="col-span-2 md:col-span-4 lg:col-span-3 min-w-0 space-y-4">
             <div className="flex items-center gap-2 text-white font-bold text-xs sm:text-sm tracking-wider uppercase mb-3.5 whitespace-nowrap">
               <Phone className="w-4 h-4 text-[#009FE3] shrink-0" />
               <span>CONTACT US</span>
@@ -331,11 +331,11 @@ export default function Footer({ settings }: FooterProps) {
         </div>
 
         {/* Bottom Horizontal Divider & Legal Bar */}
-        <div className="mt-14 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="mt-14 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
           <div>
             © {new Date().getFullYear()} EduKyu • Independent University Information & Admission Guidance Portal.
           </div>
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
             <Link href="/privacy-policy" className="hover:text-slate-300 transition-colors">
               Privacy Policy
             </Link>

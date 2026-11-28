@@ -149,15 +149,15 @@ export default function CompareModal({ isOpen, onClose }: CompareModalProps) {
         </div>
 
         {/* University Selector Controls */}
-        <div className="grid grid-cols-2 divide-x divide-slate-200 bg-slate-50 border-b border-slate-200 p-3 sm:p-4">
-          <div className="pr-2 sm:pr-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-y sm:divide-y-0 divide-slate-200 bg-slate-50 border-b border-slate-200 p-3 sm:p-4 gap-3 sm:gap-0">
+          <div className="sm:pr-4">
             <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
               Select University 1
             </label>
             <select
               value={selectedU1}
               onChange={(e) => setSelectedU1(e.target.value)}
-              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-xs"
+              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-xs"
             >
               {UNIVERSITIES.map((u) => (
                 <option key={u.id} value={u.id} disabled={u.id === selectedU2}>
@@ -167,14 +167,14 @@ export default function CompareModal({ isOpen, onClose }: CompareModalProps) {
             </select>
           </div>
 
-          <div className="pl-2 sm:pl-4">
+          <div className="pt-3 sm:pt-0 sm:pl-4">
             <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
               Select University 2 (To Compare)
             </label>
             <select
               value={selectedU2}
               onChange={(e) => setSelectedU2(e.target.value)}
-              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-xs"
+              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-xs"
             >
               {UNIVERSITIES.map((u) => (
                 <option key={u.id} value={u.id} disabled={u.id === selectedU1}>
@@ -186,22 +186,22 @@ export default function CompareModal({ isOpen, onClose }: CompareModalProps) {
         </div>
 
         {/* Comparison Body Table */}
-        <div className="overflow-y-auto p-4 sm:p-6 space-y-4">
+        <div className="overflow-y-auto p-3.5 sm:p-6 space-y-4">
           {/* Institution Header Cards */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-6">
-            <div className={`p-4 rounded-xl border ${u1.id === 'ignou' ? 'bg-sky-50/60 border-sky-300 ring-1 ring-sky-200' : 'bg-slate-50 border-slate-200'}`}>
-              <h4 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">{u1.shortName}</h4>
-              <p className="text-xs text-slate-600 mt-1">{u1.tagline}</p>
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-6">
+            <div className={`min-w-0 p-3 sm:p-4 rounded-xl border ${u1.id === 'ignou' ? 'bg-sky-50/60 border-sky-300 ring-1 ring-sky-200' : 'bg-slate-50 border-slate-200'}`}>
+              <h4 className="text-sm sm:text-lg font-bold text-slate-900 leading-snug break-words">{u1.shortName}</h4>
+              <p className="text-[11px] sm:text-xs text-slate-600 mt-1 break-words">{u1.tagline}</p>
             </div>
 
-            <div className={`p-4 rounded-xl border ${u2.id === 'ignou' ? 'bg-sky-50/60 border-sky-300 ring-1 ring-sky-200' : 'bg-slate-50 border-slate-200'}`}>
-              <h4 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">{u2.shortName}</h4>
-              <p className="text-xs text-slate-600 mt-1">{u2.tagline}</p>
+            <div className={`min-w-0 p-3 sm:p-4 rounded-xl border ${u2.id === 'ignou' ? 'bg-sky-50/60 border-sky-300 ring-1 ring-sky-200' : 'bg-slate-50 border-slate-200'}`}>
+              <h4 className="text-sm sm:text-lg font-bold text-slate-900 leading-snug break-words">{u2.shortName}</h4>
+              <p className="text-[11px] sm:text-xs text-slate-600 mt-1 break-words">{u2.tagline}</p>
             </div>
           </div>
 
           {/* Metric Comparison Rows */}
-          <div className="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-200 text-sm">
+          <div className="border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-200 text-xs sm:text-sm">
             {/* NAAC Accreditation */}
             <div className="bg-slate-100/70 px-4 py-2 text-xs font-bold text-slate-600 uppercase flex items-center gap-1.5">
               <Award className="w-3.5 h-3.5 text-sky-600" /> NAAC Accreditation

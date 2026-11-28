@@ -138,7 +138,7 @@ export default function AdminAnalyticsPage() {
           </div>
 
           {/* Period Tabs */}
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100/80 self-stretch sm:self-auto">
+          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-slate-100/80 self-stretch sm:self-auto">
             {[
               { id: "7d", label: "Last 7 Days" },
               { id: "30d", label: "30 Days" },
@@ -160,7 +160,7 @@ export default function AdminAnalyticsPage() {
         </div>
 
         {/* Overview KPI Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 site-gutter">
           <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
             <div className="flex items-center justify-between text-slate-500">
               <span className="text-xs font-bold uppercase tracking-wider">Estimated Visitors</span>
@@ -252,8 +252,8 @@ export default function AdminAnalyticsPage() {
                 <span className="text-xs">Loading trends...</span>
               </div>
             ) : data && data.timeline.length > 0 ? (
-              <div className="space-y-3 pt-2">
-                <div className="h-44 flex items-end justify-between gap-2 border-b border-slate-100 pb-2">
+              <div className="space-y-3 pt-2 overflow-x-auto no-scrollbar">
+                <div className="h-44 min-w-[420px] flex items-end justify-between gap-2 border-b border-slate-100 pb-2">
                   {data.timeline.slice(-14).map((t, i) => {
                     const maxInq = Math.max(...data.timeline.map((x) => x.inquiries), 4);
                     const heightPercent = Math.max((t.inquiries / maxInq) * 85, 12);

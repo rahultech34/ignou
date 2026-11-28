@@ -76,7 +76,7 @@ export function ProgramDirectoryPage({
         />
         <div className="absolute inset-0 bg-slate-950/75" />
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <div className="site-container text-center relative z-10">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
             {pageTitle}
           </h1>
@@ -108,8 +108,8 @@ export function ProgramDirectoryPage({
       </section>
 
       {/* Filter Tabs Navigation */}
-      <section className="bg-white border-b border-slate-200/80 sticky top-[65px] z-30 shadow-xs">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-white border-b border-slate-200/80 sticky top-[60px] sm:top-[65px] z-30 shadow-xs">
+        <div className="site-container">
           <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto py-3 no-scrollbar">
             {[
               { id: "all", label: "All Programs", icon: GraduationCap },
@@ -140,7 +140,7 @@ export function ProgramDirectoryPage({
 
       {/* Program Cards Grid */}
       <section className="py-12 sm:py-16 flex-1">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="site-container">
           {filteredPrograms.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 p-8 max-w-md mx-auto">
               <GraduationCap className="w-12 h-12 text-[#009FE3] mx-auto mb-3" />
@@ -160,7 +160,7 @@ export function ProgramDirectoryPage({
               </button>
             </div>
           ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-[1920px]:grid-cols-4 site-gutter">
             {filteredPrograms.map((prog) => {
                 return (
                   <div

@@ -70,7 +70,7 @@ export default function ApplicationProcessSection() {
       id="application-process"
       className="py-16 sm:py-20 bg-gradient-to-b from-white via-slate-50/60 to-white border-b border-slate-200/80 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-16">
@@ -83,11 +83,11 @@ export default function ApplicationProcessSection() {
           </p>
         </div>
 
-        {/* DESKTOP VIEW: Zigzag Staggered Flow (Hidden on mobile/tablet, visible on lg+) */}
-        <div className="hidden lg:block relative pb-10">
+        {/* DESKTOP VIEW: Zigzag Staggered Flow (Visible on xl+ wide laptop/desktop) */}
+        <div className="hidden xl:block relative pb-10">
           
           {/* 7-Column Grid */}
-          <div className="grid grid-cols-7 gap-3 xl:gap-4 relative z-10 items-start">
+          <div className="grid grid-cols-7 gap-4 2xl:gap-6 relative z-10 items-start">
             {STEPS.map((step, idx) => {
               const isEven = step.number % 2 === 0;
               return (
@@ -153,8 +153,8 @@ export default function ApplicationProcessSection() {
           </div>
         </div>
 
-        {/* MOBILE & TABLET VIEW: Responsive Vertical Stepper (Visible below lg) */}
-        <div className="lg:hidden space-y-4 max-w-xl mx-auto">
+        {/* MOBILE, TABLET & COMPACT LAPTOP VIEW: Responsive Grid Stepper (Visible below xl) */}
+        <div className="xl:hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 site-gutter">
           {STEPS.map((step, idx) => (
             <div
               key={step.number}
@@ -178,10 +178,10 @@ export default function ApplicationProcessSection() {
                   <Globe className="w-5 h-5 stroke-[2.2]" />
                 </div>
 
-                {/* Connecting dashed line to next item */}
+                {/* Connecting dashed line to next item (mobile only) */}
                 {idx < STEPS.length - 1 && (
                   <div
-                    className="w-0.5 h-6 mt-3 border-l-2"
+                    className="w-0.5 h-6 mt-3 border-l-2 md:hidden"
                     style={{
                       borderColor: step.color,
                       borderStyle: "dashed",

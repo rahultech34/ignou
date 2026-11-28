@@ -1373,5 +1373,15 @@
       "updatedAt": "2026-11-26T05:19:57.473Z",
       "displayOrder": 7
     }
+  ],
+  "media": [
+    {
+      "id": "screenshot_2026-11-28_112754_c90ca7e7.png",
+      "name": "Screenshot 2026-11-28 112754.png",
+      "url": "/uploads/screenshot_2026-11-28_112754_c90ca7e7.png",
+      "size": 315397,
+      "mimeType": "image/png",
+      "uploadedAt": "2026-11-28T07:10:12.808Z"
+    }
   ]
 }

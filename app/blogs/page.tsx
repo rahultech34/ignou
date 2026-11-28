@@ -12,16 +12,35 @@ export const metadata: Metadata = {
   title: "IGNOU Blogs & Admission Guides 2026-27 | Student Resources",
   description:
     "Stay updated with the latest IGNOU admission dates, syllabus, assignment submission guidelines, exam datesheets, fee structures, and student career resources.",
+  alternates: {
+    canonical: "/blogs",
+  },
 };
 
-export default async function PublicBlogsPage() {
+export default async function PublicBlogsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ category?: string }>;
+}) {
   await connection();
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const selectedCategory = resolvedSearchParams.category?.trim() || "all";
+
   const [blogs, siteSettings] = await Promise.all([
     getBlogs(),
     getSiteSettings(),
   ]);
 
   const publishedBlogs = blogs.filter((b) => b.status !== "draft");
+  const categories = Array.from(
+    new Set(publishedBlogs.map((b) => b.category).filter(Boolean))
+  );
+  const displayedBlogs =
+    selectedCategory === "all"
+      ? publishedBlogs
+      : publishedBlogs.filter(
+          (b) => b.category?.toLowerCase() === selectedCategory.toLowerCase()
+        );
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-sky-500 selection:text-white">
@@ -41,7 +60,7 @@ export default async function PublicBlogsPage() {
           />
           <div className="absolute inset-0 bg-slate-950/75" />
 
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="site-container text-center relative z-10">
             <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
               IGNOU Student Blog &amp; News
             </h1>
@@ -53,8 +72,39 @@ export default async function PublicBlogsPage() {
 
         {/* Blog Cards Grid */}
         <section className="py-12 sm:py-16 flex-1">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            {publishedBlogs.length === 0 ? (
+          <div className="site-container">
+            {categories.length > 0 && (
+              <div className="mb-8 flex flex-wrap items-center gap-2">
+                <Link
+                  href="/blogs"
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                    selectedCategory === "all"
+                      ? "bg-[#009FE3] text-white shadow-xs"
+                      : "bg-white border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-[#009FE3]"
+                  }`}
+                >
+                  All Articles ({publishedBlogs.length})
+                </Link>
+                {categories.map((cat) => {
+                  const active = selectedCategory.toLowerCase() === cat.toLowerCase();
+                  return (
+                    <Link
+                      key={cat}
+                      href={`/blogs?category=${encodeURIComponent(cat)}`}
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                        active
+                          ? "bg-[#009FE3] text-white shadow-xs"
+                          : "bg-white border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-[#009FE3]"
+                      }`}
+                    >
+                      {cat}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+
+            {displayedBlogs.length === 0 ? (
               <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 p-8 max-w-md mx-auto shadow-sm">
                 <BookOpen className="w-12 h-12 text-[#009FE3] mx-auto mb-3" />
                 <h3 className="text-lg font-bold text-slate-900">Articles Coming Soon</h3>
@@ -78,8 +128,8 @@ export default async function PublicBlogsPage() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                {publishedBlogs.map((blog) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-[1920px]:grid-cols-4 site-gutter">
+                {displayedBlogs.map((blog) => (
                   <article
                     key={blog.id}
                     className="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-xl hover:border-sky-300 transition-all duration-300 flex flex-col justify-between group"
@@ -103,6 +153,14 @@ export default async function PublicBlogsPage() {
                       )}
 
                       <div className="p-6">
+                        {blog.category && (
+                          <Link
+                            href={`/blogs?category=${encodeURIComponent(blog.category)}`}
+                            className="inline-block mb-2.5 px-2.5 py-0.5 rounded-full bg-sky-50 text-[#009FE3] text-[11px] font-bold hover:bg-sky-100 transition-colors"
+                          >
+                            {blog.category}
+                          </Link>
+                        )}
                         <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#009FE3] transition-colors leading-snug">
                           <Link href={`/blogs/${blog.slug}`}>{blog.title}</Link>
                         </h2>

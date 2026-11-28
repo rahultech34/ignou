@@ -92,7 +92,7 @@ export default function EnquiryModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-[390px] max-h-[92dvh] overflow-y-auto overscroll-contain"
+        className="relative w-full max-w-[420px] max-h-[92dvh] overflow-y-auto overscroll-contain"
       >
         <button
           type="button"

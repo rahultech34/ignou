@@ -204,7 +204,7 @@ export function StudentZoneGuidePage({ page }: StudentZoneGuidePageProps) {
         />
         <div className="absolute inset-0 bg-slate-950/75" />
 
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-5">
+        <div className="relative z-10 site-container text-center space-y-5">
           <h1 className="text-2xl sm:text-4xl lg:text-[42px] font-black tracking-tight text-white leading-tight">
             {page.title}
           </h1>
@@ -232,10 +232,10 @@ export function StudentZoneGuidePage({ page }: StudentZoneGuidePageProps) {
 
       {/* 2. TWO-COLUMN BODY SECTION (8 Cols Content + 4 Cols Sticky Form) */}
       <section className="py-10 sm:py-14 flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+        <div className="site-container">
+          <div className="site-grid items-start">
             {/* LEFT COLUMN: Structured Guide Content */}
-            <article className="lg:col-span-8 space-y-6">
+            <article className="col-span-4 md:col-span-8 lg:col-span-8 space-y-6 min-w-0">
               {page.sections.map((section, sIdx) => (
                 <div
                   key={`${section.heading}-${sIdx}`}
@@ -291,7 +291,7 @@ export function StudentZoneGuidePage({ page }: StudentZoneGuidePageProps) {
             {/* RIGHT COLUMN: Sticky Counseling Form Sidebar */}
             <aside
               id="admission-form"
-              className="lg:col-span-4 lg:sticky lg:top-[96px] self-start z-20 w-full max-w-[380px] mx-auto lg:ml-auto scroll-mt-28"
+              className="col-span-4 md:col-span-8 lg:col-span-4 lg:sticky lg:top-[96px] self-start z-20 w-full max-w-[420px] lg:max-w-[440px] mx-auto lg:ml-auto scroll-mt-28"
             >
               <AdmissionForm
                 formTitle="Book 100% Free Counseling"

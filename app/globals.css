@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --background: #ffffff;
@@ -57,4 +58,89 @@ body {
 
 .animate-marquee-up:hover {
   animation-play-state: paused;
+}
+
+/* =========================================================
+   Responsive Breakpoint Container & Grid System
+   - Mobile  (0-767px):     4 cols, 20px margin, 16px gutter
+   - Tablet  (768-1023px):  8 cols, 20px margin, 16px gutter
+   - Laptop  (1024-1919px): 12 cols, 56px margin, 24px gutter
+   - Desktop (1920px+):     12 cols, fluid margin (1807px content), 24px gutter
+   ========================================================= */
+.site-container {
+  width: 100%;
+  max-width: 1807px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+@media (min-width: 1024px) {
+  .site-container {
+    padding-left: 56px;
+    padding-right: 56px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .site-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.site-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .site-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
+
+.site-gutter {
+  gap: 16px;
+}
+
+@media (min-width: 1024px) {
+  .site-gutter {
+    gap: 24px;
+  }
+}
+
+/* Responsive Prose & Media Safety */
+img,
+video,
+canvas {
+  max-width: 100%;
+}
+
+.prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  pointer-events: none;
+  display: block;
 }

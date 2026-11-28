@@ -5,22 +5,19 @@ import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { connection } from "next/server";
 import { getBlogBySlug, getBlogs, getSiteSettings, getMbaSpecializationBySlug } from "@/lib/admin-data";
+import { getCurrentAdmin } from "@/lib/auth";
 import { sanitizePublicHtml } from "@/lib/sanitize";
 import {
   Calendar,
   Clock,
   ArrowRight,
-  ShieldCheck,
-  CheckCircle2,
   Phone,
-  Mail,
-  ChevronRight,
-  BookOpen,
   Tag,
 } from "lucide-react";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import { AdmissionForm } from "@/components/public/AdmissionForm";
+import { calculateReadingTime } from "@/lib/blog-constants";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -45,6 +42,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  if (blog.status === "draft") {
+    const admin = await getCurrentAdmin();
+    if (!admin) {
+      return {
+        title: "Article Not Found | IGNOU Portal",
+      };
+    }
+  }
+
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://ignouadmission.edukyu.com";
+
   return {
     title:
       blog.metaTitle ||
@@ -53,6 +62,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       blog.metaDescription ||
       blog.excerpt ||
       "Read verified IGNOU admission guides, assignment submission steps, and syllabus updates.",
+    alternates: {
+      canonical: `${siteUrl}/blogs/${blog.slug}`,
+    },
+    robots:
+      blog.status === "draft" ? { index: false, follow: false } : undefined,
     keywords:
       blog.tags && blog.tags.length > 0
         ? blog.tags
@@ -60,9 +74,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: blog.metaTitle || blog.title,
       description: blog.metaDescription || blog.excerpt,
+      url: `${siteUrl}/blogs/${blog.slug}`,
       images: blog.coverImage ? [{ url: blog.coverImage }] : undefined,
       type: "article",
       publishedTime: blog.createdAt,
+      modifiedTime: blog.updatedAt || blog.createdAt,
       authors: [blog.author || "IGNOU Advisory Team"],
     },
     twitter: {
@@ -72,15 +88,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: blog.coverImage ? [blog.coverImage] : undefined,
     },
   };
-}
-
-function calculateReadingTime(content: string, fallback?: string): string {
-  if (fallback) return fallback;
-  if (!content) return "4 min read";
-  const clean = content.replace(/<[^>]*>/g, " ").trim();
-  const words = clean.split(/\s+/).filter(Boolean).length;
-  const minutes = Math.max(2, Math.ceil(words / 200));
-  return `${minutes} min read`;
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -100,25 +107,64 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
+  if (blog.status === "draft") {
+    const admin = await getCurrentAdmin();
+    if (!admin) {
+      notFound();
+    }
+  }
+
   // Related guides excluding current article
   const relatedBlogs = allBlogs
     .filter((b) => b.id !== blog.id && b.status !== "draft")
     .slice(0, 3);
   const readingTime = calculateReadingTime(blog.content, blog.readTime);
 
-  // Phone and email from settings
+  // Phone from settings
   const phone =
     siteSettings?.supportPhone && siteSettings.supportPhone !== "1800-11-2345"
       ? siteSettings.supportPhone
       : "+91 83368 89553";
-  const email =
-    siteSettings?.supportEmail &&
-      !siteSettings.supportEmail.includes("distanceeducationschool.com")
-      ? siteSettings.supportEmail
-      : "hi@edukyu.com";
+
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://ignouadmission.edukyu.com";
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: blog.metaTitle || blog.title,
+    description: blog.metaDescription || blog.excerpt || "",
+    image: blog.coverImage
+      ? blog.coverImage.startsWith("http")
+        ? blog.coverImage
+        : `${siteUrl}${blog.coverImage}`
+      : undefined,
+    datePublished: blog.createdAt,
+    dateModified: blog.updatedAt || blog.createdAt,
+    author: {
+      "@type": "Person",
+      name: blog.author || "IGNOU EduKyu Editorial Team",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: siteSettings?.portalName || "Edukyu x IGNOU Portal",
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/blogs/${blog.slug}`,
+    },
+    articleSection: blog.category || undefined,
+    keywords: blog.tags && blog.tags.length > 0 ? blog.tags.join(", ") : undefined,
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-sky-500 selection:text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <Navbar settings={siteSettings} />
 
       <main className="flex-1 flex flex-col">
@@ -131,13 +177,21 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* 2-Column Main Section: Content on Left (8 cols), Sticky Form on Right (4 cols) */}
         <section className="py-8 sm:py-12 flex-1">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          <div className="site-container">
+            <div className="site-grid items-start">
 
               {/* LEFT COLUMN: Main Blog Content (8 cols) */}
-              <article className="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-10 lg:p-12 border border-slate-200/80 shadow-xs space-y-7">
-                {/* Read Time */}
+              <article className="col-span-4 md:col-span-8 lg:col-span-8 bg-white rounded-3xl p-5 sm:p-8 lg:p-10 xl:p-12 border border-slate-200/80 shadow-xs space-y-6 sm:space-y-7 min-w-0">
+                {/* Category & Read Time */}
                 <div className="flex flex-wrap items-center gap-3">
+                  {blog.category && (
+                    <Link
+                      href={`/blogs?category=${encodeURIComponent(blog.category)}`}
+                      className="px-3 py-1 rounded-full bg-sky-50 text-[#009FE3] text-xs font-bold hover:bg-sky-100 transition-colors"
+                    >
+                      {blog.category}
+                    </Link>
+                  )}
                   <span className="inline-flex items-center gap-1 text-xs text-slate-500 font-medium">
                     <Clock className="w-3.5 h-3.5 text-slate-400" />
                     <span>{readingTime}</span>
@@ -254,7 +308,7 @@ export default async function BlogPostPage({ params }: Props) {
               {/* RIGHT COLUMN: Sticky Sidebar with Form */}
               <aside
                 id="counseling-form"
-                className="lg:col-span-4 lg:sticky lg:top-[96px] self-start z-20 w-full max-w-[370px] mx-auto lg:ml-auto scroll-mt-28"
+                className="col-span-4 md:col-span-8 lg:col-span-4 lg:sticky lg:top-[96px] self-start z-20 w-full max-w-[420px] lg:max-w-[440px] mx-auto lg:ml-auto scroll-mt-28"
               >
                 {/* Quick Admission Counseling Form (Sticks below navbar) */}
                 <AdmissionForm
@@ -271,7 +325,7 @@ export default async function BlogPostPage({ params }: Props) {
         {/* RELATED ADMISSIONS GUIDES SECTION AT BOTTOM */}
         {relatedBlogs.length > 0 && (
           <section className="py-12 bg-white border-t border-slate-200/80">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="site-container">
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">
@@ -287,7 +341,7 @@ export default async function BlogPostPage({ params }: Props) {
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 site-gutter">
                 {relatedBlogs.map((item) => (
                   <Link
                     key={item.id}

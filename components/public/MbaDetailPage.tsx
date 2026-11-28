@@ -164,7 +164,7 @@ export function MbaDetailPage({ item }: MbaDetailPageProps) {
         />
         <div className="absolute inset-0 bg-slate-950/75" />
 
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-5">
+        <div className="relative z-10 site-container text-center space-y-5">
           <h1 className="text-2xl sm:text-4xl lg:text-[42px] font-black tracking-tight text-white leading-tight">
             {item.title}
           </h1>
@@ -191,10 +191,10 @@ export function MbaDetailPage({ item }: MbaDetailPageProps) {
 
       {/* 2. TWO-COLUMN BODY SECTION (8 Cols Content + 4 Cols Sticky Form) */}
       <section className="py-10 sm:py-14 flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+        <div className="site-container">
+          <div className="site-grid items-start">
             {/* LEFT COLUMN: Structured Guide Cards */}
-            <article className="lg:col-span-8 space-y-6">
+            <article className="col-span-4 md:col-span-8 lg:col-span-8 space-y-6 min-w-0">
               {parsed.introExtraHtml && (
                 <div
                   className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-xs overflow-x-hidden
@@ -267,7 +267,7 @@ export function MbaDetailPage({ item }: MbaDetailPageProps) {
                         [&_ul>li]:p-3 [&_ul>li]:rounded-xl [&_ul>li]:bg-slate-50 [&_ul>li]:border [&_ul>li]:border-slate-100 [&_ul>li]:text-sm sm:[&_ul>li]:text-base [&_ul>li]:text-slate-700
                         [&_ol]:space-y-2.5 [&_ol]:pl-5
                         [&_ol>li]:p-3.5 [&_ol>li]:rounded-xl [&_ol>li]:bg-sky-50/50 [&_ol>li]:border [&_ol>li]:border-sky-100 [&_ol>li]:text-sm sm:[&_ol>li]:text-base [&_ol>li]:text-slate-800
-                        [&_table]:w-full [&_table]:text-left [&_table]:border-collapse [&_table]:text-xs sm:[&_table]:text-sm
+                        [&_table]:block [&_table]:overflow-x-auto [&_table]:w-full [&_table]:text-left [&_table]:border-collapse [&_table]:text-xs sm:[&_table]:text-sm
                         [&_th]:px-4 [&_th]:py-3 [&_th]:font-extrabold [&_th]:bg-slate-100 [&_th]:text-slate-900 [&_th]:border-b [&_th]:border-slate-200
                         [&_td]:px-4 [&_td]:py-2.5 [&_td]:text-slate-700 [&_td]:border-b [&_td]:border-slate-100
                         [&_span:empty]:hidden [&_.w-8:empty]:hidden
@@ -282,7 +282,7 @@ export function MbaDetailPage({ item }: MbaDetailPageProps) {
             {/* RIGHT COLUMN: Sticky Counseling Form Sidebar */}
             <aside
               id="admission-form"
-              className="lg:col-span-4 lg:sticky lg:top-[96px] self-start z-20 w-full max-w-[380px] mx-auto lg:ml-auto scroll-mt-28"
+              className="col-span-4 md:col-span-8 lg:col-span-4 lg:sticky lg:top-[96px] self-start z-20 w-full max-w-[420px] lg:max-w-[440px] mx-auto lg:ml-auto scroll-mt-28"
             >
               <AdmissionForm
                 formTitle="Book 100% Free Counseling"

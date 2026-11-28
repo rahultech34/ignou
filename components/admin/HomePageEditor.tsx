@@ -272,7 +272,7 @@ export function HomePageEditor() {
 
   return (
     <AdminLayoutWrapper title="Edit Home Page">
-      <form onSubmit={handleSave} className="space-y-8 max-w-5xl pb-16">
+      <form onSubmit={handleSave} className="space-y-8 w-full max-w-6xl pb-16">
         {/* Top Header & Save Button */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
           <div>
@@ -497,7 +497,7 @@ export function HomePageEditor() {
                         type="text"
                         value={item.title}
                         onChange={(e) => handleUpdateNewsTitle(item.id, e.target.value)}
-                        className="font-bold text-xs sm:text-sm text-slate-900 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-[#009FE3] outline-none flex-1 min-w-[200px]"
+                        className="font-bold text-xs sm:text-sm text-slate-900 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-[#009FE3] outline-none flex-1 min-w-0 w-full"
                       />
                       {item.isNew && (
                         <span className="px-1.5 py-0.5 text-[10px] font-black rounded bg-amber-400 text-slate-950 uppercase tracking-wide shrink-0">
@@ -506,7 +506,7 @@ export function HomePageEditor() {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-3 text-xs text-slate-500">
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
                       <div className="flex items-center gap-1">
                         <span className="text-slate-400">Link:</span>
                         <input

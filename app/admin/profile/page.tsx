@@ -141,7 +141,7 @@ export default function AdminProfilePage() {
       adminEmail={admin.email}
       adminName={admin.name}
     >
-      <div className="max-w-4xl space-y-8">
+      <div className="max-w-5xl w-full space-y-8">
         {/* Account Details Card */}
         <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-2xs space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">

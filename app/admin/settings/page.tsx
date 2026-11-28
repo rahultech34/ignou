@@ -94,7 +94,7 @@ export default function AdminSettingsPage() {
       title="Global Portal Settings"
       subtitle="Configure site-wide admissions metadata, contact info, helpline, and branding."
     >
-      <div className="max-w-4xl space-y-6">
+      <div className="max-w-5xl w-full space-y-6">
         {feedback && (
           <div
             className={`p-4 rounded-2xl text-xs sm:text-sm flex items-center gap-3 ${

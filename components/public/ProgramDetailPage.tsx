@@ -120,11 +120,11 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
         />
         <div className="absolute inset-0 bg-slate-950/75" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="site-container relative z-10">
+          <div className="site-grid items-center">
 
-            {/* Left Column: Course Highlights (7 cols) */}
-            <div className="lg:col-span-7 space-y-5">
+            {/* Left Column: Course Highlights */}
+            <div className="col-span-4 md:col-span-8 lg:col-span-7 space-y-5 min-w-0">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
                 {program.title}
               </h1>
@@ -171,8 +171,8 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
               </div>
             </div>
 
-            {/* Right Column: Key Admissions Checklist Card (5 cols) */}
-            <div className="lg:col-span-5 w-full">
+            {/* Right Column: Key Admissions Checklist Card */}
+            <div className="col-span-4 md:col-span-8 lg:col-span-5 w-full min-w-0">
               <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-7 border border-white/15 text-white space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-white/10">
                   <span className="text-xs font-bold uppercase tracking-wider text-sky-300">
@@ -211,8 +211,8 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
       </section>
 
       {/* Sticky Tab Navigation Bar — CENTERED */}
-      <section className="bg-white/95 backdrop-blur-md border-b border-slate-200/90 sticky top-[64px] z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-white/95 backdrop-blur-md border-b border-slate-200/90 sticky top-[60px] sm:top-[64px] z-30 shadow-xs">
+        <div className="site-container">
           <div className="flex items-center justify-start sm:justify-center gap-1.5 sm:gap-2.5 overflow-x-auto py-2.5 sm:py-3 no-scrollbar">
             {navItems.map((item) => (
               <button
@@ -233,11 +233,11 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
 
       {/* Main Content Body: 8 cols Content on Left, 4 cols Sticky Form on Right */}
       <section className="py-10 sm:py-12 flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+        <div className="site-container">
+          <div className="site-grid items-start">
 
-            {/* Left Column Content (8 cols) */}
-            <div className="lg:col-span-8 space-y-10">
+            {/* Left Column Content */}
+            <div className="col-span-4 md:col-span-8 lg:col-span-8 space-y-8 sm:space-y-10 min-w-0">
 
               {/* 1. Overview */}
               <div
@@ -446,7 +446,7 @@ export function ProgramDetailPage({ program }: ProgramDetailPageProps) {
             {/* Right Column Sticky Form (4 cols) — Fixed after touching the header */}
             <aside
               id="admission-form"
-              className="lg:col-span-4 lg:sticky lg:top-[128px] self-start space-y-4 w-full max-w-md lg:max-w-[370px] mx-auto lg:ml-auto"
+              className="col-span-4 md:col-span-8 lg:col-span-4 lg:sticky lg:top-[128px] self-start space-y-4 w-full max-w-[420px] lg:max-w-[440px] mx-auto lg:ml-auto"
             >
               {/* 1. Dedicated Admission & Counseling Form */}
               <AdmissionForm
